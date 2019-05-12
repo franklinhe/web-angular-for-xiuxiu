@@ -25,12 +25,26 @@ export class ScrollbarComponent implements AfterViewChecked {
   @Input() options: any;
   @Output() init = new EventEmitter();
   qkScrollbar: any;
+  uninit = true;
+  id = 'scrollbar' + (new Date()).getTime() + (Math.random()*666666|3332);
 
   ngAfterViewChecked() {
-    if (!this.qkScrollbar && this.ele && this.ele.nativeElement) {
-      this.options = Object.assign(this.defaultOptions, this.options);
-      this.qkScrollbar = $(this.ele.nativeElement).mCustomScrollbar(this.options);
-      this.init.emit(this.qkScrollbar);
+    if (!this.qkScrollbar&&this.uninit&&document.getElementById(this.id)) {
+      this.uninit = false;
+      try {
+        this.options = Object.assign(this.defaultOptions, this.options);
+        if (this.qkScrollbar&&this.qkScrollbar.ele&&this.qkScrollbar.ele.mCustomScrollbar) {
+          this.qkScrollbar.ele.mCustomScrollbar('destroy');
+        }
+        this.qkScrollbar = $(this.ele.nativeElement).mCustomScrollbar(this.options);
+        this.init.emit(this.qkScrollbar);
+      } catch {
+        console.warn('mCustomScrollbar Error！');
+        this.uninit = true;
+      }
     }
+  }
+  constructor(private elementRef: ElementRef) { 
+    
   }
 }

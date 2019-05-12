@@ -39,7 +39,7 @@ export class HttpInterceptorService implements HttpInterceptor {
           if (err.status === 0) {
             this.message.error('网络不在线！');
             // cancel request
-            return of(new HttpResponse());
+            return of(new HttpResponse({body: {}}));
           } else if (err.name === 'TimeoutError') {
             // retry
             return caught;

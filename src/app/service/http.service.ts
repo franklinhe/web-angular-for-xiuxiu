@@ -20,5 +20,35 @@ export class HttpService {
   }) {
     return this.http.get<any>(environment.api + '/book/getStatCount', HttpUtil.setParams(data));
   }
-  
+  getBookNameList(data: {
+    bookCataId?: string|number
+    pageNum: string|number
+    pageSize: string|number
+  }) {
+    return this.http.get<any>(environment.api + '/book/getBookNameList', HttpUtil.setParams(data));
+  }
+  getBookAuthorList(data: {
+    bookCataId?: string|number
+    pageNum: string|number
+    pageSize: string|number
+  }) {
+    return this.http.get<any>(environment.api + '/book/getBookAuthorList', HttpUtil.setParams(data));
+  }
+  getCaseList(data: {
+    bookName?: string|number
+    bookAuthor?: string|number
+    bookCataId?: string|number
+    pageNum: string|number
+    pageSize: string|number
+  }) {
+    return this.http.get<any>(environment.api + '/case/list', HttpUtil.setParams(data));
+  }
+  // 医案内容
+  contentItem: any = null;
+  getSection(data: {
+    articleId: string
+    bookName: string
+  }) {
+    return this.http.get<any>(environment.api + '/case/getSection', HttpUtil.setParams(data));
+  }
 }

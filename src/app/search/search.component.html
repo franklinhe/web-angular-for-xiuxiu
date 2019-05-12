@@ -11,23 +11,73 @@
 <div class="search-type" nz-row>
   <div class="search-type-label" nz-col nzXs="4" nzMd="3" nzLg="1">分类搜索：</div>
   <div class="search-type-value" nz-col nzXs="20" nzMd="15" nzLg="14">
-    <nz-cascader 
-    [nzChangeOnSelect]="true"
-    [nzPlaceHolder]="searchTypePlaceholder"
-    [(nzOptions)]="searchType" 
-    [(ngModel)]="searchTypeValue" 
-    (ngModelChange)="searchTypeChanges($event)">
+    <nz-cascader [nzChangeOnSelect]="true" [nzPlaceHolder]="searchTypePlaceholder" [(nzOptions)]="searchType"
+      [(ngModel)]="searchTypeValue" (ngModelChange)="searchTypeChanges($event)">
     </nz-cascader>
   </div>
 </div>
 <nz-tabset>
   <nz-tab [nzTitle]="'医案'+(searchResultTab1Number!=null?('（'+searchResultTab1Number+'）'):'')">
-    Content of Tab Pane 1
+    <qk-scrollbar class="case-list" [options]="tab1Options">
+      <nz-list [nzDataSource]="caseList.list" [nzRenderItem]="itemCase" [nzItemLayout]="'horizontal'"
+        [nzLoading]="caseList.isLoading">
+        <ng-template #itemCase let-item>
+          <nz-list-item>
+            <p class="case-title"><span class="case-section">{{item.section}}</span><span class="case-label">
+              &nbsp;&nbsp;|&nbsp;{{item.title}}</span></p>
+            <p><span class="body-title">「原文」</span><span (click)="caseContent(item)"
+                class="case-content">&nbsp;&nbsp;&nbsp;&nbsp;{{item.content}}</span></p>
+            <p><span class="body-title">「出处」</span><span class="case-source">{{item.source}}</span></p>
+          </nz-list-item>
+        </ng-template>
+      </nz-list>
+      <div *ngIf="caseList.config.total>caseList.param.pageSize * caseList.param.pageNum" class="scrollbar-loading">
+        <nz-spin nzSimple></nz-spin>
+      </div>
+    </qk-scrollbar>
   </nz-tab>
   <nz-tab [nzTitle]="'医书'+(searchResultTab2Number!=null?('（'+searchResultTab2Number+'）'):'')">
-    Content of Tab Pane 2
+    <qk-scrollbar class="book-name-list" [options]="tab2Options">
+      <nz-list [nzDataSource]="bookNameList.list" [nzRenderItem]="itemBookName" [nzItemLayout]="'horizontal'"
+        [nzLoading]="bookNameList.isLoading">
+        <ng-template #itemBookName let-item>
+          <nz-list-item>
+            <div class="book-img">
+              <span [ngStyle]="bookNameSize(item.bookName)">{{item.bookName}}</span>
+            </div>
+            <div class="book-body">
+              <p><span>书名：</span><span>{{item.bookName}}<span *ngIf="item.caseCount!=null">（医案{{item.caseCount}}例）</span></span></p>
+              <p><span>作者：</span><span>{{item.bookAuthor}}</span></p>
+              <p><span>年代：</span><span>{{item.bookYear}}</span></p>
+              <p><span>简介：</span><span>{{item.bookSource}}</span></p>
+            </div>
+          </nz-list-item>
+        </ng-template>
+      </nz-list>
+      <div *ngIf="bookNameList.config.total>bookNameList.param.pageSize * bookNameList.param.pageNum" class="scrollbar-loading">
+        <nz-spin nzSimple></nz-spin>
+      </div>
+    </qk-scrollbar>
   </nz-tab>
   <nz-tab [nzTitle]="'医家'+(searchResultTab3Number!=null?('（'+searchResultTab3Number+'）'):'')">
-    Content of Tab Pane 3
+    <qk-scrollbar class="author-list" [options]="tab3Options">
+      <nz-list [nzDataSource]="bookAuthorList.list" [nzRenderItem]="itemAuthor" [nzItemLayout]="'horizontal'"
+        [nzLoading]="bookAuthorList.isLoading">
+        <ng-template #itemAuthor let-item>
+          <nz-list-item>
+            <div class="author">
+              <span class="author-name">{{item.bookAuthor}}</span>
+              <span class="author-case">
+                <span *ngIf="item.caseCount!=null">（医案{{item.caseCount}}例）</span>
+                <i *ngIf="item.caseCount>0" nz-icon nzType="right" nzTheme="outline"></i>
+              </span>
+            </div>
+          </nz-list-item>
+        </ng-template>
+      </nz-list>
+      <div *ngIf="bookAuthorList.config.total>bookAuthorList.param.pageSize * bookAuthorList.param.pageNum" class="scrollbar-loading">
+        <nz-spin nzSimple></nz-spin>
+      </div>
+    </qk-scrollbar>
   </nz-tab>
 </nz-tabset>

@@ -5,7 +5,20 @@
     padding: 10px;
     border-bottom: 1px solid $color-order-bg;
     input {
-        background: rgb(247,245,245);
+        background: rgb(244,244,245);
+        border: none;
+        &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+            color: rgba(72,84,143,0.8);
+        }
+        &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+           color: rgba(72,84,143,0.8);
+        }
+        &::-moz-placeholder { /* Mozilla Firefox 19+ */
+           color: rgba(72,84,143,0.8);
+        }
+        &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+           color: rgba(72,84,143,0.8);
+        }
     }
 }
 .search-type {
@@ -35,4 +48,100 @@
 }
 /deep/ul.ant-cascader-menu {
     height: auto !important;
+}
+nz-tabset {
+    /deep/.ant-tabs-bar {
+        margin-bottom: 5px !important;
+    }
+}
+qk-scrollbar {
+    height: calc(100vh - 150px);
+    nz-list {
+        nz-list-item {
+            display: block;
+        }
+    }
+    .scrollbar-loading {
+        text-align: center;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 4px;
+        margin-bottom: 20px;
+        padding: 30px 50px;
+        margin: 20px 0;
+    }
+    &.case-list {
+        .case-title {
+            margin-left: 10px;
+        }
+        .case-content {
+            color: rgb(27,25,26);
+            display: inline-block;
+            vertical-align: top;
+            width: calc(100% - 89px);
+            cursor: pointer;
+        }
+        .body-title {
+            color: rgb(190,190,190);
+            display: inline-block;
+            width: 60px;
+        }
+        .case-source {
+            color: rgb(30,30,30);
+        }
+        .case-section {
+            color: rgb(180, 50, 130);
+        }
+        .case-content {
+            color: rgb(120, 120, 160);
+        }
+    }
+    &.book-name-list {
+        .book-img{
+            width: 85px;
+            margin-left: 10px;
+            height: 130px;
+            background: url('./img/book.png') no-repeat;
+            background-size: 100%, auto;
+            display: inline-block;
+            vertical-align: top;
+            span {
+                writing-mode: vertical-rl;
+                display: inline-block;
+                width: 54px;
+                height: 141px;
+                text-align: center;
+                margin: -12px 0px 0;
+                word-wrap: break-word;
+                line-height: 54px;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+        }
+        .book-body {
+            display: inline-block;
+            vertical-align: top;
+            margin-left: 15px;
+        }
+    }
+    &.author-list {
+        .author {
+            height: 25px;
+            padding: 3px 15px;
+            .author-name {
+                float: left;
+                color: rgb(40, 40, 40);
+            }
+            .author-case {
+                float: right;
+                cursor: pointer;
+                span {
+                    color: rgb(120,160,250);
+                }
+                i {
+                    color: rgb(190, 190, 190);
+                }
+            }
+        }
+        
+    }
 }

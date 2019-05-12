@@ -38,7 +38,7 @@ export abstract class TableList extends TableListAbstract {
     Object.assign(this.config, config);
     Object.assign(this.param, param);
     // init data
-    this.param.page = 1;
+    this.param.pageNum = 1;
     this.isLoading = true;
     this.checkedList = [];
     this.allChecked = false;
@@ -85,7 +85,7 @@ export abstract class TableList extends TableListAbstract {
     }
     if (event.target) {
       this.param.search = event.target.value;
-      this.param.page = 1;
+      this.param.pageNum = 1;
       this.checkedList = [];
       this.allChecked = false;
       this.indeterminate = false;
@@ -109,9 +109,13 @@ export abstract class TableList extends TableListAbstract {
    * @param res 
    */
   processingDataNextPage(res: any) {
-    if (res.page && res.page.records) {
-      this.list = this.list.concat(res.page.records);
-      this.config.total = res.page.total;
+    if (res.code==0&&res.data&&res.msg==="ok") {
+      this.list = this.list.concat(res.data.list);
+      this.param.pageNum = res.data.pageNum;
+      this.config.total = res.data.total;
+      if (this.config.isActiveFist && this.list.length > 0) {
+        this.active(this.list[0]);
+      }
     }
   }
 
@@ -119,9 +123,10 @@ export abstract class TableList extends TableListAbstract {
    * init list processing data
    */
   processingDataInit(res: any) {
-    if (res.page && res.page.records) {
-      this.list = res.page.records;
-      this.config.total = res.page.total;
+    if (res.code==0&&res.data&&res.msg==="ok") {
+      this.list = res.data.list;
+      this.param.pageNum = res.data.pageNum;
+      this.config.total = res.data.total;
       if (this.config.isActiveFist && this.list.length > 0) {
         this.active(this.list[0]);
       }

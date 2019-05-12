@@ -16,12 +16,14 @@ import { HttpService } from './service/http.service';
 import { ScrollbarModule } from 'src/shared/scrollbar/scrollbar.module';
 import { HttpInterceptorModule } from 'src/shared/http-api/http-interceptor.module';
 import { SearchComponent } from './search/search.component';
+import { CaseContentComponent } from './case-content/case-content.component';
 registerLocaleData(zh);
 
 @NgModule({
   declarations: [
     AppComponent,
-    SearchComponent
+    SearchComponent,
+    CaseContentComponent
   ],
   imports: [
     BrowserModule,
@@ -38,8 +40,10 @@ registerLocaleData(zh);
       {
         path: 'search',
         component: SearchComponent
-      },
-      {
+      },{
+        path: 'case',
+        component: CaseContentComponent
+      },{
         path: '**',
         pathMatch: 'full',
         redirectTo: '/search'

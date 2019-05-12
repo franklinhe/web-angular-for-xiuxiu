@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {NgZorroAntdModule} from 'ng-zorro-antd';
-import {I18nForChildModule} from './i18n/i18n.module';
 import {ScrollbarModule} from './scrollbar/scrollbar.module';
 import {HttpInterceptorModule} from './http-api/http-interceptor.module';
 

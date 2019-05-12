@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: true,
+  api: 'http://47.99.194.110/mockjsdata/2',
+  resource: './',
+  lng: 'zh'
 };
 
 /*

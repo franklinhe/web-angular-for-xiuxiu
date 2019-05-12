@@ -1,0 +1,11 @@
+{
+  "/api": {
+    "target": "http://47.99.194.110/mockjsdata/2",
+    "secure": false,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

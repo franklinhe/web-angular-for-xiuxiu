@@ -1,0 +1,38 @@
+@import "../style/vars";
+
+
+.search-input {
+    padding: 10px;
+    border-bottom: 1px solid $color-order-bg;
+    input {
+        background: rgb(247,245,245);
+    }
+}
+.search-type {
+    .search-type-label {
+        margin-right: -8px;
+        padding-left: 14px;
+        line-height: 32px;
+        width: auto;
+    }
+    .search-type-value {
+        width: calc(100% - 85px);
+    }
+    nz-cascader {
+        width: 100%;
+        /deep/input {
+            border: none;
+        }
+        &:focus {
+            /deep/input {
+                box-shadow: none !important;
+            }
+        }
+        /deep/i {
+            display: none;
+        }
+    }
+}
+/deep/ul.ant-cascader-menu {
+    height: auto !important;
+}

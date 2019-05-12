@@ -1,0 +1,33 @@
+<div class="search-input" nz-row>
+  <div nz-col nzXs="24" nzMd="18" nzLg="15">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input type="text" nz-input [placeholder]="searchInputPlaceholder" />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <i nz-icon type="search"></i>
+    </ng-template>
+  </div>
+</div>
+<div class="search-type" nz-row>
+  <div class="search-type-label" nz-col nzXs="4" nzMd="3" nzLg="1">分类搜索：</div>
+  <div class="search-type-value" nz-col nzXs="20" nzMd="15" nzLg="14">
+    <nz-cascader 
+    [nzChangeOnSelect]="true"
+    [nzPlaceHolder]="searchTypePlaceholder"
+    [(nzOptions)]="searchType" 
+    [(ngModel)]="searchTypeValue" 
+    (ngModelChange)="searchTypeChanges($event)">
+    </nz-cascader>
+  </div>
+</div>
+<nz-tabset>
+  <nz-tab [nzTitle]="'医案'+(searchResultTab1Number!=null?('（'+searchResultTab1Number+'）'):'')">
+    Content of Tab Pane 1
+  </nz-tab>
+  <nz-tab [nzTitle]="'医书'+(searchResultTab2Number!=null?('（'+searchResultTab2Number+'）'):'')">
+    Content of Tab Pane 2
+  </nz-tab>
+  <nz-tab [nzTitle]="'医家'+(searchResultTab3Number!=null?('（'+searchResultTab3Number+'）'):'')">
+    Content of Tab Pane 3
+  </nz-tab>
+</nz-tabset>

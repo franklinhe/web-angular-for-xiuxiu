@@ -1,0 +1,23 @@
+@import "../style/vars";
+
+
+.search-input {
+  padding: 10px;
+  border-bottom: 1px solid $color-order-bg;
+  input {
+    background: rgb(244,244,245);
+    border: none;
+    &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+      color: rgba(72,84,143,0.8);
+    }
+    &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      color: rgba(72,84,143,0.8);
+    }
+    &::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color: rgba(72,84,143,0.8);
+    }
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: rgba(72,84,143,0.8);
+    }
+  }
+}

@@ -1,29 +1,36 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
-import { NgZorroAntdModule, NZ_I18N, zh_CN } from 'ng-zorro-antd';
-import { AppComponent } from './app.component';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgModule} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import {RouterModule} from '@angular/router';
+import {NgZorroAntdModule, NZ_I18N, zh_CN} from 'ng-zorro-antd';
+import {AppComponent} from './app.component';
 
 /** 配置 angular i18n **/
-import { registerLocaleData } from '@angular/common';
+import {registerLocaleData} from '@angular/common';
 import zh from '@angular/common/locales/zh';
-import { MessageModule } from '../shared/message/Message.module';
-import { ModalModule } from '../shared/modal/Modal.module';
-import { HttpService } from './service/http.service';
-import { ScrollbarModule } from '../shared/scrollbar/scrollbar.module';
-import { HttpInterceptorModule } from '../shared/http-api/http-interceptor.module';
-import { SearchComponent } from './search/search.component';
-import { CaseContentComponent } from './case-content/case-content.component';
+import {MessageModule} from '../shared/message/Message.module';
+import {ModalModule} from '../shared/modal/Modal.module';
+import {HttpService} from './service/http.service';
+import {ScrollbarModule} from '../shared/scrollbar/scrollbar.module';
+import {HttpInterceptorModule} from '../shared/http-api/http-interceptor.module';
+import {CaseContentComponent} from './case-content/case-content.component';
+import {SearchResultComponent} from './search-result/search-result.component';
+import {SearchTypeComponent} from './search-type/search-type.component';
+import {SearchInputComponent} from './search-input/search-input.component';
+import {AppSearchTypeComponent} from './app-search-type/app-search-type.component';
+
 registerLocaleData(zh);
 
 @NgModule({
   declarations: [
     AppComponent,
-    SearchComponent,
-    CaseContentComponent
+    CaseContentComponent,
+    SearchResultComponent,
+    SearchTypeComponent,
+    SearchInputComponent,
+    AppSearchTypeComponent
   ],
   imports: [
     BrowserModule,
@@ -37,28 +44,29 @@ registerLocaleData(zh);
     ModalModule.forRoot(),
     NgZorroAntdModule,
     RouterModule.forRoot([
-      {
-        path: 'search',
-        component: SearchComponent
-      },{
-        path: 'case',
-        component: CaseContentComponent
-      },{
-        path: '**',
-        pathMatch: 'full',
-        redirectTo: '/search'
-      }
-    ]
-    // , { useHash: true }
+        {
+          path: 'type',
+          component: AppSearchTypeComponent
+        }, {
+          path: 'case',
+          component: CaseContentComponent
+        }, {
+          path: '**',
+          pathMatch: 'full',
+          redirectTo: '/type'
+        }
+      ]
+      // , { useHash: true }
     ),
     ScrollbarModule,
     HttpInterceptorModule
   ],
-  bootstrap: [ AppComponent ],
+  bootstrap: [AppComponent],
   /** 配置 ng-zorro-antd 国际化（文案 及 日期） **/
-  providers   : [
-    { provide: NZ_I18N, useValue: zh_CN },
+  providers: [
+    {provide: NZ_I18N, useValue: zh_CN},
     HttpService
   ]
 })
-export class AppModule { }
+export class AppModule {
+}

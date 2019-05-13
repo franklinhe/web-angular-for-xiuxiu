@@ -1,0 +1,10 @@
+<div class="search-input" nz-row>
+  <div nz-col nzXs="24" nzMd="18" nzLg="15">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input type="text" nz-input [placeholder]="searchInputPlaceholder" />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <i nz-icon type="search"></i>
+    </ng-template>
+  </div>
+</div>

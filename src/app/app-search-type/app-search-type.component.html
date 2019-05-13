@@ -1,0 +1,21 @@
+<app-search-input></app-search-input>
+<app-search-type (change)="searchTypeChang($event)"></app-search-type>
+<app-search-result (init)="searchResultInit($event)" (case)="caseContent($event)"></app-search-result>
+<nz-drawer [nzClosable]="false"
+           [nzVisible]="!!caseItem"
+           nzPlacement="right"
+           [nzTitle]="title"
+           (nzOnClose)="caseItem=null"
+           nzWrapClassName="case-item-drawer"
+>
+  <ng-template #title>
+    <div class="label">
+      <i class="back" nz-icon nzType="left" nzTheme="outline" (click)="caseItem=null"></i>
+      <span class="title">{{caseItem?.title}}</span>
+    </div>
+  </ng-template>
+  <div class="body">
+    <nz-skeleton *ngIf="!caseItem?.content"></nz-skeleton>
+    <p *ngIf="caseItem?.content">&nbsp;&nbsp;&nbsp;&nbsp;{{caseItem?.content}}</p>
+  </div>
+</nz-drawer>

@@ -5,11 +5,11 @@
 export const environment = {
   production: true,
   // 是否开启前端mockData
-  mockData: true,
+  mockData: false,
   // 接口mockData
-  api: 'http://47.99.194.110/mockjsdata/2',
+  // api: 'http://47.99.194.110/mockjsdata/2',
   // 真实数据
-  // api: 'http://47.99.194.110/consilia',
+  api: 'http://47.99.194.110/consilia',
   resource: './',
   lng: 'zh'
 };

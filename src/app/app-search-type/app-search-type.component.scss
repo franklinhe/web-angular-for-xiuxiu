@@ -1,0 +1,39 @@
+@import "../style/vars";
+
+/deep/.case-item-drawer {
+  width: 100vw !important;
+  .ant-drawer-header {
+    padding: 0;
+  }
+  .ant-drawer-body {
+    padding: 20px 0;
+  }
+  .label {
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+    .back {
+      color: #4678dc;
+      font-size: 25px;
+      float: left;
+      line-height: 36px;
+    }
+    .title {
+      color: rgb(76,130,250);
+      font-size: 20px;
+    }
+  }
+  .body {
+    padding: 0 15px 0 15px;
+  }
+}
+@media (min-width: 768px) {
+  /deep/.case-item-drawer {
+    width: 70vw !important;
+  }
+}
+@media (min-width: 1600px) {
+  /deep/.case-item-drawer {
+    width: 40vw !important;
+  }
+}

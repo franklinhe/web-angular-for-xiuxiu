@@ -1,42 +1,23 @@
-<div class="search-input" nz-row>
-  <div nz-col nzXs="24" nzMd="18" nzLg="15">
-    <nz-input-group [nzSuffix]="suffixIconSearch">
-      <input type="text" nz-input [placeholder]="searchInputPlaceholder" />
-    </nz-input-group>
-    <ng-template #suffixIconSearch>
-      <i nz-icon type="search"></i>
-    </ng-template>
-  </div>
-</div>
-<div class="search-type" nz-row>
-  <div class="search-type-label" nz-col nzXs="4" nzMd="3" nzLg="1">分类搜索：</div>
-  <div class="search-type-value" nz-col nzXs="20" nzMd="15" nzLg="14">
-    <nz-cascader [nzChangeOnSelect]="true" [nzPlaceHolder]="searchTypePlaceholder" [(nzOptions)]="searchType"
-      [(ngModel)]="searchTypeValue" (ngModelChange)="searchTypeChanges($event)">
-    </nz-cascader>
-  </div>
-</div>
 <nz-tabset>
-  <nz-tab [nzTitle]="'医案'+(searchResultTab1Number!=null?('（'+searchResultTab1Number+'）'):'')">
+  <nz-tab *ngIf="config.includes('case')" [nzTitle]="'医案'+(caseList.searchResultNumber!=null?('（'+caseList.searchResultNumber+'）'):'')">
     <qk-scrollbar class="case-list" [options]="tab1Options">
       <nz-list [nzDataSource]="caseList.list" [nzRenderItem]="itemCase" [nzItemLayout]="'horizontal'"
         [nzLoading]="caseList.isLoading">
         <ng-template #itemCase let-item>
           <nz-list-item>
-            <p class="case-title"><span class="case-section">{{item.section}}</span><span class="case-label">
-              &nbsp;&nbsp;|&nbsp;{{item.title}}</span></p>
+            <p class="case-title"><span class="case-section">{{item.section}}</span><span class="case-label">|&nbsp;{{item.title}}</span></p>
             <p><span class="body-title">「原文」</span><span (click)="caseContent(item)"
-                class="case-content">&nbsp;&nbsp;&nbsp;&nbsp;{{item.content}}</span></p>
-            <p><span class="body-title">「出处」</span><span class="case-source">{{item.source}}</span></p>
+                class="case-content" [innerHtml]="item.content"></span></p>
+            <p><span class="body-title">「出处」</span><span class="case-source">{{item.title}}{{item.source}}</span></p>
           </nz-list-item>
         </ng-template>
       </nz-list>
-      <div *ngIf="caseList.config.total>caseList.param.pageSize * caseList.param.pageNum" class="scrollbar-loading">
+      <div *ngIf="!caseList.isLoading&&caseList.config.total>caseList.param.pageSize * caseList.param.pageNum" class="scrollbar-loading">
         <nz-spin nzSimple></nz-spin>
       </div>
     </qk-scrollbar>
   </nz-tab>
-  <nz-tab [nzTitle]="'医书'+(searchResultTab2Number!=null?('（'+searchResultTab2Number+'）'):'')">
+  <nz-tab *ngIf="config.includes('book')" [nzTitle]="'医书'+(bookNameList.searchResultNumber!=null?('（'+bookNameList.searchResultNumber+'）'):'')">
     <qk-scrollbar class="book-name-list" [options]="tab2Options">
       <nz-list [nzDataSource]="bookNameList.list" [nzRenderItem]="itemBookName" [nzItemLayout]="'horizontal'"
         [nzLoading]="bookNameList.isLoading">
@@ -59,7 +40,7 @@
       </div>
     </qk-scrollbar>
   </nz-tab>
-  <nz-tab [nzTitle]="'医家'+(searchResultTab3Number!=null?('（'+searchResultTab3Number+'）'):'')">
+  <nz-tab *ngIf="config.includes('author')" [nzTitle]="'医家'+(bookAuthorList.searchResultNumber!=null?('（'+bookAuthorList.searchResultNumber+'）'):'')">
     <qk-scrollbar class="author-list" [options]="tab3Options">
       <nz-list [nzDataSource]="bookAuthorList.list" [nzRenderItem]="itemAuthor" [nzItemLayout]="'horizontal'"
         [nzLoading]="bookAuthorList.isLoading">

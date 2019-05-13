@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { TableList } from '../../shared/table-list/table-list';
-import { HttpService } from './http.service';
+import { HttpService } from '../service/http.service';
 /**
  * list service
  */
 @Injectable()
-export class BookAuthorListService extends TableList {
+export class BookNameListService extends TableList {
+  searchResultNumber = 0;
 
   param: any = {
     pageNum: 1,
-    pageSize: 15,
+    pageSize: 10,
     bookCataId: null
   };
 
@@ -17,6 +18,6 @@ export class BookAuthorListService extends TableList {
     super();
   }
   getList(_parame = {}) {
-    return this.http.getBookAuthorList(Object.assign({}, this.param, _parame));
+    return this.http.getBookNameList(Object.assign({}, this.param, _parame));
   }
 }

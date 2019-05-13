@@ -12,7 +12,7 @@ import {Observable, of} from 'rxjs';
 import {tap, catchError, timeout} from 'rxjs/operators';
 import {MessageService} from '../message/message.service';
 import { NzNotificationService } from 'ng-zorro-antd';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 // import {TranslateService} from '@ngx-translate/core';
 // import {backoff} from './backoff';
 

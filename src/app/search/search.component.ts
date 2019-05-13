@@ -33,6 +33,7 @@ export class SearchComponent implements OnInit {
   searchType: any = [
     {
       value: 0,
+      isLeaf: true,
       label: '所有医案'
     }
   ];

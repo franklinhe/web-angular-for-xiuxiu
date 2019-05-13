@@ -4,6 +4,7 @@
 
 export const environment = {
   production: true,
+  mockData: true,
   api: '//' + window.location.hostname + ':8080/',
   resource: './',
   lng: 'zh'

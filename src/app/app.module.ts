@@ -10,11 +10,11 @@ import { AppComponent } from './app.component';
 /** 配置 angular i18n **/
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
-import { MessageModule } from 'src/shared/message/Message.module';
-import { ModalModule } from 'src/shared/modal/Modal.module';
+import { MessageModule } from '../shared/message/Message.module';
+import { ModalModule } from '../shared/modal/Modal.module';
 import { HttpService } from './service/http.service';
-import { ScrollbarModule } from 'src/shared/scrollbar/scrollbar.module';
-import { HttpInterceptorModule } from 'src/shared/http-api/http-interceptor.module';
+import { ScrollbarModule } from '../shared/scrollbar/scrollbar.module';
+import { HttpInterceptorModule } from '../shared/http-api/http-interceptor.module';
 import { SearchComponent } from './search/search.component';
 import { CaseContentComponent } from './case-content/case-content.component';
 registerLocaleData(zh);

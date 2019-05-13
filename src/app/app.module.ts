@@ -11,7 +11,6 @@ import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { MessageModule } from 'src/shared/message/Message.module';
 import { ModalModule } from 'src/shared/modal/Modal.module';
-import { RouterModule } from '_@angular_router@7.2.15@@angular/router';
 import { HttpService } from './service/http.service';
 import { ScrollbarModule } from 'src/shared/scrollbar/scrollbar.module';
 import { HttpInterceptorModule } from 'src/shared/http-api/http-interceptor.module';

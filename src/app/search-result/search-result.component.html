@@ -1,6 +1,6 @@
-<nz-tabset>
-  <nz-tab *ngIf="config.includes('case')" [nzTitle]="'医案'+(caseList.searchResultNumber!=null?('（'+caseList.searchResultNumber+'）'):'')">
-    <qk-scrollbar class="case-list" [options]="tab1Options">
+<nz-tabset [(nzSelectedIndex)]="index" (nzSelectedIndexChange)="indexChange.emit($event)">
+  <nz-tab *ngIf="config.includes('case')" [nzTitle]="'医案（'+caseList.config.total+'）'">
+    <qk-scrollbar class="case-list" [config]="tab1Options">
       <nz-list [nzDataSource]="caseList.list" [nzRenderItem]="itemCase" [nzItemLayout]="'horizontal'"
         [nzLoading]="caseList.isLoading">
         <ng-template #itemCase let-item>
@@ -17,8 +17,8 @@
       </div>
     </qk-scrollbar>
   </nz-tab>
-  <nz-tab *ngIf="config.includes('book')" [nzTitle]="'医书'+(bookNameList.searchResultNumber!=null?('（'+bookNameList.searchResultNumber+'）'):'')">
-    <qk-scrollbar class="book-name-list" [options]="tab2Options">
+  <nz-tab *ngIf="config.includes('book')" [nzTitle]="'医书（'+bookNameList.config.total+'）'">
+    <qk-scrollbar class="book-name-list" [config]="tab2Options">
       <nz-list [nzDataSource]="bookNameList.list" [nzRenderItem]="itemBookName" [nzItemLayout]="'horizontal'"
         [nzLoading]="bookNameList.isLoading">
         <ng-template #itemBookName let-item>
@@ -30,25 +30,25 @@
               <p><span>书名：</span><span>{{item.bookName}}<span *ngIf="item.caseCount!=null">（医案{{item.caseCount}}例）</span></span></p>
               <p><span>作者：</span><span>{{item.bookAuthor}}</span></p>
               <p><span>年代：</span><span>{{item.bookYear}}</span></p>
-              <p><span>简介：</span><span>{{item.bookSource}}</span></p>
+              <p class="text-primary" (click)="bookItem(item)"><span>简介：</span><span>{{item.bookSource}}</span></p>
             </div>
           </nz-list-item>
         </ng-template>
       </nz-list>
-      <div *ngIf="bookNameList.config.total>bookNameList.param.pageSize * bookNameList.param.pageNum" class="scrollbar-loading">
+      <div *ngIf="!bookNameList.isLoading&&bookNameList.config.total>bookNameList.param.pageSize * bookNameList.param.pageNum" class="scrollbar-loading">
         <nz-spin nzSimple></nz-spin>
       </div>
     </qk-scrollbar>
   </nz-tab>
-  <nz-tab *ngIf="config.includes('author')" [nzTitle]="'医家'+(bookAuthorList.searchResultNumber!=null?('（'+bookAuthorList.searchResultNumber+'）'):'')">
-    <qk-scrollbar class="author-list" [options]="tab3Options">
+  <nz-tab *ngIf="config.includes('author')" [nzTitle]="'医家（'+bookAuthorList.config.total+'）'">
+    <qk-scrollbar class="author-list" [config]="tab3Options">
       <nz-list [nzDataSource]="bookAuthorList.list" [nzRenderItem]="itemAuthor" [nzItemLayout]="'horizontal'"
         [nzLoading]="bookAuthorList.isLoading">
         <ng-template #itemAuthor let-item>
           <nz-list-item>
             <div class="author">
               <span class="author-name">{{item.bookAuthor}}</span>
-              <span class="author-case">
+              <span class="author-case"  (click)="authorItem(item)">
                 <span *ngIf="item.caseCount!=null">（医案{{item.caseCount}}例）</span>
                 <i *ngIf="item.caseCount>0" nz-icon nzType="right" nzTheme="outline"></i>
               </span>
@@ -56,7 +56,7 @@
           </nz-list-item>
         </ng-template>
       </nz-list>
-      <div *ngIf="bookAuthorList.config.total>bookAuthorList.param.pageSize * bookAuthorList.param.pageNum" class="scrollbar-loading">
+      <div *ngIf="!bookAuthorList.isLoading&&bookAuthorList.config.total>bookAuthorList.param.pageSize * bookAuthorList.param.pageNum" class="scrollbar-loading">
         <nz-spin nzSimple></nz-spin>
       </div>
     </qk-scrollbar>

@@ -1,8 +1,8 @@
 @import "vars";
 
 body {
-  color: $color-black-primary; 
-  font-size: 14px !important; 
+  color: $color-black-primary;
+  font-size: 14px !important;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑";
   //background-color: $color-body-bg;
   background-color: rgb(255, 255, 255);
@@ -10,12 +10,11 @@ body {
   min-width: 100%;
   transition: background 1s cubic-bezier(.075, .82, .165, 1);
   word-break: break-word;
-  -webkit-user-select:none;
-  -moz-user-select:none;
-  -ms-user-select:none;
-  user-select:none;
+  //-webkit-user-select:none;
+  //-moz-user-select:none;
+  //-ms-user-select:none;
+  //user-select:none;
 }
-
 a {
   text-decoration: none !important;
 }
@@ -81,4 +80,11 @@ tr.active td {
 }
 .ant-breadcrumb, ant-breadcrumb-link, ant-breadcrumb-separator{
   color: #666666 !important;
+}
+.text-primary {
+  cursor: pointer;
+  color: $color-text-primary;
+  &:hover {
+    color: $color-text-primary-hover;
+  }
 }

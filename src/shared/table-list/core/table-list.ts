@@ -40,23 +40,6 @@ export abstract class TableList {
    */
   abstract processingDataNextPage(res: any);
 
-  /**
-   * next page
-   */
-  nextPage() {
-    const e = new EventEmitter();
-    if (this.list.length < this.config.total) {
-      this.param.pageNum++;
-      this.getList()
-        .subscribe((res: any) => {
-          this.processingDataNextPage(res);
-          this.dataChangeEvent.emit(res);
-          e.emit(res);
-        });
-    }
-    return e;
-  }
-
   sort(type, order) {
     this.param['sortName'] = type;
     this.param['sortOrder'] = order;
@@ -65,7 +48,6 @@ export abstract class TableList {
 
   /**
    * init list processing data
-   * @returns {Observable<any>}
    */
   abstract processingDataInit(res: any);
 
@@ -113,7 +95,6 @@ export abstract class TableList {
 
   /**
    * All/none
-   * @param checked
    */
   checkedAll(checked: boolean) {
     this.indeterminate = false;

@@ -1,10 +1,22 @@
 <div class="search-input" nz-row>
   <div nz-col nzXs="24" nzMd="18" nzLg="15">
-    <nz-input-group [nzSuffix]="suffixIconSearch">
-      <input type="text" nz-input [placeholder]="searchInputPlaceholder" />
-    </nz-input-group>
-    <ng-template #suffixIconSearch>
-      <i nz-icon type="search"></i>
-    </ng-template>
+    <div [class.back-icon]="back" style="display: none;">
+      <i (click)="previous.emit()" class="back-icon" nz-icon nzType="left" nzTheme="outline"></i>
+    </div>
+    <div [class.back-input]="back" [class.diseases-input]="!diseases">
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input type="text" [(ngModel)]="search"
+               [(disabled)]="disabled"
+               (keyup)="keyup($event)"
+               (keydown.enter)="enter($event)"
+               (ngModelChange)="searchChange.emit($event)" nz-input [placeholder]="placeholder" />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <i nz-icon type="search"></i>
+      </ng-template>
+    </div>
+    <div [class.diseases]="!diseases" style="display: none;">
+      <button nz-button nzType="primary" (click)="diseasesChange.emit(true)">病名</button>
+    </div>
   </div>
 </div>

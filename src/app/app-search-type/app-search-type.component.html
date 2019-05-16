@@ -1,21 +1,51 @@
-<app-search-input></app-search-input>
-<app-search-type (change)="searchTypeChang($event)"></app-search-type>
-<app-search-result (init)="searchResultInit($event)" (case)="caseContent($event)"></app-search-result>
+<app-search-input
+  [(placeholder)]="status.searchInputPlaceholder"
+  [(back)]="status.topBack"
+  [(diseases)]="status.diseasesButtonHide"
+  [(disabled)]="status.searchInputDisabled"
+  (diseasesChange)="diseases($event)"
+  [(search)]="status.searchstr"
+  (searchChange)="searchStr($event)"
+  (previous)="previous()"
+></app-search-input>
+<app-search-type
+  *ngIf="!status.diseases&&!status.diseasesNode"
+  [(searchType)]="status.bookCataIds"
+  [(disabled)]="status.searchTypeDisabled"
+  (searchTypeChange)="searchTypeChang($event)"></app-search-type>
+<p class="diseases-node-title" *ngIf="status.diseasesNode&&!status.diseases">病名：{{status.diseasesNode.title}}</p>
+<app-search-result
+  *ngIf="!status.diseases"
+  [config]="status.searchResultType"
+  [(index)]="status.searchResultIndex"
+  (init)="searchResultInit($event)"
+  (case)="caseContent($event)"
+  (author)="authorSearch($event)"
+  (book)="bookClick($event)"></app-search-result>
 <nz-drawer [nzClosable]="false"
            [nzVisible]="!!caseItem"
            nzPlacement="right"
-           [nzTitle]="title"
+           [nzTitle]="titleCaseItem"
            (nzOnClose)="caseItem=null"
            nzWrapClassName="case-item-drawer"
 >
-  <ng-template #title>
+  <ng-template #titleCaseItem>
     <div class="label">
       <i class="back" nz-icon nzType="left" nzTheme="outline" (click)="caseItem=null"></i>
       <span class="title">{{caseItem?.title}}</span>
     </div>
   </ng-template>
-  <div class="body">
-    <nz-skeleton *ngIf="!caseItem?.content"></nz-skeleton>
+  <qk-scrollbar class="body">
+    <nz-skeleton
+      *ngIf="!caseItem?.content"
+      [nzParagraph]="{rows:24}"
+      [nzActive]="true"
+      [nzTitle]="false"
+    ></nz-skeleton>
     <p *ngIf="caseItem?.content">&nbsp;&nbsp;&nbsp;&nbsp;{{caseItem?.content}}</p>
-  </div>
+  </qk-scrollbar>
 </nz-drawer>
+<qk-scrollbar *ngIf="status.diseases" class="diseases-tree">
+  <nz-tree [(nzData)]="diseasesNode" nzShowLine (nzClick)="diseasesSearch($event)">
+  </nz-tree>
+</qk-scrollbar>

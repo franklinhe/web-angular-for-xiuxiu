@@ -20,4 +20,32 @@
       color: rgba(72,84,143,0.8);
     }
   }
+  .back-icon {
+    color: #507cdc;
+    display: inline-block !important;
+    width: 20px;
+    margin-right: 10px;
+    font-size: 20px;
+    line-height: 20px;
+    vertical-align: middle;
+    i {
+      cursor: pointer;
+    }
+  }
+  .back-input {
+    width: calc(100% - 32px);
+    display: inline-block;
+  }
+  .diseases-input {
+    width: calc(100% - 70px);
+    display: inline-block;
+  }
+  .diseases-input.back-input {
+    width: calc(100% - 103px);
+    display: inline-block;
+  }
+  .diseases {
+    display: inline-block !important;
+    padding-left: 10px;
+  }
 }

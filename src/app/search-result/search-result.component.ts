@@ -14,43 +14,67 @@ import {BookAuthorListService} from './book-author-list.service';
   ]
 })
 export class SearchResultComponent implements OnInit {
-  tab1Options = {
-    scrollInertia: 100,
-    callbacks: {
-      onTotalScrollOffset: 30,
-      alwaysTriggerOffsets: false,
-      onTotalScroll: () => {
-        this.caseList.nextPage();
+  tab1Options: any = {
+    options: {
+      scrollInertia: 300,
+      callbacks: {
+        onTotalScrollOffset: 300,
+        onTotalScroll: () => {
+          this.caseList.nextPage();
+        }
       }
     }
   };
-  tab2Options = {
-    scrollInertia: 100,
-    callbacks: {
-      onTotalScrollOffset: 30,
-      alwaysTriggerOffsets: false,
-      onTotalScroll: () => {
-        this.bookNameList.nextPage();
+  tab2Options: any = {
+    options: {
+      scrollInertia: 300,
+      callbacks: {
+        onTotalScrollOffset: 300,
+        onTotalScroll: () => {
+          this.bookNameList.nextPage();
+        }
       }
     }
   };
-  tab3Options = {
-    scrollInertia: 100,
-    callbacks: {
-      onTotalScrollOffset: 30,
-      alwaysTriggerOffsets: false,
-      onTotalScroll: () => {
-        this.bookAuthorList.nextPage();
+  tab3Options: any = {
+    options: {
+      scrollInertia: 300,
+      callbacks: {
+        onTotalScrollOffset: 300,
+        onTotalScroll: () => {
+          this.bookAuthorList.nextPage();
+        }
       }
     }
   };
+  tab4Options: any = {};
   @Input() config = ['case', 'book', 'author'];
   @Output() init = new EventEmitter();
   @Output() case = new EventEmitter();
+  @Output() book = new EventEmitter();
+  @Output() author = new EventEmitter();
+  @Input() index: number;
+  @Output() indexChange = new EventEmitter();
+  categoryList = [];
 
   constructor(public caseList: CaseListService,
               public bookNameList: BookNameListService,
               public bookAuthorList: BookAuthorListService) {
+    caseList.dataChangeEvent.subscribe(() => {
+      if (caseList.param.pageNum === 1) {
+        this.tab1Options.inited = false;
+      }
+    });
+    bookNameList.dataChangeEvent.subscribe(() => {
+      if (bookNameList.param.pageNum === 1) {
+        this.tab2Options.inited = false;
+      }
+    });
+    bookAuthorList.dataChangeEvent.subscribe(() => {
+      if (bookAuthorList.param.pageNum === 1) {
+        this.tab3Options.inited = false;
+      }
+    });
   }
 
   ngOnInit() {
@@ -80,5 +104,11 @@ export class SearchResultComponent implements OnInit {
   }
   caseContent(data) {
     this.case.emit(data);
+  }
+  bookItem(data) {
+    this.book.emit(data);
+  }
+  authorItem(data) {
+    this.author.emit(data);
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, Output, EventEmitter, Input} from '@angular/core';
 import {HttpService} from '../service/http.service';
 
 @Component({
@@ -6,9 +6,14 @@ import {HttpService} from '../service/http.service';
   templateUrl: './search-type.component.html',
   styleUrls: ['./search-type.component.scss']
 })
-export class SearchTypeComponent implements OnInit {
-  searchTypePlaceholder = '所有医案';
-  searchTypeValue: any[] = [];
+export class SearchTypeComponent {
+  searchOptions: any = [
+    {
+      value: 'all',
+      isLeaf: true,
+      label: '所有医案'
+    }
+  ];
   /* ['所有医案', ...] or like this:
   values: any[] = [{
     value: 'zhejiang',
@@ -20,27 +25,17 @@ export class SearchTypeComponent implements OnInit {
     value: 'xihu',
     label: 'West Lake'
   }]; */
-  searchType: any = [
-    {
-      value: 0,
-      isLeaf: true,
-      label: '所有医案'
-    }
-  ];
-  @Output() change = new EventEmitter();
+  @Input() searchType: any[];
+  @Output() searchTypeChange = new EventEmitter<string>();
+  @Input() disabled = false;
+  @Output() disabledChange = new EventEmitter<string>();
+
   constructor(private http: HttpService) {
     http.getCategoryList().subscribe(res => {
       if (res.code == 0 && res.data && res.msg === 'ok') {
-        this.apiDataToSearchType(res.data, this.searchType);
+        this.apiDataToSearchType(res.data, this.searchOptions);
       }
     });
-  }
-
-  ngOnInit() {
-  }
-
-  searchTypeChanges(values: any): void {
-    this.change.emit(values.slice(-1)[0]);
   }
 
   apiDataToSearchType(data: any[], result: any[]) {

@@ -6,12 +6,13 @@ import { HttpService } from '../service/http.service';
  */
 @Injectable()
 export class BookAuthorListService extends TableList {
-  searchResultNumber = 0;
-
   param: any = {
     pageNum: 1,
-    pageSize: 15,
-    bookCataId: null
+    pageSize: 20,
+    search: null,
+    bookCataId: null,
+    bookAuthor: null,
+    bookName: null
   };
 
   constructor(private http: HttpService) {

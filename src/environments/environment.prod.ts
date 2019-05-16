@@ -4,8 +4,9 @@
 
 export const environment = {
   production: true,
-  mockData: true,
-  api: '//' + window.location.hostname + ':8080/',
+  mockData: false,
+  // api: '//' + window.location.hostname + ':8080/',
+  api: 'http://47.99.194.110/consilia',
   resource: './',
   lng: 'zh'
 };

@@ -12,8 +12,9 @@ export abstract class TableList extends TableListAbstract {
     page: 1,
     pageSize: 50,
     search: '',
-  }
+  };
   searchEvent = new EventEmitter<any>(true);
+  nextPageLoading = false;
 
   constructor() {
     super();
@@ -22,19 +23,16 @@ export abstract class TableList extends TableListAbstract {
       distinctUntilChanged(),
       switchMap(() => {
         this.isLoading = true;
-        return this.getList()})
+        return this.getList();
+      })
     ).subscribe((res: any) => {
       this.isLoading = false;
       this.processingDataInit(res);
     });
   }
 
-  /**
-   * @param config 
-   * @param param 
-   */
   initList(config?: Config, param?: Param) {
-    let e = new EventEmitter(true);
+    const e = new EventEmitter(true);
     Object.assign(this.config, config);
     Object.assign(this.param, param);
     // init data
@@ -47,7 +45,6 @@ export abstract class TableList extends TableListAbstract {
       .subscribe((res: any) => {
         this.isLoading = false;
         this.processingDataInit(res);
-        this.dataChangeEvent.emit(res);
         e.next(res);
         e.complete();
       }, () => {
@@ -58,10 +55,11 @@ export abstract class TableList extends TableListAbstract {
   }
 
   /**
+   * table next page
    * Getting Paging Data: Do not Change Query Parameters
    */
   getDataOfPage() {
-    let e = new EventEmitter(true);
+    const e = new EventEmitter(true);
     this.isLoading = true;
     this.checkedList = [];
     this.allChecked = false;
@@ -70,32 +68,30 @@ export abstract class TableList extends TableListAbstract {
       .subscribe((res: any) => {
         this.isLoading = false;
         this.processingDataInit(res);
-        this.dataChangeEvent.emit(res);
         e.emit(res);
       });
     return e;
   }
 
   /**
-   * @param event 
+   * next page for scrollbar
    */
-  search(event: any) {
-    if (event.stopPropagation) {
-      event.stopPropagation();
-    }
-    if (event.target) {
-      this.param.search = event.target.value;
-      this.param.pageNum = 1;
-      this.checkedList = [];
-      this.allChecked = false;
-      this.indeterminate = false;
-      this.searchEvent.emit(this.param.search);
+  nextPage() {
+    if (!this.nextPageLoading && this.list.length < this.config.total) {
+      this.nextPageLoading = true;
+      this.param.pageNum++;
+      this.getList().subscribe((res: any) => {
+        this.processingDataNextPage(res);
+      });
     }
   }
-  /**
-   * @param type 
-   * @param order 
-   */
+
+  search(event: any) {
+    this.param.search = event;
+    this.param.pageNum = 1;
+    this.searchEvent.emit(event);
+  }
+
   sort(event: any) {
     if (event.stopPropagation) {
       event.stopPropagation();
@@ -105,14 +101,13 @@ export abstract class TableList extends TableListAbstract {
     // this.initList({isActiveFist: false});
   }
 
-  /**
-   * @param res 
-   */
   processingDataNextPage(res: any) {
-    if (res.code==0&&res.data&&res.msg==="ok") {
+    if (res.code === '0' && res.data && res.msg === 'ok') {
       this.list = this.list.concat(res.data.list);
       this.param.pageNum = res.data.pageNum;
       this.config.total = res.data.total;
+      this.dataChangeEvent.emit(res);
+      this.nextPageLoading = false;
       if (this.config.isActiveFist && this.list.length > 0) {
         this.active(this.list[0]);
       }
@@ -123,10 +118,11 @@ export abstract class TableList extends TableListAbstract {
    * init list processing data
    */
   processingDataInit(res: any) {
-    if (res.code==0&&res.data&&res.msg==="ok") {
+    if (res.code === '0' && res.data && res.msg === 'ok') {
       this.list = res.data.list;
       this.param.pageNum = res.data.pageNum;
       this.config.total = res.data.total;
+      this.dataChangeEvent.emit(res);
       if (this.config.isActiveFist && this.list.length > 0) {
         this.active(this.list[0]);
       }

@@ -15,7 +15,6 @@ import {ModalModule} from '../shared/modal/Modal.module';
 import {HttpService} from './service/http.service';
 import {ScrollbarModule} from '../shared/scrollbar/scrollbar.module';
 import {HttpInterceptorModule} from '../shared/http-api/http-interceptor.module';
-import {CaseContentComponent} from './case-content/case-content.component';
 import {SearchResultComponent} from './search-result/search-result.component';
 import {SearchTypeComponent} from './search-type/search-type.component';
 import {SearchInputComponent} from './search-input/search-input.component';
@@ -26,7 +25,6 @@ registerLocaleData(zh);
 @NgModule({
   declarations: [
     AppComponent,
-    CaseContentComponent,
     SearchResultComponent,
     SearchTypeComponent,
     SearchInputComponent,
@@ -47,9 +45,6 @@ registerLocaleData(zh);
         {
           path: 'type',
           component: AppSearchTypeComponent
-        }, {
-          path: 'case',
-          component: CaseContentComponent
         }, {
           path: '**',
           pathMatch: 'full',

@@ -160,6 +160,7 @@ export class AppSearchTypeComponent {
         this.searchResult.bookNameList.search(value);
         this.searchResult.bookAuthorList.search(value);
       }
+      debugger;
       if (this.status.searchstr && environment.planA) {
         this.status.searchOptions = [
           {
@@ -178,7 +179,7 @@ export class AppSearchTypeComponent {
         //     this.apiDataToSearchType(res.data, this.status.searchOptions);
         //   }
         // });
-      } else {
+      } else if (environment.planA) {
         this.status.searchOptions = [
           {
             value: 'all',

@@ -11,6 +11,9 @@ qk-scrollbar {
         nz-list-item {
             display: block;
         }
+        /deep/.ant-spin-nested-loading {
+            min-height: 1000px;
+        }
     }
     .scrollbar-loading {
         text-align: center;

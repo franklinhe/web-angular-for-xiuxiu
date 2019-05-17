@@ -15,6 +15,9 @@
         width: 100%;
         /deep/input {
             border: none;
+            &:focus {
+                box-shadow: none !important;
+            }
         }
         &:focus {
             /deep/input {

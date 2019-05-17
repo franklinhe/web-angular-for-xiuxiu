@@ -13,14 +13,14 @@ export class HttpService {
 
   constructor(private http: HttpClient) {
   }
-  getCategoryList() {
+  getCategoryList(data?: any) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
         observer.next(environment.mockData.getCategoryList);
         observer.complete();
       });
     } else {
-      return this.http.get<any>(environment.api + '/book/getCategoryList');
+      return this.http.get<any>(environment.api + '/book/getCategoryList', HttpUtil.setParams(data));
     }
   }
   getStatCount(data?: {

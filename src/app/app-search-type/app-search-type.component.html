@@ -10,6 +10,8 @@
 ></app-search-input>
 <app-search-type
   *ngIf="!status.diseases&&!status.diseasesNode"
+  [searchOptions]="status.searchOptions"
+  (init)="searchTypeInit($event)"
   [(searchType)]="status.bookCataIds"
   [(disabled)]="status.searchTypeDisabled"
   (searchTypeChange)="searchTypeChang($event)"></app-search-type>

@@ -4,11 +4,13 @@
 
 export const environment: any = {
   production: true,
-  mockData: false,
   // api: '//' + window.location.hostname + ':8080/',
   api: 'http://47.99.194.110/consilia',
   resource: './',
-  lng: 'zh'
+  lng: 'zh',
+  // 开启 分类的实时搜索功能
+  planA: false,
+  mockData: false
 };
 
 /*

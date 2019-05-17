@@ -160,7 +160,6 @@ export class AppSearchTypeComponent {
         this.searchResult.bookNameList.search(value);
         this.searchResult.bookAuthorList.search(value);
       }
-      debugger;
       if (this.status.searchstr && environment.planA) {
         this.status.searchOptions = [
           {

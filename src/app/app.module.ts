@@ -51,7 +51,7 @@ registerLocaleData(zh);
           redirectTo: '/type'
         }
       ]
-      // , { useHash: true }
+      , { useHash: true }
     ),
     ScrollbarModule,
     HttpInterceptorModule

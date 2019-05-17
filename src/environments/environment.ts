@@ -12,7 +12,7 @@ export const environment: any = {
   resource: './',
   lng: 'zh',
   // 开启 分类的实时搜索功能
-  planA: false,
+  planA: true,
   mockData: false
   // mockData: {
   //   getCategoryList: {
@@ -727,7 +727,17 @@ export const environment: any = {
   //       "total": 0
   //     },
   //     "msg": "ok"
-  //   }
+  //   },
+  //   autoComplete: {
+  //     "code": "测试内容zy0o",
+  //     "data": [
+  //         {
+  //             "cate": "感冒",
+  //             "value": "感冒案"
+  //         }
+  //     ],
+  //     "msg": "测试内容m95d"
+  // }
   // }
 };
 

@@ -9,7 +9,7 @@ export const environment: any = {
   resource: './',
   lng: 'zh',
   // 开启 分类的实时搜索功能
-  planA: false,
+  planA: true,
   mockData: false
 };
 

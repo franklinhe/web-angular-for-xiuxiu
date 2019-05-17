@@ -1,7 +1,7 @@
 <div class="search-type" nz-row>
   <div class="search-type-label" nz-col nzXs="4" nzMd="3" nzLg="1">分类搜索：</div>
   <div class="search-type-value" nz-col nzXs="20" nzMd="15" nzLg="14">
-    <nz-cascader [nzChangeOnSelect]="true" nzPlaceHolder="所有医案" [(nzOptions)]="searchOptions" [nzShowSearch]="true"
+    <nz-cascader [nzChangeOnSelect]="true" nzPlaceHolder="所有医案" [(nzOptions)]="searchOptions" [nzShowSearch]="!planA"
       [(ngModel)]="searchType" (ngModelChange)="searchTypeChange.emit($event)" [nzDisabled]="disabled">
     </nz-cascader>
   </div>

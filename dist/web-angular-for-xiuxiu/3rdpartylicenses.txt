@@ -466,6 +466,8 @@ ng-zorro-antd/skeleton
 
 ng-zorro-antd/tree
 
+ng-zorro-antd/auto-complete
+
 ng-zorro-antd/input
 
 zone.js

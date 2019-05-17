@@ -25,13 +25,17 @@ export class AppSearchTypeComponent {
     searchResultType: ['case', 'book', 'author'],
     bookCataIds: [],
     searchTypeDisabled: false,
-    searchOptions: [
-      {
-        value: 'all',
-        isLeaf: true,
-        label: '所有医案'
-      }
-    ],
+    searchOptionsResources: [{
+      value: 'all',
+      isLeaf: true,
+      label: '所有医案'
+    }],
+    searchOptionsResourcesMapByKey: {},
+    searchOptions: [{
+      value: 'all',
+      isLeaf: true,
+      label: '所有医案'
+    }],
     casePageNum: 1,
     bookPageNum: 1,
     authorPageNum: 1,
@@ -51,6 +55,7 @@ export class AppSearchTypeComponent {
     this.http.getCategoryList().subscribe(res => {
       if (res.code == 0 && res.data && res.msg === 'ok') {
         this.apiDataToSearchType(res.data, this.status.searchOptions);
+        this.apiDataToSearchType(res.data, this.status.searchOptionsResources);
       }
     });
   }
@@ -66,6 +71,7 @@ export class AppSearchTypeComponent {
       } else {
         item_.isLeaf = true;
       }
+      this.status.searchOptionsResourcesMapByKey[item_.value] = item_;
       result.push(item_);
     });
   }
@@ -161,38 +167,24 @@ export class AppSearchTypeComponent {
         this.searchResult.bookAuthorList.search(value);
       }
       if (this.status.searchstr && environment.planA) {
-        this.status.searchOptions = [
-          {
-            value: 'all',
-            isLeaf: true,
-            label: '所有医案'
-          }
-        ];
-        this.http.searchCategoryList({searchstr: this.status.searchstr}).subscribe(res => {
-          if (res.code == 0 && res.data && res.msg === 'ok') {
-            this.apiDataToSearchType(res.data, this.status.searchOptions);
-          }
-        });
-        // this.http.getCategoryList({searchstr: this.status.searchstr}).subscribe(res => {
-        //   if (res.code == 0 && res.data && res.msg === 'ok') {
-        //     this.apiDataToSearchType(res.data, this.status.searchOptions);
-        //   }
-        // });
+        this.status.searchOptions = this.filterSearchOptions(this.status.searchOptionsResources);
+        this.status.bookCataIds = [];
+        this.status.bookCataId = null;
       } else if (environment.planA) {
-        this.status.searchOptions = [
-          {
-            value: 'all',
-            isLeaf: true,
-            label: '所有医案'
-          }
-        ];
-        this.http.getCategoryList().subscribe(res => {
-          if (res.code == 0 && res.data && res.msg === 'ok') {
-            this.apiDataToSearchType(res.data, this.status.searchOptions);
-          }
-        });
+        this.status.searchOptions = [...this.status.searchOptionsResources];
       }
     }
+  }
+  filterSearchOptions(data) {
+    return data.filter((o: any) => {
+      if (o.label.includes(this.status.searchstr)) {
+        return true;
+      } else if (o.children && o.children.length > 0) {
+        return !!this.filterSearchOptions(o.children);
+      } else {
+        return false;
+      }
+    });
   }
   caseContent(data: any) {
     this.caseItem = {title: data.title};
@@ -223,6 +215,7 @@ export class AppSearchTypeComponent {
         ...this.status,
         topBack: true,
         bookCataIds: [],
+        bookCataId: null,
         searchTypeDisabled: true,
         searchResultIndex: 0,
         searchResultType: ['case', 'author'],
@@ -248,6 +241,7 @@ export class AppSearchTypeComponent {
         topBack: true,
         searchTypeDisabled: true,
         bookCataIds: [],
+        bookCataId: null,
         searchResultIndex: 0,
         searchResultType: ['case', 'book'],
         bookAuthor: data.bookAuthor,

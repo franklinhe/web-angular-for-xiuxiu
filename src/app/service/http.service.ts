@@ -211,4 +211,16 @@ export class HttpService {
       return this.http.get<any>(environment.api + '/book/searchCategoryList', HttpUtil.setParams(data));
     }
   }
+  autoComplete(data: {
+    query: string
+  }) {
+    if (environment.mockData) {
+      return new Observable((observer: Observer<any>) => {
+        observer.next(environment.mockData.autoComplete);
+        observer.complete();
+      });
+    } else {
+      return this.http.get<any>(environment.api + '/autoComplete', HttpUtil.setParams(data));
+    }
+  }
 }

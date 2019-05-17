@@ -16,7 +16,7 @@ export class SearchInputComponent implements OnInit {
   @Output() searchChange = new EventEmitter<string>();
 
   @Input()  diseases: string;
-  @Output() diseasesChange = new EventEmitter<string>();
+  @Output() diseasesChange = new EventEmitter<any>();
 
   @Input()  disabled: string;
   @Output() disabledChange = new EventEmitter<string>();

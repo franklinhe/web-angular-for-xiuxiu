@@ -23,14 +23,10 @@ export class AppSearchTypeComponent {
     searchInputPlaceholder: '搜索医案、医书、医家等',
     searchInputDisabled: false,
     searchResultType: ['case', 'book', 'author'],
+    bookCataId: null,
     bookCataIds: [],
+    searchTypeIdMap: {},
     searchTypeDisabled: false,
-    searchOptionsResources: [{
-      value: 'all',
-      isLeaf: true,
-      label: '所有医案'
-    }],
-    searchOptionsResourcesMapByKey: {},
     searchOptions: [{
       value: 'all',
       isLeaf: true,
@@ -40,8 +36,7 @@ export class AppSearchTypeComponent {
     bookPageNum: 1,
     authorPageNum: 1,
     bookName: null,
-    bookAuthor: null,
-    bookCataId: null
+    bookAuthor: null
   };
   states = [];
   diseasesNode: any = [];
@@ -51,29 +46,35 @@ export class AppSearchTypeComponent {
               private msg: MessageService,
               private activateRoute: ActivatedRoute) {
   }
-  searchTypeInit(event) {
+  searchTypeInit(event?) {
     this.http.getCategoryList().subscribe(res => {
-      if (res.code == 0 && res.data && res.msg === 'ok') {
+      if (res.code === '0' && res.data && res.msg === 'ok') {
+        this.status.searchOptions = [];
+        this.status.bookCataIds = [];
+        this.status.bookCataId = null;
         this.apiDataToSearchType(res.data, this.status.searchOptions);
-        this.apiDataToSearchType(res.data, this.status.searchOptionsResources);
       }
     });
   }
   apiDataToSearchType(data: any[], result: any[]) {
+    let ids = [];
     data.forEach(item => {
+      ids.push(item.bookCataId);
       const item_: any = {
         value: item.bookCataId + '',
         label: item.byName + '（' + item.numFound + '）'
       };
       if (item.cataList && item.cataList.length > 0) {
         item_.children = [];
-        this.apiDataToSearchType(item.cataList, item_.children);
+        this.status.searchTypeIdMap[item_.value] = this.apiDataToSearchType(item.cataList, item_.children);
+        ids = ids.concat(this.apiDataToSearchType(item.cataList, item_.children));
       } else {
+        this.status.searchTypeIdMap[item_.value] = item_.value;
         item_.isLeaf = true;
       }
-      this.status.searchOptionsResourcesMapByKey[item_.value] = item_;
       result.push(item_);
     });
+    return ids.join(',');
   }
   searchResultInit(event) {
     this.searchResult = event;
@@ -99,7 +100,7 @@ export class AppSearchTypeComponent {
     this.searchResult.bookAuthorList.param.pageNum = this.status.authorPageNum;
     this.searchResult.bookAuthorList.param.bookCataId = this.status.bookCataId;
     if (this.status.searchstr) {
-      this.searchResult.caseList.search(this.status.searchstr);
+      // this.searchResult.caseList.search(this.status.searchstr);
       this.searchResult.bookNameList.search(this.status.searchstr);
       this.searchResult.bookAuthorList.search(this.status.searchstr);
     } else {
@@ -110,10 +111,12 @@ export class AppSearchTypeComponent {
   }
   searchTypeChang(values: any[]) {
     if ('all' === values.slice(-1)[0]) {
-      this.status.bookCataId = null;
+      this.status.bookCataId = this.status.searchTypeIdMap['all'] || null;
     } else {
-      this.status.bookCataId = values.slice(-1)[0];
+      this.status.bookCataId = this.status.searchTypeIdMap[values.slice(-1)[0]];
     }
+    this.searchResult.caseList.param.bookCataId = this.status.bookCataId;
+    this.searchResult.caseList.initList();
     this.initSearchResultDate();
   }
   diseasesListToTree(data: any[]) {
@@ -159,20 +162,29 @@ export class AppSearchTypeComponent {
       });
     } else {
       this.status.searchstr = value;
-      if (this.status.bookName || this.status.bookAuthor) {
-        this.searchResult.caseList.search(value);
+      this.searchResult.bookNameList.search(value);
+      this.searchResult.bookAuthorList.search(value);
+      this.searchResult.caseList.param.bookCataId = null;
+      if (value) {
+        this.http.searchGetCategoryList({searchstr: value}).subscribe(res => {
+          this.status.searchOptions = [];
+          if (res.code === '0' && res.data && res.msg === 'ok') {
+            this.status.searchTypeIdMap['all'] = this.apiDataToSearchType(res.data, this.status.searchOptions);
+            this.searchResult.caseList.param.bookCataId = this.status.searchTypeIdMap['all'];
+          }
+          this.searchResult.caseList.search(value);
+        });
       } else {
+        this.searchTypeInit();
         this.searchResult.caseList.search(value);
-        this.searchResult.bookNameList.search(value);
-        this.searchResult.bookAuthorList.search(value);
       }
-      if (this.status.searchstr && environment.planA) {
-        this.status.searchOptions = this.filterSearchOptions(this.status.searchOptionsResources);
-        this.status.bookCataIds = [];
-        this.status.bookCataId = null;
-      } else if (environment.planA) {
-        this.status.searchOptions = [...this.status.searchOptionsResources];
-      }
+      // if (this.status.searchstr && environment.planA) {
+      //   // this.status.searchOptions = this.filterSearchOptions(this.status.searchOptionsResources);
+      //   this.status.bookCataIds = [];
+      //   this.status.bookCataId = null;
+      // } else if (environment.planA) {
+      //   this.status.searchOptions = [...this.status.searchOptionsResources];
+      // }
     }
   }
   filterSearchOptions(data) {
@@ -188,31 +200,44 @@ export class AppSearchTypeComponent {
   }
   caseContent(data: any) {
     this.caseItem = {title: data.title};
-    this.http.getSection({
-      articleId: data.articleId || data.caseId,
-      bookName: data.title
-    }).subscribe(res => {
-      if (res.code === '0' && res.data && res.msg === 'ok') {
-        this.caseItem = res.data;
-      } else {
-        this.msg.error('无法获取原文');
-        this.caseItem = null;
-      }
-    });
+    if (data.articleId) {
+      this.http.getSection({
+        articleId: data.articleId,
+        bookName: data.title
+      }).subscribe(res => {
+        if (res.code === '0' && res.data && res.msg === 'ok') {
+          this.caseItem = res.data;
+        } else {
+          this.msg.error('无法获取原文');
+          this.caseItem = null;
+        }
+      });
+    } else if (data.caseId) {
+      this.http.caseInfo({
+        caseId: data.caseId
+      }).subscribe(res => {
+        if (res.code === '0' && res.data && res.msg === 'ok') {
+          this.caseItem = res.data.caseInfo;
+        } else {
+          this.msg.error('无法获取原文');
+          this.caseItem = null;
+        }
+      });
+    }
   }
   bookClick(data) {
-    if (this.status.topBack) {
-      this.status.searchResultIndex = 0;
-      this.status.bookAuthor = null;
-      this.status.bookCataId = null;
-      this.status.bookCataIds = [];
-      this.status.searchResultType = ['case', 'author'];
-      this.status.bookName = data.bookName;
-      this.status.searchInputPlaceholder = '搜索「' + data.bookName + '」中的医案';
-    } else {
+    // if (this.status.topBack) {
+    //   this.status.searchResultIndex = 0;
+    //   this.status.bookAuthor = null;
+    //   this.status.bookCataId = null;
+    //   this.status.bookCataIds = [];
+    //   this.status.searchResultType = ['case', 'author'];
+    //   this.status.bookName = data.bookName;
+    //   this.status.searchInputPlaceholder = '搜索「' + data.bookName + '」中的医案';
+    // } else {
       this.states.push({...this.status});
       this.status = {
-        ...this.status,
+        searchstr: null,
         topBack: true,
         bookCataIds: [],
         bookCataId: null,
@@ -222,23 +247,23 @@ export class AppSearchTypeComponent {
         bookName: data.bookName,
         searchInputPlaceholder: '搜索「' + data.bookName + '」中的医案'
       };
-    }
+    // }
     this.initSearchResultDate();
   }
   authorSearch(data) {
-    if (this.status.topBack) {
-      this.status.bookCataId = null;
-      this.status.bookCataIds = [];
-      this.status.bookAuthor = data.bookAuthor;
-      this.status.searchResultIndex = 0;
-      this.status.searchResultType = ['case', 'book'];
-      this.status.bookName = null;
-      this.status.searchInputPlaceholder = '搜索「' + data.bookAuthor + '」著作的医案';
-    } else {
+    // if (this.status.topBack) {
+    //   this.status.bookCataId = null;
+    //   this.status.bookCataIds = [];
+    //   this.status.bookAuthor = data.bookAuthor;
+    //   this.status.searchResultIndex = 0;
+    //   this.status.searchResultType = ['case', 'book'];
+    //   this.status.bookName = null;
+    //   this.status.searchInputPlaceholder = '搜索「' + data.bookAuthor + '」著作的医案';
+    // } else {
       this.states.push({...this.status});
       this.status = {
-        ...this.status,
         topBack: true,
+        searchstr: null,
         searchTypeDisabled: true,
         bookCataIds: [],
         bookCataId: null,
@@ -247,7 +272,7 @@ export class AppSearchTypeComponent {
         bookAuthor: data.bookAuthor,
         searchInputPlaceholder: '搜索「' + data.bookAuthor + '」著作的医案'
       };
-    }
+    // }
     this.initSearchResultDate();
   }
   diseases(e) {

@@ -13,14 +13,28 @@ export class HttpService {
 
   constructor(private http: HttpClient) {
   }
-  getCategoryList(data?: any) {
+  getCategoryList() {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
         observer.next(environment.mockData.getCategoryList);
         observer.complete();
       });
     } else {
-      return this.http.get<any>(environment.api + '/book/getCategoryList', HttpUtil.setParams(data));
+      return this.http.get<any>(environment.api + '/book/getCategoryList');
+    }
+  }
+  searchGetCategoryList(data?: {
+    searchstr?: string
+    bookAuthor?: string
+    bookName?: string
+  }) {
+    if (environment.mockData) {
+      return new Observable((observer: Observer<any>) => {
+        observer.next(environment.mockData.getCategoryList);
+        observer.complete();
+      });
+    } else {
+      return this.http.get<any>(environment.api + '/search/getCategoryList', HttpUtil.setParams(data));
     }
   }
   getStatCount(data?: {
@@ -49,18 +63,19 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      if (data.search || data.bookAuthor || data.bookName) {
+      if (data.bookAuthor || data.bookName) {
         return this.getBookNameListBySearch({
           bookCataId: data.bookCataId, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,
           pageSize: data.pageSize,
           bookAuthor: data.bookAuthor,	// 作者	string
           bookName: data.bookName,	// 书名	string	@mock=续名医类案
-          searchstr: data.search
+          // searchstr: data.search
         });
       }
       return this.http.get<any>(environment.api + '/book/getBookNameList', HttpUtil.setParams({
         bookCataId: data.bookCataId,
+        searchstr: data.search,
         pageNum: data.pageNum,
         pageSize: data.pageSize
       }));
@@ -80,18 +95,19 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      if (data.search || data.bookAuthor || data.bookName) {
+      if (data.bookAuthor || data.bookName) {
         return this.getBookAuthorListBySearch({
           bookCataId: data.bookCataId, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,
           pageSize: data.pageSize,
           bookAuthor: data.bookAuthor,	// 作者	string
           bookName: data.bookName,	// 书名	string	@mock=续名医类案
-          searchstr: data.search
+          // searchstr: data.search
         });
       }
       return this.http.get<any>(environment.api + '/book/getBookAuthorList', HttpUtil.setParams({
         bookCataId: data.bookCataId,
+        searchstr:  data.search,
         pageNum: data.pageNum,
         pageSize: data.pageSize
       }));
@@ -100,7 +116,7 @@ export class HttpService {
   getCaseList(data: {
     bookName?: string|number
     bookAuthor?: string|number
-    bookCataId?: string|number
+    bookCataId?: string
     search?: string|number
     pageNum: string|number
     pageSize: string|number
@@ -111,14 +127,14 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      if (data.search || data.bookAuthor || data.bookName) {
+      if ((data.bookCataId && data.bookCataId.includes(',')) || data.search || data.bookAuthor || data.bookName) {
         return this.getCaseListBySearch({
-          bookCataId: data.bookCataId, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
+          bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,
           pageSize: data.pageSize,
-          bookAuthor: data.bookAuthor,	// 作者	string
-          bookName: data.bookName,	// 书名	string	@mock=续名医类案
-          searchstr: data.search
+          bookAuthor: data.bookAuthor || null,	// 作者	string
+          bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
+          searchstr: data.search || null
         });
       }
       return this.http.get<any>(environment.api + '/case/list', HttpUtil.setParams({
@@ -221,6 +237,18 @@ export class HttpService {
       });
     } else {
       return this.http.get<any>(environment.api + '/autoComplete', HttpUtil.setParams(data));
+    }
+  }
+  caseInfo(data: {
+    caseId: string
+  }) {
+    if (environment.mockData) {
+      return new Observable((observer: Observer<any>) => {
+        observer.next(environment.mockData.autoComplete);
+        observer.complete();
+      });
+    } else {
+      return this.http.get<any>(environment.api + '/case/info', HttpUtil.setParams({...data, userId: '123456789'}));
     }
   }
 }

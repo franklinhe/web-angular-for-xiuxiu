@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { HttpService } from '../service/http.service';
 import { MessageService } from '../../shared/message/message.service';
 
@@ -93,20 +93,27 @@ export class AppSearchTypeComponent {
         }
       });
     } else {
-      this.searchResult.bookNameList.search(value);
-      this.searchResult.bookAuthorList.search(value);
       if (!value) {
         this.searchResult.caseList.param.bookCataId = null;
         this.searchResult.caseList.search(value);
+        this.searchResult.bookNameList.param.search = null;
+        this.searchResult.bookAuthorList.param.search = null;
+        this.searchResult.bookNameList.param.bookCataId = null;
+        this.searchResult.bookAuthorList.param.bookCataId = null;
+        this.searchResult.bookNameList.initList();
+        this.searchResult.bookAuthorList.initList();
       }
-      this.getCategoryList();
-      // if (this.status.searchstr && environment.planA) {
-      //   // this.status.searchOptions = this.filterSearchOptions(this.status.searchOptionsResources);
-      //   this.status.bookCataIds = [];
-      //   this.status.bookCataId = null;
-      // } else if (environment.planA) {
-      //   this.status.searchOptions = [...this.status.searchOptionsResources];
-      // }
+      this.getCategoryList().subscribe(id => {
+        if (id) {
+          this.searchResult.bookNameList.param.bookCataId = id;
+          this.searchResult.bookAuthorList.param.bookCataId = id;
+        } else {
+          this.searchResult.bookNameList.param.search = value;
+          this.searchResult.bookAuthorList.param.search = value;
+        }
+        this.searchResult.bookNameList.initList();
+        this.searchResult.bookAuthorList.initList();
+      });
     }
   }
   // 获取原文
@@ -140,7 +147,18 @@ export class AppSearchTypeComponent {
   // 点击医书 查询
   bookClick(data: any) {
     if (!this.status.resultList.bookAuthor || !this.status.resultList.bookName) {
-      this.states.push({ ...JSON.parse(JSON.stringify(this.status)) });
+      const cache = [];
+      this.states.push({ ...JSON.parse(JSON.stringify(this.status, (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+                // Circular reference found, discard key
+                return;
+            }
+            // Store value in our collection
+            cache.push(value);
+        }
+        return value;
+    })) });
     }
     this.status.topInputSearch.topBack = true;
     this.status.topInputSearch.searchInputPlaceholder = '搜索「' + data.bookName + '」中的医案';
@@ -152,7 +170,18 @@ export class AppSearchTypeComponent {
   // 点击医家 查询
   authorSearch(data: any) {
     if (!this.status.resultList.bookAuthor || !this.status.resultList.bookName) {
-      this.states.push({ ...JSON.parse(JSON.stringify(this.status)) });
+      const cache = [];
+      this.states.push({ ...JSON.parse(JSON.stringify(this.status, (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+                // Circular reference found, discard key
+                return;
+            }
+            // Store value in our collection
+            cache.push(value);
+        }
+        return value;
+    })) });
     }
     this.status.topInputSearch.topBack = true;
     this.status.topInputSearch.searchInputPlaceholder = '搜索「' + data.bookAuthor + '」著作的医案';
@@ -163,7 +192,18 @@ export class AppSearchTypeComponent {
   }
   // 点击 病名 进入病名查询模式
   diseases(e: any) {
-    this.states.push({ ...JSON.parse(JSON.stringify(this.status)), diseasesButtonHide: false });
+    const cache = [];
+    this.states.push({ ...JSON.parse(JSON.stringify(this.status, (key, value) => {
+      if (typeof value === 'object' && value !== null) {
+          if (cache.indexOf(value) !== -1) {
+              // Circular reference found, discard key
+              return;
+          }
+          // Store value in our collection
+          cache.push(value);
+      }
+      return value;
+  })), diseasesButtonHide: false });
     this.status.topInputSearch.topBack = true;
     this.status.diseases.active = true;
     this.status.topInputSearch.searchInputPlaceholder = '搜索病名...';
@@ -171,7 +211,18 @@ export class AppSearchTypeComponent {
   // 选择病名 查询相关 的 医案，医术，医家
   diseasesSearch(e: any) {
     if (e && e.node) {
-      this.states.push(JSON.parse(JSON.stringify(this.status)));
+      const cache = [];
+      this.states.push(JSON.parse(JSON.stringify(this.status, (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+                // Circular reference found, discard key
+                return;
+            }
+            // Store value in our collection
+            cache.push(value);
+        }
+        return value;
+    })));
       this.status.diseases.active = false;
       this.status.searchType.searchTypeDisabled = true;
       this.status.topInputSearch.searchInputDisabled = true;
@@ -191,6 +242,7 @@ export class AppSearchTypeComponent {
   }
   // 获取分类
   getCategoryList() {
+    let e = new EventEmitter<any>();
     if (this.status.topInputSearch.searchstr || this.status.resultList.bookAuthor || this.status.resultList.bookName) {
       this.http.searchGetCategoryList({
         searchstr: this.status.topInputSearch.searchstr || null,
@@ -206,6 +258,9 @@ export class AppSearchTypeComponent {
           this.status.searchType.searchTypeIdMap = {};
           this.status.searchType.searchTypeIdMap['all'] = this.apiDataToSearchType(res.data, this.status.searchType.searchOptions);
           this.searchResult.caseList.param.bookCataId = this.status.searchType.searchTypeIdMap['all'];
+          e.emit(this.searchResult.caseList.param.bookCataId);
+        } else {
+          e.emit(null);
         }
         this.searchResult.caseList.search(this.status.topInputSearch.searchstr);
       });
@@ -223,6 +278,7 @@ export class AppSearchTypeComponent {
         }
       });
     }
+    return e;
   }
   diseasesListToTree(data: any[]) {
     data.forEach(item => {

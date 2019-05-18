@@ -50,7 +50,7 @@ export class HttpService {
     }
   }
   getBookNameList(data: {
-    bookCataId?: string|number
+    bookCataId?: string
     bookAuthor?: string|number	// 作者	string
     bookName?: string|number	// 书名	string	@mock=续名医类案
     search?: string|number
@@ -63,7 +63,8 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      if (data.bookAuthor || data.bookName) {
+      // if (data.bookAuthor || data.bookName) { 
+      if ((data.bookCataId && data.bookCataId.includes && data.bookCataId.includes(',')) || data.bookAuthor || data.bookName) {  
         return this.getBookNameListBySearch({
           bookCataId: data.bookCataId, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,
@@ -82,7 +83,7 @@ export class HttpService {
     }
   }
   getBookAuthorList(data: {
-    bookCataId?: string|number
+    bookCataId?: string
     bookAuthor?: string|number	// 作者	string
     bookName?: string|number	// 书名	string	@mock=续名医类案
     search?: string|number
@@ -95,7 +96,7 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      if (data.bookAuthor || data.bookName) {
+      if ((data.bookCataId && data.bookCataId.includes && data.bookCataId.includes(',')) || data.bookAuthor || data.bookName) {
         return this.getBookAuthorListBySearch({
           bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,

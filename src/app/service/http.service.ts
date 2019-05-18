@@ -71,7 +71,7 @@ export class HttpService {
           pageSize: data.pageSize,
           bookAuthor: data.bookAuthor,	// 作者	string
           bookName: data.bookName,	// 书名	string	@mock=续名医类案
-          // searchstr: data.search
+          searchstr: data.search
         });
       }
       return this.http.get<any>(environment.api + '/book/getBookNameList', HttpUtil.setParams({
@@ -103,7 +103,7 @@ export class HttpService {
           pageSize: data.pageSize,
           bookAuthor: data.bookAuthor || null,	// 作者	string
           bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
-          // searchstr: data.search
+          searchstr: data.search
         });
       }
       return this.http.get<any>(environment.api + '/book/getBookAuthorList', HttpUtil.setParams({

@@ -110,6 +110,10 @@ export class AppSearchTypeComponent {
           this.searchResult.bookNameList.search(value);
           this.searchResult.bookAuthorList.search(value);
         });
+      } else {
+        this.searchResult.caseList.search(value);
+        this.searchResult.bookNameList.search(value);
+        this.searchResult.bookAuthorList.search(value);
       }
     }
   }

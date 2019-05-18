@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NgModule} from '@angular/core';
+import {NgModule, Pipe, PipeTransform} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule} from '@angular/router';
@@ -19,7 +19,14 @@ import {SearchResultComponent} from './search-result/search-result.component';
 import {SearchTypeComponent} from './search-type/search-type.component';
 import {SearchInputComponent} from './search-input/search-input.component';
 import {AppSearchTypeComponent} from './app-search-type/app-search-type.component';
-
+import { DomSanitizer } from '@angular/platform-browser';
+@Pipe({ name: 'safeHtml' })
+export class SafeHtmlPipe implements PipeTransform {
+  constructor(private sanitized: DomSanitizer) { }
+  transform(value) {
+    return this.sanitized.bypassSecurityTrustHtml(value);
+  }
+}
 registerLocaleData(zh);
 
 @NgModule({
@@ -28,7 +35,8 @@ registerLocaleData(zh);
     SearchResultComponent,
     SearchTypeComponent,
     SearchInputComponent,
-    AppSearchTypeComponent
+    AppSearchTypeComponent,
+    SafeHtmlPipe
   ],
   imports: [
     BrowserModule,

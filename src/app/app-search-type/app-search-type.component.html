@@ -44,7 +44,7 @@
       [nzActive]="true"
       [nzTitle]="false"
     ></nz-skeleton>
-    <p *ngIf="caseItem?.content" [innerHtml]="caseItem?.content" style="text-indent: 32px;"></p>
+    <p *ngIf="caseItem?.content" [innerHtml]="caseItem?.content | safeHtml"></p>
   </qk-scrollbar>
 </nz-drawer>
 <qk-scrollbar *ngIf="status.diseases" class="diseases-tree">

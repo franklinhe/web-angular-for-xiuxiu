@@ -7,7 +7,7 @@
           <nz-list-item>
             <p class="case-title"><span class="case-section">{{item.section}}</span><span class="case-label">|&nbsp;{{item.title}}</span></p>
             <p><span class="body-title">「原文」</span><span (click)="caseContent(item)"
-                class="case-content" [innerHtml]="item.content"></span></p>
+                class="case-content" [innerHtml]="item?.content | safeHtml"></span></p>
             <p><span class="body-title">「出处」</span><span class="case-source">{{item.title}}{{item.source}}</span></p>
           </nz-list-item>
         </ng-template>

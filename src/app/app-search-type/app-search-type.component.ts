@@ -100,19 +100,14 @@ export class AppSearchTypeComponent {
         this.searchResult.bookAuthorList.param.search = null;
         this.searchResult.bookNameList.param.bookCataId = null;
         this.searchResult.bookAuthorList.param.bookCataId = null;
-        this.searchResult.bookNameList.initList();
-        this.searchResult.bookAuthorList.initList();
+        this.searchResult.bookNameList.search(value);
+        this.searchResult.bookAuthorList.search(value);
       }
       this.getCategoryList().subscribe(id => {
-        if (id) {
-          this.searchResult.bookNameList.param.bookCataId = id;
-          this.searchResult.bookAuthorList.param.bookCataId = id;
-        } else {
-          this.searchResult.bookNameList.param.search = value;
-          this.searchResult.bookAuthorList.param.search = value;
-        }
-        this.searchResult.bookNameList.initList();
-        this.searchResult.bookAuthorList.initList();
+        this.searchResult.bookNameList.param.bookCataId = id;
+        this.searchResult.bookAuthorList.param.bookCataId = id;
+        this.searchResult.bookNameList.search(value);
+        this.searchResult.bookAuthorList.search(value);
       });
     }
   }

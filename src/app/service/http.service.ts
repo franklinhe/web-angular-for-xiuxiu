@@ -64,7 +64,7 @@ export class HttpService {
       });
     } else {
       // if (data.bookAuthor || data.bookName) { 
-      if ((data.bookCataId && data.bookCataId.includes && data.bookCataId.includes(',') && data.search) || data.bookAuthor || data.bookName) {  
+      if ((data.bookCataId && data.bookCataId.includes && data.bookCataId.includes(',')) || (data.bookCataId && data.search) || data.bookAuthor || data.bookName) {  
         return this.getBookNameListBySearch({
           bookCataId: data.bookCataId, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,
@@ -96,7 +96,7 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      if ((data.bookCataId && data.bookCataId.includes && data.bookCataId.includes(',') && data.search) || data.bookAuthor || data.bookName) {
+      if ((data.bookCataId && data.bookCataId.includes && data.bookCataId.includes(',')) || (data.bookCataId && data.search) || data.bookAuthor || data.bookName) {
         return this.getBookAuthorListBySearch({
           bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,

@@ -103,12 +103,14 @@ export class AppSearchTypeComponent {
         this.searchResult.bookNameList.search(value);
         this.searchResult.bookAuthorList.search(value);
       }
-      this.getCategoryList().subscribe(id => {
-        this.searchResult.bookNameList.param.bookCataId = id;
-        this.searchResult.bookAuthorList.param.bookCataId = id;
-        this.searchResult.bookNameList.search(value);
-        this.searchResult.bookAuthorList.search(value);
-      });
+      if (!this.status.resultList.bookAuthor && !this.status.resultList.bookName) {
+        this.getCategoryList().subscribe(id => {
+          this.searchResult.bookNameList.param.bookCataId = id;
+          this.searchResult.bookAuthorList.param.bookCataId = id;
+          this.searchResult.bookNameList.search(value);
+          this.searchResult.bookAuthorList.search(value);
+        });
+      }
     }
   }
   // 获取原文

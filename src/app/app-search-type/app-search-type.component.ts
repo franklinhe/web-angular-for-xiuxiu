@@ -156,8 +156,8 @@ export class AppSearchTypeComponent {
     })) });
     }
     this.status.topInputSearch.topBack = true;
-    this.status.topInputSearch.searchInputDisabled = true;
-    this.status.searchType.searchTypeDisabled = true;
+    // this.status.topInputSearch.searchInputDisabled = true;
+    // this.status.searchType.searchTypeDisabled = true;
     this.status.topInputSearch.searchInputPlaceholder = '搜索「' + data.bookName + '」中的医案';
     this.status.resultList.bookName = data.bookName;
     this.status.resultList.searchResultType = ['case', 'author'];
@@ -181,8 +181,8 @@ export class AppSearchTypeComponent {
     })) });
     }
     this.status.topInputSearch.topBack = true;
-    this.status.topInputSearch.searchInputDisabled = true;
-    this.status.searchType.searchTypeDisabled = true;
+    // this.status.topInputSearch.searchInputDisabled = true;
+    // this.status.searchType.searchTypeDisabled = true;
     this.status.topInputSearch.searchInputPlaceholder = '搜索「' + data.bookAuthor + '」著作的医案';
     this.status.resultList.bookAuthor = data.bookAuthor;
     this.status.resultList.searchResultType = ['case', 'book'];

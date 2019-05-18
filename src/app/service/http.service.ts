@@ -74,8 +74,8 @@ export class HttpService {
         });
       }
       return this.http.get<any>(environment.api + '/book/getBookNameList', HttpUtil.setParams({
-        bookCataId: data.bookCataId,
-        searchstr: data.search,
+        bookCataId: data.bookCataId || null,
+        searchstr: data.search || null,
         pageNum: data.pageNum,
         pageSize: data.pageSize
       }));
@@ -97,17 +97,17 @@ export class HttpService {
     } else {
       if (data.bookAuthor || data.bookName) {
         return this.getBookAuthorListBySearch({
-          bookCataId: data.bookCataId, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
+          bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,
           pageSize: data.pageSize,
-          bookAuthor: data.bookAuthor,	// 作者	string
-          bookName: data.bookName,	// 书名	string	@mock=续名医类案
+          bookAuthor: data.bookAuthor || null,	// 作者	string
+          bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
           // searchstr: data.search
         });
       }
       return this.http.get<any>(environment.api + '/book/getBookAuthorList', HttpUtil.setParams({
-        bookCataId: data.bookCataId,
-        searchstr:  data.search,
+        bookCataId: data.bookCataId || null,
+        searchstr:  data.search || null,
         pageNum: data.pageNum,
         pageSize: data.pageSize
       }));
@@ -127,7 +127,7 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      if ((data.bookCataId && data.bookCataId.includes(',')) || data.search || data.bookAuthor || data.bookName) {
+      if ((data.bookCataId && data.bookCataId.includes && data.bookCataId.includes(',')) || data.search || data.bookAuthor || data.bookName) {
         return this.getCaseListBySearch({
           bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,
@@ -138,11 +138,11 @@ export class HttpService {
         });
       }
       return this.http.get<any>(environment.api + '/case/list', HttpUtil.setParams({
-        bookCataId: data.bookCataId, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
+        bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
         pageNum: data.pageNum,
         pageSize: data.pageSize,
-        bookAuthor: data.bookAuthor,	// 作者	string
-        bookName: data.bookName	// 书名	string	@mock=续名医类案
+        bookAuthor: data.bookAuthor || null,	// 作者	string
+        bookName: data.bookName || null	// 书名	string	@mock=续名医类案
       }));
     }
   }

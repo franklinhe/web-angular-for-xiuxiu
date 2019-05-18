@@ -7,7 +7,6 @@ import {
   HttpRequest,
   HttpResponse
 } from '@angular/common/http';
-import {Router} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {tap, catchError, timeout} from 'rxjs/operators';
 import {MessageService} from '../message/message.service';
@@ -19,8 +18,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {
 
-  constructor(private router: Router,
-              private message: MessageService,
+  constructor(private message: MessageService,
               private notification: NzNotificationService,
               // private translateService: TranslateService,
               private injector: Injector) {

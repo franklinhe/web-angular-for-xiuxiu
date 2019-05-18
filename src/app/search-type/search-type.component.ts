@@ -1,5 +1,4 @@
 import {Component, Output, EventEmitter, Input, OnInit} from '@angular/core';
-import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-search-type',
@@ -25,7 +24,6 @@ export class SearchTypeComponent implements OnInit{
   @Input() disabled = false;
   @Output() disabledChange = new EventEmitter<string>();
   @Output() init = new EventEmitter();
-  planA = environment.planA;
   ngOnInit() {
     this.init.emit(this);
   }

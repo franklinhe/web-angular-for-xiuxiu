@@ -1,25 +1,25 @@
 <app-search-input
-  [(placeholder)]="status.searchInputPlaceholder"
-  [(back)]="status.topBack"
-  [(diseases)]="status.diseasesButtonHide"
-  [(disabled)]="status.searchInputDisabled"
+  [(placeholder)]="status.topInputSearch.searchInputPlaceholder"
+  [(back)]="status.topInputSearch.topBack"
+  [(diseases)]="status.topInputSearch.diseasesButtonHide"
+  [(disabled)]="status.topInputSearch.searchInputDisabled"
   (diseasesChange)="diseases($event)"
-  [(search)]="status.searchstr"
+  [(search)]="status.topInputSearch.searchstr"
   (searchChange)="searchStr($event)"
   (previous)="previous()"
 ></app-search-input>
 <app-search-type
-  *ngIf="!status.diseases&&!status.diseasesNode"
-  [searchOptions]="status.searchOptions"
-  (init)="searchTypeInit($event)"
-  [(searchType)]="status.bookCataIds"
-  [(disabled)]="status.searchTypeDisabled"
+  *ngIf="!status.diseases.active&&!status.diseases.diseasesNode"
+  [searchOptions]="status.searchType.searchOptions"
+  (init)="getCategoryList()"
+  [(searchType)]="status.searchType.bookCataIds"
+  [(disabled)]="status.searchType.searchTypeDisabled"
   (searchTypeChange)="searchTypeChang($event)"></app-search-type>
-<p class="diseases-node-title" *ngIf="status.diseasesNode&&!status.diseases">病名：{{status.diseasesNode.title}}</p>
+<p class="diseases-node-title" *ngIf="status.diseases.diseasesNode&&!status.diseases.active">病名：{{status.diseases.diseasesNode.title}}</p>
 <app-search-result
-  *ngIf="!status.diseases"
-  [config]="status.searchResultType"
-  [(index)]="status.searchResultIndex"
+  *ngIf="!status.diseases.active"
+  [config]="status.resultList.searchResultType"
+  [(index)]="status.resultList.searchResultIndex"
   (init)="searchResultInit($event)"
   (case)="caseContent($event)"
   (author)="authorSearch($event)"
@@ -47,7 +47,7 @@
     <p *ngIf="caseItem?.content" [innerHtml]="caseItem?.content | safeHtml"></p>
   </qk-scrollbar>
 </nz-drawer>
-<qk-scrollbar *ngIf="status.diseases" class="diseases-tree">
-  <nz-tree [(nzData)]="diseasesNode" nzShowLine (nzClick)="diseasesSearch($event)">
+<qk-scrollbar *ngIf="status.diseases.active" class="diseases-tree">
+  <nz-tree [(nzData)]="status.diseases.diseasesNodes" nzShowLine (nzClick)="diseasesSearch($event)">
   </nz-tree>
 </qk-scrollbar>

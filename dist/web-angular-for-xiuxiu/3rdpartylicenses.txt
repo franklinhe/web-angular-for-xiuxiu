@@ -447,9 +447,6 @@ ng-zorro-antd/popconfirm
 
 ng-zorro-antd/modal
 
-@angular/router
-MIT
-
 ng-zorro-antd/empty
 
 ng-zorro-antd/cascader
@@ -469,6 +466,9 @@ ng-zorro-antd/tree
 ng-zorro-antd/auto-complete
 
 ng-zorro-antd/input
+
+@angular/router
+MIT
 
 zone.js
 MIT

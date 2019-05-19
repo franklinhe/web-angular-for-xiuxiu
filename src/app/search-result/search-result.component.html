@@ -25,14 +25,14 @@
         [nzLoading]="bookNameList.isLoading">
         <ng-template #itemBookName let-item>
           <nz-list-item>
-            <div class="book-img">
+            <div class="book-img" (click)="bookItem(item)" style="cursor: pointer;">
               <span [ngStyle]="bookNameSize(item.bookName)">{{item.bookName}}</span>
             </div>
             <div class="book-body">
-              <p><span>书名：</span><span>{{item.bookName}}<span *ngIf="item.caseCount!=null">（医案{{item.caseCount}}例）</span></span></p>
+              <p class="text-primary" (click)="bookItem(item)"><span>书名：</span><span>{{item.bookName}}<span *ngIf="item.caseCount!=null">（医案{{item.caseCount}}例）</span></span></p>
               <p><span>作者：</span><span>{{item.bookAuthor}}</span></p>
               <p><span>年代：</span><span>{{item.bookYear}}</span></p>
-              <p class="text-primary" (click)="bookItem(item)"><span>简介：</span><span>{{item.bookSource}}</span></p>
+              <p><span>简介：</span><span>{{item.bookSource}}</span></p>
             </div>
           </nz-list-item>
         </ng-template>

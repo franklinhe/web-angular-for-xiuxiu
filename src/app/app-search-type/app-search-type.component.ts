@@ -436,7 +436,7 @@ export class AppSearchTypeComponent {
       if (item.cataList && item.cataList.length > 0) {
         item_.children = [];
         this.status.searchType.searchTypeIdMap[item_.value] = this.apiDataToSearchType(item.cataList, item_.children);
-        ids = ids.concat(this.apiDataToSearchType(item.cataList, item_.children));
+        ids = ids.concat(this.status.searchType.searchTypeIdMap[item_.value]);
       } else {
         this.status.searchType.searchTypeIdMap[item_.value] = item_.value;
         item_.isLeaf = true;

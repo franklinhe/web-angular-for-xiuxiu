@@ -283,7 +283,7 @@ export class AppSearchTypeComponent {
     this.status.resultList.searchResultIndex = 0;
     this.searchResult.caseList.param.bookName = data.bookName;
     this.searchResult.bookAuthorList.param.bookName = data.bookName;
-    if (this.status.diseases) {
+    if (this.status.diseases || !this.status.topInputSearch.searchstr) {
       this.searchResult.bookAuthorList.initList();
       this.searchResult.caseList.initList();
     } else {
@@ -322,7 +322,7 @@ export class AppSearchTypeComponent {
     this.status.resultList.searchResultIndex = 0;
     this.searchResult.caseList.param.bookAuthor = data.bookAuthor;
     this.searchResult.bookNameList.param.bookAuthor = data.bookAuthor;
-    if (this.status.diseases) {
+    if (this.status.diseases || !this.status.topInputSearch.searchstr) {
       this.searchResult.bookNameList.initList();
       this.searchResult.caseList.initList();
     } else {

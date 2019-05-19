@@ -33,5 +33,6 @@
     }
 }
 /deep/ul.ant-cascader-menu {
-    height: auto !important;
+  height: auto !important;
+  max-height: 85vh !important;
 }

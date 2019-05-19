@@ -290,8 +290,8 @@ export class AppSearchTypeComponent {
       this.searchResult.caseList.initList();
     } else {
       this.getCategoryList().subscribe(ids => {
-        this.searchResult.bookAuthorList.param.bookCataId = ids;
-        this.searchResult.caseList.param.bookCataId = ids;
+        this.searchResult.bookAuthorList.param.bookCataId = this.status.searchType.bookCataId;
+        this.searchResult.caseList.param.bookCataId = this.status.searchType.bookCataId;
         this.searchResult.bookAuthorList.initList();
         this.searchResult.caseList.initList();
       });
@@ -329,8 +329,8 @@ export class AppSearchTypeComponent {
       this.searchResult.caseList.initList();
     } else {
       this.getCategoryList().subscribe(ids => {
-        this.searchResult.bookNameList.param.bookCataId = ids;
-        this.searchResult.caseList.param.bookCataId = ids;
+        this.searchResult.bookNameList.param.bookCataId = this.status.searchType.bookCataId;
+        this.searchResult.caseList.param.bookCataId = this.status.searchType.bookCataId;
         this.searchResult.bookNameList.initList();
         this.searchResult.caseList.initList();
       });

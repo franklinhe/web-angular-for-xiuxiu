@@ -198,8 +198,9 @@ export class AppSearchTypeComponent {
 
   // 搜索
   searchStr(value: any) {
-    if (this.status.topInputSearch.type === 'case' && this.status.diseases) {
-      this.status.resultList.searchResultIndex = 0;
+    if (this.status.topInputSearch.type === 'case' &&
+      (this.status.diseases || this.status.resultList.bookAuthor || this.status.resultList.bookName)) {
+      // this.status.resultList.searchResultIndex = 0;
       this.searchResult.caseList.search(value);
       this.searchResult.bookNameList.search(value);
       this.searchResult.bookAuthorList.search(value);

@@ -34,6 +34,8 @@ export class AppSearchTypeComponent {
     },
     resultList: {
       searchResultIndex: 0,
+      searchResultIndexBase: 0,
+      searchResultIndexBaseCheck: false,
       searchResultType: ['case', 'book', 'author'],
       casePageNum: 1,
       bookPageNum: 1,
@@ -95,15 +97,7 @@ export class AppSearchTypeComponent {
 
   // 类型切换
   searchTypeChang(values: any[]) {
-    if ('all' === values.slice(-1)[0] && this.status.topInputSearch.searchstr) {
-      this.status.searchType.bookCataId = this.status.searchType.searchTypeIdMap['all'];
-    } else if ('all' === values.slice(-1)[0]) {
-      this.status.searchType.bookCataId = null;
-    } else if (this.status.topInputSearch.searchstr) {
-      this.status.searchType.bookCataId = this.status.searchType.searchTypeIdMap[values.slice(-1)[0]];
-    } else {
-      this.status.searchType.bookCataId = values.slice(-1)[0];
-    }
+    this.status.searchType.bookCataId = this.status.searchType.searchTypeIdMap[values.slice(-1)[0]];
     this.initDataByStatus();
   }
 
@@ -289,12 +283,17 @@ export class AppSearchTypeComponent {
     this.status.resultList.searchResultIndex = 0;
     this.searchResult.caseList.param.bookName = data.bookName;
     this.searchResult.bookAuthorList.param.bookName = data.bookName;
-    this.getCategoryList().subscribe(ids => {
-      this.searchResult.bookAuthorList.param.bookCataId = ids;
-      this.searchResult.caseList.param.bookCataId = ids;
+    if (this.status.diseases) {
       this.searchResult.bookAuthorList.initList();
       this.searchResult.caseList.initList();
-    });
+    } else {
+      this.getCategoryList().subscribe(ids => {
+        this.searchResult.bookAuthorList.param.bookCataId = ids;
+        this.searchResult.caseList.param.bookCataId = ids;
+        this.searchResult.bookAuthorList.initList();
+        this.searchResult.caseList.initList();
+      });
+    }
   }
 
   // 点击医家 查询
@@ -323,12 +322,17 @@ export class AppSearchTypeComponent {
     this.status.resultList.searchResultIndex = 0;
     this.searchResult.caseList.param.bookAuthor = data.bookAuthor;
     this.searchResult.bookNameList.param.bookAuthor = data.bookAuthor;
-    this.getCategoryList().subscribe(ids => {
-      this.searchResult.bookNameList.param.bookCataId = ids;
-      this.searchResult.caseList.param.bookCataId = ids;
+    if (this.status.diseases) {
       this.searchResult.bookNameList.initList();
       this.searchResult.caseList.initList();
-    });
+    } else {
+      this.getCategoryList().subscribe(ids => {
+        this.searchResult.bookNameList.param.bookCataId = ids;
+        this.searchResult.caseList.param.bookCataId = ids;
+        this.searchResult.bookNameList.initList();
+        this.searchResult.caseList.initList();
+      });
+    }
   }
 
   // 点击 分类查询模式
@@ -358,6 +362,20 @@ export class AppSearchTypeComponent {
   previous() {
     this.status = this.states.pop();
     this.initDataByStatus();
+    setTimeout(() => {
+      this.status.resultList.searchResultIndexBaseCheck = true;
+      this.status.resultList.searchResultIndex = 0;
+    }, 15);
+    setTimeout(() => {
+      this.status.resultList.searchResultIndex = this.status.resultList.searchResultIndexBase;
+    }, 30);
+  }
+
+  searchResultIndexChange(index: number) {
+    if (!this.status.resultList.searchResultIndexBaseCheck) {
+      this.status.resultList.searchResultIndexBase = index;
+    }
+    this.status.resultList.searchResultIndexBaseCheck = false;
   }
 
   // 获取分类

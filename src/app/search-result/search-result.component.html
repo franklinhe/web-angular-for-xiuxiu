@@ -1,4 +1,6 @@
-<nz-tabset [(nzSelectedIndex)]="index" (nzSelectedIndexChange)="indexChange.emit($event)">
+<nz-tabset [(nzSelectedIndex)]="index"
+           (nzSelectChange)="change.emit($event)"
+           (nzSelectedIndexChange)="indexChange.emit($event)">
   <nz-tab *ngIf="config.includes('case')" [nzTitle]="'医案（'+caseList.config.total+'）'">
     <qk-scrollbar class="case-list" [config]="tab1Options">
       <nz-list [nzDataSource]="caseList.list" [nzRenderItem]="itemCase" [nzItemLayout]="'horizontal'"

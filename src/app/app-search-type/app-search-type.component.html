@@ -17,11 +17,12 @@
     [(disabled)]="status.searchType.searchTypeDisabled"
     (searchTypeChange)="searchTypeChang($event)"></app-search-type>
   <p class="diseases-node-title" *ngIf="status.diseases">
-    病名：{{status.diseases.title}}
+    病名：{{status.diseases.origin.byName}}
   </p>
   <app-search-result
     [config]="status.resultList.searchResultType"
     [(index)]="status.resultList.searchResultIndex"
+    (indexChange)="searchResultIndexChange($event)"
     (init)="searchResultInit($event)"
     (case)="caseContent($event)"
     (author)="authorSearch($event)"

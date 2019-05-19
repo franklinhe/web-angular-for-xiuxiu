@@ -55,6 +55,7 @@ export class SearchResultComponent implements OnInit {
   @Output() author = new EventEmitter();
   @Input() index: number;
   @Output() indexChange = new EventEmitter();
+  @Output() change = new EventEmitter();
   categoryList = [];
 
   constructor(public caseList: CaseListService,

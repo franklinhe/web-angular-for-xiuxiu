@@ -52,7 +52,7 @@
               <span class="author-name">{{item.bookAuthor}}</span>
               <span class="author-case"  (click)="authorItem(item)">
                 <span *ngIf="item.caseCount!=null">（医案{{item.caseCount}}例）</span>
-                <i *ngIf="item.caseCount>0" nz-icon nzType="right" nzTheme="outline"></i>
+                <!--<i *ngIf="item.caseCount>0" nz-icon nzType="right" nzTheme="outline"></i>-->
               </span>
             </div>
           </nz-list-item>

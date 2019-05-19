@@ -36,16 +36,30 @@
     width: calc(100% - 32px);
     display: inline-block;
   }
-  .diseases-input {
-    width: calc(100% - 70px);
+  .type-search-input {
+    width: calc(100% - 60px);
     display: inline-block;
   }
-  .diseases-input.back-input {
-    width: calc(100% - 103px);
+  .type-search-input.back-input {
+    width: calc(100% - 93px);
     display: inline-block;
   }
-  .diseases {
+  .type-search {
     display: inline-block !important;
-    padding-left: 10px;
+    /deep/nz-select {
+      width: 60px;
+      .ant-select-selection {
+        border: none !important;
+      }
+      .ant-select-open .ant-select-selection {
+        box-shadow: none !important;
+      }
+      .ant-select-selection__rendered {
+        margin: 0 !important;
+      }
+      .ant-select-focused .ant-select-selection, .ant-select-selection:focus, .ant-select-selection:active {
+        box-shadow: none !important;
+      }
+    }
   }
 }

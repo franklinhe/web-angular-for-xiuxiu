@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {HttpUtil} from '../../shared/http-api/util';
-import { Observable, Observer } from 'rxjs';
+import {Observable, Observer} from 'rxjs';
 
 // import { Observable } from 'rxjs';
 /**
@@ -13,6 +13,7 @@ export class HttpService {
 
   constructor(private http: HttpClient) {
   }
+
   getCategoryList() {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -23,6 +24,7 @@ export class HttpService {
       return this.http.get<any>(environment.api + '/book/getCategoryList');
     }
   }
+
   searchGetCategoryList(data?: {
     searchstr?: string
     bookAuthor?: string
@@ -37,25 +39,15 @@ export class HttpService {
       return this.http.get<any>(environment.api + '/search/getCategoryList', HttpUtil.setParams(data));
     }
   }
-  getStatCount(data?: {
-    bookCataId: string
-  }) {
-    if (environment.mockData) {
-      return new Observable((observer: Observer<any>) => {
-        observer.next(environment.mockData.getStatCount);
-        observer.complete();
-      });
-    } else {
-      return this.http.get<any>(environment.api + '/book/getStatCount', HttpUtil.setParams(data));
-    }
-  }
+
   getBookNameList(data: {
+    searchModel?: boolean,
     bookCataId?: string
-    bookAuthor?: string|number	// 作者	string
-    bookName?: string|number	// 书名	string	@mock=续名医类案
-    search?: string|number
-    pageNum: string|number
-    pageSize: string|number
+    bookAuthor?: string | number	// 作者	string
+    bookName?: string | number	// 书名	string	@mock=续名医类案
+    search?: string | number
+    pageNum: string | number
+    pageSize: string | number
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -63,15 +55,14 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      // if (data.bookAuthor || data.bookName) { 
-      if ((data.bookCataId && data.bookCataId.includes && data.bookCataId.includes(',')) || (data.bookCataId && data.search) || data.bookAuthor || data.bookName) {  
+      if (data.searchModel) {
         return this.getBookNameListBySearch({
-          bookCataId: data.bookCataId, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
+          bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,
           pageSize: data.pageSize,
-          bookAuthor: data.bookAuthor,	// 作者	string
-          bookName: data.bookName,	// 书名	string	@mock=续名医类案
-          searchstr: data.search
+          bookAuthor: data.bookAuthor || null,	// 作者	string
+          bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
+          searchstr: data.search || null
         });
       }
       return this.http.get<any>(environment.api + '/book/getBookNameList', HttpUtil.setParams({
@@ -82,13 +73,15 @@ export class HttpService {
       }));
     }
   }
+
   getBookAuthorList(data: {
+    searchModel?: boolean,
     bookCataId?: string
-    bookAuthor?: string|number	// 作者	string
-    bookName?: string|number	// 书名	string	@mock=续名医类案
-    search?: string|number
-    pageNum: string|number
-    pageSize: string|number
+    bookAuthor?: string | number	// 作者	string
+    bookName?: string | number	// 书名	string	@mock=续名医类案
+    search?: string | number
+    pageNum: string | number
+    pageSize: string | number
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -96,31 +89,34 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      if ((data.bookCataId && data.bookCataId.includes && data.bookCataId.includes(',')) || (data.bookCataId && data.search) || data.bookAuthor || data.bookName) {
+      if (data.searchModel) {
         return this.getBookAuthorListBySearch({
           bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,
           pageSize: data.pageSize,
           bookAuthor: data.bookAuthor || null,	// 作者	string
           bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
-          searchstr: data.search
+          searchstr: data.search || null
         });
+      } else {
+        return this.http.get<any>(environment.api + '/book/getBookAuthorList', HttpUtil.setParams({
+          bookCataId: data.bookCataId || null,
+          searchstr: data.search || null,
+          pageNum: data.pageNum,
+          pageSize: data.pageSize
+        }));
       }
-      return this.http.get<any>(environment.api + '/book/getBookAuthorList', HttpUtil.setParams({
-        bookCataId: data.bookCataId || null,
-        searchstr:  data.search || null,
-        pageNum: data.pageNum,
-        pageSize: data.pageSize
-      }));
     }
   }
+
   getCaseList(data: {
-    bookName?: string|number
-    bookAuthor?: string|number
+    searchModel?: boolean,
+    bookName?: string | number
+    bookAuthor?: string | number
     bookCataId?: string
-    search?: string|number
-    pageNum: string|number
-    pageSize: string|number
+    search?: string | number
+    pageNum: string | number
+    pageSize: string | number
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -128,7 +124,7 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      if ((data.bookCataId && data.bookCataId.includes && data.bookCataId.includes(',')) || data.search || data.bookAuthor || data.bookName) {
+      if (data.searchModel) {
         return this.getCaseListBySearch({
           bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
           pageNum: data.pageNum,
@@ -137,16 +133,19 @@ export class HttpService {
           bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
           searchstr: data.search || null
         });
+      } else {
+        return this.http.get<any>(environment.api + '/case/list', HttpUtil.setParams({
+          bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
+          pageNum: data.pageNum,
+          pageSize: data.pageSize,
+          bookAuthor: data.bookAuthor || null,	// 作者	string
+          bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
+          searchstr: data.search || null
+        }));
       }
-      return this.http.get<any>(environment.api + '/case/list', HttpUtil.setParams({
-        bookCataId: data.bookCataId || null, // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
-        pageNum: data.pageNum,
-        pageSize: data.pageSize,
-        bookAuthor: data.bookAuthor || null,	// 作者	string
-        bookName: data.bookName || null	// 书名	string	@mock=续名医类案
-      }));
     }
   }
+
   getSection(data: {
     articleId: string
     bookName: string
@@ -163,12 +162,12 @@ export class HttpService {
 
   // 获取医书列表
   getBookNameListBySearch(data: {
-    bookCataId?: string|number // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
-    pageNum: string|number
-    pageSize: string|number
-    bookAuthor?: string|number	// 作者	string
-    bookName?: string|number	// 书名	string	@mock=续名医类案
-    searchstr?: string|number
+    bookCataId?: string | number // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
+    pageNum: string | number
+    pageSize: string | number
+    bookAuthor?: string | number	// 作者	string
+    bookName?: string | number	// 书名	string	@mock=续名医类案
+    searchstr?: string | number
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -179,14 +178,15 @@ export class HttpService {
       return this.http.get<any>(environment.api + '/search/getBookNameList', HttpUtil.setParams(data));
     }
   }
+
   // 获取医家列表
   getBookAuthorListBySearch(data: {
-    bookCataId?: string|number // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
-    pageNum: string|number
-    pageSize: string|number
-    bookAuthor?: string|number	// 作者	string
-    bookName?: string|number	// 书名	string	@mock=续名医类案
-    searchstr?: string|number
+    bookCataId?: string | number // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
+    pageNum: string | number
+    pageSize: string | number
+    bookAuthor?: string | number	// 作者	string
+    bookName?: string | number	// 书名	string	@mock=续名医类案
+    searchstr?: string | number
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -197,14 +197,15 @@ export class HttpService {
       return this.http.get<any>(environment.api + '/search/getBookAuthorList', HttpUtil.setParams(data));
     }
   }
+
   // 获取医案列表
   getCaseListBySearch(data: {
-    bookCataId?: string|number // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
-    pageNum: string|number
-    pageSize: string|number
-    bookAuthor?: string|number	// 作者	string
-    bookName?: string|number	// 书名	string	@mock=续名医类案
-    searchstr?: string|number
+    bookCataId?: string | number // 取点击节点下的所有bookCataId值，逗号分开	string	@mock=374,380,391,395,296
+    pageNum: string | number
+    pageSize: string | number
+    bookAuthor?: string | number	// 作者	string
+    bookName?: string | number	// 书名	string	@mock=续名医类案
+    searchstr?: string | number
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -215,6 +216,7 @@ export class HttpService {
       return this.http.get<any>(environment.api + '/search', HttpUtil.setParams(data));
     }
   }
+
   // 按疾病搜索
   searchCategoryList(data: {
     searchstr: string
@@ -228,6 +230,7 @@ export class HttpService {
       return this.http.get<any>(environment.api + '/book/searchCategoryList', HttpUtil.setParams(data));
     }
   }
+
   autoComplete(data: {
     query: string
   }) {
@@ -240,6 +243,7 @@ export class HttpService {
       return this.http.get<any>(environment.api + '/autoComplete', HttpUtil.setParams(data));
     }
   }
+
   caseInfo(data: {
     caseId: string
   }) {

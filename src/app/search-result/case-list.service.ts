@@ -7,6 +7,7 @@ import { HttpService } from '../service/http.service';
 @Injectable()
 export class CaseListService extends TableList {
   param: any = {
+    searchModel: false,
     pageNum: 1,
     pageSize: 10,
     search: null,

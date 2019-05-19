@@ -18,13 +18,16 @@ export class SearchInputComponent implements OnInit {
   @Input()  search: string;
   @Output() searchChange = new EventEmitter<string>();
 
-  @Input()  diseases: string;
-  @Output() diseasesChange = new EventEmitter<any>();
-
   @Input()  disabled: string;
   @Output() disabledChange = new EventEmitter<string>();
 
   @Output() previous = new EventEmitter<string>();
+
+  @Input() typeSearch = 'case';
+  @Output() typeSearchChange = new EventEmitter<string>();
+
+  @Input() typeSearchShow = true;
+  @Output() typeSearchShowChange = new EventEmitter<string>();
 
   options: string[] = [];
 

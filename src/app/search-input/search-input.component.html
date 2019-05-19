@@ -3,7 +3,17 @@
     <div [class.back-icon]="back" style="display: none;">
       <i (click)="previous.emit()" class="back-icon" nz-icon nzType="left" nzTheme="outline"></i>
     </div>
-    <div [class.back-input]="back" [class.diseases-input]="!diseases">
+    <div [class.type-search]="typeSearchShow" style="display: none;">
+      <nz-select [(ngModel)]="typeSearch"
+                 (ngModelChange)="typeSearchChange.emit($event)"
+                 [nzDropdownMatchSelectWidth]="false" [nzAllowClear]="false">
+        <nz-option nzValue="case" nzLabel="医案"></nz-option>
+        <nz-option nzValue="book" nzLabel="医书"></nz-option>
+        <nz-option nzValue="author" nzLabel="医家"></nz-option>
+        <nz-option nzValue="diseases" nzLabel="病名"></nz-option>
+      </nz-select>
+    </div>
+    <div [class.back-input]="back" [class.type-search-input]="typeSearchShow">
       <nz-input-group [nzSuffix]="suffixIconSearch">
         <input type="text" [(ngModel)]="search"
                [(disabled)]="disabled"
@@ -21,9 +31,6 @@
       <ng-template #suffixIconSearch>
         <i nz-icon type="search"></i>
       </ng-template>
-    </div>
-    <div [class.diseases]="!diseases" style="display: none;">
-      <button nz-button nzType="primary" (click)="diseasesChange.emit(true)">病名</button>
     </div>
   </div>
 </div>

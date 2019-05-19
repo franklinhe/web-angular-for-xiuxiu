@@ -1,53 +1,70 @@
 <app-search-input
   [(placeholder)]="status.topInputSearch.searchInputPlaceholder"
   [(back)]="status.topInputSearch.topBack"
-  [(diseases)]="status.topInputSearch.diseasesButtonHide"
+  [(typeSearchShow)]="status.topInputSearch.searchTypeSelectShow"
+  [(typeSearch)]="status.topInputSearch.type"
   [(disabled)]="status.topInputSearch.searchInputDisabled"
-  (diseasesChange)="diseases($event)"
+  (typeSearchChange)="typeSearch($event)"
   [(search)]="status.topInputSearch.searchstr"
   (searchChange)="searchStr($event)"
   (previous)="previous()"
 ></app-search-input>
-<app-search-type
-  *ngIf="!status.diseases.active&&!status.diseases.diseasesNode"
-  [searchOptions]="status.searchType.searchOptions"
-  (init)="getCategoryList()"
-  [(searchType)]="status.searchType.bookCataIds"
-  [(disabled)]="status.searchType.searchTypeDisabled"
-  (searchTypeChange)="searchTypeChang($event)"></app-search-type>
-<p class="diseases-node-title" *ngIf="status.diseases.diseasesNode&&!status.diseases.active">病名：{{status.diseases.diseasesNode.title}}</p>
-<app-search-result
-  *ngIf="!status.diseases.active"
-  [config]="status.resultList.searchResultType"
-  [(index)]="status.resultList.searchResultIndex"
-  (init)="searchResultInit($event)"
-  (case)="caseContent($event)"
-  (author)="authorSearch($event)"
-  (book)="bookClick($event)"></app-search-result>
-<nz-drawer [nzClosable]="false"
-           [nzVisible]="!!caseItem"
-           nzPlacement="right"
-           [nzTitle]="titleCaseItem"
-           (nzOnClose)="caseItem=null"
-           nzWrapClassName="case-item-drawer"
->
-  <ng-template #titleCaseItem>
-    <div class="label">
-      <i class="back" nz-icon nzType="left" nzTheme="outline" (click)="caseItem=null"></i>
-      <span class="title">{{caseItem?.title}}</span>
-    </div>
-  </ng-template>
-  <qk-scrollbar class="body">
-    <nz-skeleton
-      *ngIf="!caseItem?.content"
-      [nzParagraph]="{rows:24}"
-      [nzActive]="true"
-      [nzTitle]="false"
-    ></nz-skeleton>
-    <p *ngIf="caseItem?.content" [innerHtml]="caseItem?.content | safeHtml"></p>
-  </qk-scrollbar>
-</nz-drawer>
-<qk-scrollbar *ngIf="status.diseases.active" class="diseases-tree">
-  <nz-tree [(nzData)]="status.diseases.diseasesNodes" nzShowLine (nzClick)="diseasesSearch($event)">
+<div *ngIf="status.topInputSearch.type==='case'">
+  <app-search-type *ngIf="!status.diseases"
+    [searchOptions]="status.searchType.searchOptions"
+    (init)="getCategoryList()"
+    [(searchType)]="status.searchType.bookCataIds"
+    [(disabled)]="status.searchType.searchTypeDisabled"
+    (searchTypeChange)="searchTypeChang($event)"></app-search-type>
+  <p class="diseases-node-title" *ngIf="status.diseases">
+    病名：{{status.diseases.title}}
+  </p>
+  <app-search-result
+    [config]="status.resultList.searchResultType"
+    [(index)]="status.resultList.searchResultIndex"
+    (init)="searchResultInit($event)"
+    (case)="caseContent($event)"
+    (author)="authorSearch($event)"
+    (book)="bookClick($event)"></app-search-result>
+  <nz-drawer [nzClosable]="false"
+             [nzVisible]="!!caseItem"
+             nzPlacement="right"
+             [nzTitle]="titleCaseItem"
+             (nzOnClose)="caseItem=null"
+             nzWrapClassName="case-item-drawer"
+  >
+    <ng-template #titleCaseItem>
+      <div class="label">
+        <i class="back" nz-icon nzType="left" nzTheme="outline" (click)="caseItem=null"></i>
+        <span class="title">{{caseItem?.title}}</span>
+      </div>
+    </ng-template>
+    <qk-scrollbar class="body">
+      <nz-skeleton
+        *ngIf="!caseItem?.content"
+        [nzParagraph]="{rows:24}"
+        [nzActive]="true"
+        [nzTitle]="false"
+      ></nz-skeleton>
+      <p *ngIf="caseItem?.content" [innerHtml]="caseItem?.content | safeHtml"></p>
+    </qk-scrollbar>
+  </nz-drawer>
+</div>
+<div *ngIf="status.topInputSearch.type==='book'">
+  <p class="diseases-node-title">搜索结果：</p>
+  <app-search-result
+    [config]="['book']"
+    (init)="bookListInit($event)"
+    (book)="bookSearch($event)"></app-search-result>
+</div>
+<div *ngIf="status.topInputSearch.type==='author'">
+  <p class="diseases-node-title">搜索结果：</p>
+  <app-search-result
+    [config]="['author']"
+    (init)="authorListInit($event)"
+    (author)="authorsSearch($event)"></app-search-result>
+</div>
+<qk-scrollbar *ngIf="status.topInputSearch.type==='diseases'" class="diseases-tree">
+  <nz-tree [(nzData)]="diseasesNodes" nzShowLine (nzClick)="diseasesSearch($event)">
   </nz-tree>
 </qk-scrollbar>

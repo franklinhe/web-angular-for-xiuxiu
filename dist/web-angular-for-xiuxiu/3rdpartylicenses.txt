@@ -451,6 +451,8 @@ ng-zorro-antd/empty
 
 ng-zorro-antd/cascader
 
+ng-zorro-antd/skeleton
+
 ng-zorro-antd/avatar
 
 ng-zorro-antd/spin
@@ -459,11 +461,11 @@ ng-zorro-antd/list
 
 ng-zorro-antd/tabs
 
-ng-zorro-antd/skeleton
-
 ng-zorro-antd/tree
 
 ng-zorro-antd/auto-complete
+
+ng-zorro-antd/select
 
 ng-zorro-antd/input
 

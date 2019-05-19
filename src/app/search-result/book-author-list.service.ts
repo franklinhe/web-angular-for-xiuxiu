@@ -7,6 +7,7 @@ import { HttpService } from '../service/http.service';
 @Injectable()
 export class BookAuthorListService extends TableList {
   param: any = {
+    searchModel: false,
     pageNum: 1,
     pageSize: 20,
     search: null,

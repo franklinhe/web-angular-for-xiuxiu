@@ -1,6 +1,5 @@
 @import "../style/vars";
 
-
 .search-input {
   padding: 10px;
   border-bottom: 1px solid $color-order-bg;
@@ -46,7 +45,7 @@
   }
   .type-search {
     display: inline-block !important;
-    /deep/nz-select {
+    nz-select {
       width: 60px;
       .ant-select-selection {
         border: none !important;

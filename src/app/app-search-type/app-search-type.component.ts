@@ -198,8 +198,7 @@ export class AppSearchTypeComponent {
 
   // 搜索
   searchStr(value: any) {
-    if (this.status.topInputSearch.type === 'case' &&
-      (this.status.diseases || this.status.resultList.bookAuthor || this.status.resultList.bookName)) {
+    if (this.status.topInputSearch.type === 'case') {
       // this.status.resultList.searchResultIndex = 0;
       this.searchResult.caseList.search(value);
       this.searchResult.bookNameList.search(value);
@@ -284,17 +283,17 @@ export class AppSearchTypeComponent {
     this.status.resultList.searchResultIndex = 0;
     this.searchResult.caseList.param.bookName = data.bookName;
     this.searchResult.bookAuthorList.param.bookName = data.bookName;
-    if (this.status.diseases || !this.status.topInputSearch.searchstr) {
+    // if (this.status.diseases || !this.status.topInputSearch.searchstr) {
       this.searchResult.bookAuthorList.initList();
       this.searchResult.caseList.initList();
-    } else {
-      this.getCategoryList().subscribe(ids => {
-        this.searchResult.bookAuthorList.param.bookCataId = ids;
-        this.searchResult.caseList.param.bookCataId = ids;
-        this.searchResult.bookAuthorList.initList();
-        this.searchResult.caseList.initList();
-      });
-    }
+    // } else {
+    //   this.getCategoryList().subscribe(ids => {
+    //     this.searchResult.bookAuthorList.param.bookCataId = ids;
+    //     this.searchResult.caseList.param.bookCataId = ids;
+    //     this.searchResult.bookAuthorList.initList();
+    //     this.searchResult.caseList.initList();
+    //   });
+    // }
   }
 
   // 点击医家 查询
@@ -323,17 +322,17 @@ export class AppSearchTypeComponent {
     this.status.resultList.searchResultIndex = 0;
     this.searchResult.caseList.param.bookAuthor = data.bookAuthor;
     this.searchResult.bookNameList.param.bookAuthor = data.bookAuthor;
-    if (this.status.diseases || !this.status.topInputSearch.searchstr) {
+    // if (this.status.diseases || !this.status.topInputSearch.searchstr) {
       this.searchResult.bookNameList.initList();
       this.searchResult.caseList.initList();
-    } else {
-      this.getCategoryList().subscribe(ids => {
-        this.searchResult.bookNameList.param.bookCataId = ids;
-        this.searchResult.caseList.param.bookCataId = ids;
-        this.searchResult.bookNameList.initList();
-        this.searchResult.caseList.initList();
-      });
-    }
+    // } else {
+    //   this.getCategoryList().subscribe(ids => {
+    //     this.searchResult.bookNameList.param.bookCataId = ids;
+    //     this.searchResult.caseList.param.bookCataId = ids;
+    //     this.searchResult.bookNameList.initList();
+    //     this.searchResult.caseList.initList();
+    //   });
+    // }
   }
 
   // 点击 分类查询模式

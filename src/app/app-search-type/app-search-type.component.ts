@@ -199,11 +199,13 @@ export class AppSearchTypeComponent {
   // 搜索
   searchStr(value: any) {
     if (this.status.topInputSearch.type === 'case' && this.status.diseases) {
-      this.status.resultList.searchResultIndex = 0;
+      // this.status.resultList.searchResultIndex = 0;
       this.searchResult.caseList.search(value);
       this.searchResult.bookNameList.search(value);
       this.searchResult.bookAuthorList.search(value);
     } else if (this.status.topInputSearch.type === 'case') {
+      this.status.searchType.bookCataId = null;
+      this.status.searchType.bookCataIds = [];
       this.status.resultList.searchResultIndex = 0;
       this.getCategoryList().subscribe(id => {
         this.searchResult.caseList.param.bookCataId = id;
@@ -288,8 +290,8 @@ export class AppSearchTypeComponent {
       this.searchResult.caseList.initList();
     } else {
       this.getCategoryList().subscribe(ids => {
-        this.searchResult.bookAuthorList.param.bookCataId = ids;
-        this.searchResult.caseList.param.bookCataId = ids;
+        this.searchResult.bookAuthorList.param.bookCataId = this.status.searchType.bookCataId;
+        this.searchResult.caseList.param.bookCataId = this.status.searchType.bookCataId;
         this.searchResult.bookAuthorList.initList();
         this.searchResult.caseList.initList();
       });
@@ -327,8 +329,8 @@ export class AppSearchTypeComponent {
       this.searchResult.caseList.initList();
     } else {
       this.getCategoryList().subscribe(ids => {
-        this.searchResult.bookNameList.param.bookCataId = ids;
-        this.searchResult.caseList.param.bookCataId = ids;
+        this.searchResult.bookNameList.param.bookCataId = this.status.searchType.bookCataId;
+        this.searchResult.caseList.param.bookCataId = this.status.searchType.bookCataId;
         this.searchResult.bookNameList.initList();
         this.searchResult.caseList.initList();
       });
@@ -387,8 +389,6 @@ export class AppSearchTypeComponent {
         isLeaf: true,
         label: '所有医案'
       }];
-      this.status.searchType.bookCataId = null;
-      this.status.searchType.bookCataIds = [];
       this.status.searchType.searchTypeIdMap = {};
       if (res.code === '0' && res.data && res.msg === 'ok') {
         this.status.searchType.searchTypeIdMap['all'] = this.apiDataToSearchType(res.data, this.status.searchType.searchOptions);
@@ -436,7 +436,7 @@ export class AppSearchTypeComponent {
       if (item.cataList && item.cataList.length > 0) {
         item_.children = [];
         this.status.searchType.searchTypeIdMap[item_.value] = this.apiDataToSearchType(item.cataList, item_.children);
-        ids = ids.concat(this.apiDataToSearchType(item.cataList, item_.children));
+        ids = ids.concat(this.status.searchType.searchTypeIdMap[item_.value]);
       } else {
         this.status.searchType.searchTypeIdMap[item_.value] = item_.value;
         item_.isLeaf = true;

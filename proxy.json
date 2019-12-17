@@ -7,5 +7,14 @@
     },
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/consilia": {
+    "target": "http://47.99.194.110",
+    "secure": false,
+    "pathRewrite": {
+      "": ""
+    },
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }

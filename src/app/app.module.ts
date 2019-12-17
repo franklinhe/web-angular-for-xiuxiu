@@ -18,6 +18,12 @@ import {SearchTypeComponent} from './search-type/search-type.component';
 import {SearchInputComponent} from './search-input/search-input.component';
 import {AppSearchTypeComponent} from './app-search-type/app-search-type.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { GlobeService } from './service/globe.service';
+import { AnalysisComponent } from './analysis/analysis.component';
+import { DrugsComponent } from './drugs/drugs.component';
+import { UnitComponent } from './unit/unit.component';
+import { DrugItemComponent } from './drug-item/drug-item.component';
+import { ChartModule } from 'src/shared/chart/chart.module';
 @Pipe({ name: 'safeHtml' })
 export class SafeHtmlPipe implements PipeTransform {
   constructor(private sanitized: DomSanitizer) { }
@@ -33,12 +39,23 @@ registerLocaleData(zh);
     SearchTypeComponent,
     SearchInputComponent,
     AppSearchTypeComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    AnalysisComponent,
+    DrugsComponent,
+    UnitComponent,
+    DrugItemComponent
+  ],
+  entryComponents: [
+    AnalysisComponent,
+    DrugsComponent,
+    DrugItemComponent,
+    UnitComponent
   ],
   imports: [
     BrowserModule,
     CommonModule,
     FormsModule,
+    ChartModule,
     HttpClientModule,
     BrowserAnimationsModule,
     /** 导入 ng-zorro-antd 模块 **/
@@ -50,7 +67,8 @@ registerLocaleData(zh);
   /** 配置 ng-zorro-antd 国际化（文案 及 日期） **/
   providers: [
     {provide: NZ_I18N, useValue: zh_CN},
-    HttpService
+    HttpService,
+    GlobeService
   ],
   bootstrap: [AppSearchTypeComponent]
 })

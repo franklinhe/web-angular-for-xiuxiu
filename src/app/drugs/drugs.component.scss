@@ -1,0 +1,55 @@
+@import "../style/vars";
+
+:host ::ng-deep .case .ant-table-small{
+    border: none;
+}
+
+.page {
+    margin: -15px;
+    margin-top: -20px;
+    height: calc(100vh - 200px);
+}
+
+.search-drug {
+    padding: 10px 5px 10px 0;
+    border-bottom: 1px solid $color-order-bg;
+    .search-input-drug {
+        display: inline-block;
+        width: calc(100% - 150px);
+        input {
+            background: rgb(244,244,245);
+            // border: none;
+            &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+            color: rgba(72,84,143,0.8);
+            }
+            &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+            color: rgba(72,84,143,0.8);
+            }
+            &::-moz-placeholder { /* Mozilla Firefox 19+ */
+            color: rgba(72,84,143,0.8);
+            }
+            &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+            color: rgba(72,84,143,0.8);
+            }
+        }
+    }
+    .search-type-drug {
+        display: inline-block !important;
+        margin-right: 10px;
+        nz-select {
+        width: 120px;
+        .ant-select-selection {
+            border: none !important;
+        }
+        .ant-select-open .ant-select-selection {
+            box-shadow: none !important;
+        }
+        .ant-select-selection__rendered {
+            margin: 0 !important;
+        }
+        .ant-select-focused .ant-select-selection, .ant-select-selection:focus, .ant-select-selection:active {
+            box-shadow: none !important;
+        }
+        }
+    }
+}

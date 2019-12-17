@@ -1,0 +1,143 @@
+<qk-scrollbar *ngIf="!analy" class="body">
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">饮片名</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['饮片名']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <input class="edit-item" type="text" [(ngModel)]="data['饮片名']">
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">同异名</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['同异名']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['同异名']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row" *ngIf="edit && flag">
+    <div nz-col nzSpan="3" class="title">此方中的用量</div>
+    <div nz-col nzSpan="20">
+      <input class="edit-count" type="text" [(ngModel)]="data.flag[flag.type][flag.id][flag.data.text]">
+      <span>{{data.StandardUnitChar}}</span>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">概述</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['概述']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['概述']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">味</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['味']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['味']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">性</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['性']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['性']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">归经</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['归经']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['归经']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">功能</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['功能']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['功能']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">主治</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['主治']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['主治']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">功效</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['功效']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['功效']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">病症</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['病症']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['病症']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">病邪</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['病邪']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['病邪']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">病位</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['病位']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['病位']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">效用分析</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['效用分析']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['效用分析']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">用量</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['用量']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['用量']"></textarea>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">用法</div>
+    <div *ngIf="!edit" nz-col nzSpan="20" [innerHtml]="data['用法']"></div>
+    <div *ngIf="edit" nz-col nzSpan="20">
+      <textarea rows="3" nz-input [(ngModel)]="data['用法']"></textarea>
+    </div>
+  </div>
+  <div *ngIf="edit" nz-row class="row">
+    <div nz-col nzSpan="8" class="title"></div>
+    <div nz-col nzSpan="8">
+      <button class="ok" nz-button nzType="primary" (click)="ok()">保存</button>
+    </div>
+  </div>
+</qk-scrollbar>
+<div *ngIf="analy">
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">饮片名</div>
+    <div nz-col nzSpan="20" [innerHtml]="data['饮片名']"></div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">同异名</div>
+    <div nz-col nzSpan="20" [innerHtml]="data['同异名']"></div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="3" class="title">此方中的用量</div>
+    <div nz-col nzSpan="20">
+      <input class="edit-count" type="text" [(ngModel)]="data.flag[flag.type][flag.id][flag.data.text]">
+      <span>{{data.StandardUnitChar}}</span>
+    </div>
+  </div>
+  <div nz-row class="row">
+    <div nz-col nzSpan="8" class="title"></div>
+    <div nz-col nzSpan="8">
+      <button class="ok" nz-button nzType="primary" (click)="ok()">保存</button>
+    </div>
+  </div>
+</div>

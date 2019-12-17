@@ -1,0 +1,70 @@
+@import "../style/vars";
+
+:host ::ng-deep .case .ant-table-small{
+    border: none;
+    margin: -10px;
+}
+:host ::ng-deep .body .ant-table-small{
+    & > .ant-table-content > .ant-table-body {
+        margin: 0;
+    }
+}
+
+.page {
+    margin: -15px;
+    height: calc(100vh - 150px);
+}
+
+.list-table {
+    // height: 200px;
+    border: $border;
+    margin-bottom: 15px;
+}
+
+.none {
+    text-align: center;
+    margin: -15px;
+    color: rgba(0,0,0,0.3);
+    font-size: 28px;
+    padding-top: 30vh;
+    height: calc(100vh - 150px);
+}
+
+.loading {
+    height: calc(100vh - 150px);
+}
+
+.top {
+    position: relative;
+    .case {
+        display: inline-block;
+        position: relative;
+        width: calc(100% - 85px);
+    }
+    .setting {
+        display: inline-block;
+        position: relative;
+        width: 60px;
+        margin-left: 20px;
+        margin-right: 5px;
+        vertical-align: top;
+    }
+}
+
+.body {
+    margin-top: 20px;
+    margin-right: 5px;
+    height: calc(100vh - 260px);
+}
+
+.edit {
+    border: none;
+    // font-size: 20px;
+    margin: 5px;
+    border-bottom: $border;
+    width: 80px;
+    margin-right: 5px;
+    &:focus {
+        outline: none;
+    }
+}

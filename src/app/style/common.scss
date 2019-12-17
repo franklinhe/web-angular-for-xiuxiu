@@ -90,3 +90,40 @@ tr.active td {
     color: $color-text-primary-hover;
   }
 }
+.text-primary-static {
+  color: $color-text-primary;
+}
+
+.text-diseditable {
+  color: $color-black-primary;
+}
+
+.text-version {
+  color: $color-text-version;
+}
+
+.text-aux {
+  color: $color-text-aux;
+}
+
+.text-warning {
+  color: $color-text-warning;
+}
+
+.text-green {
+  color: $color-green;
+}
+.table-head .ant-table-placeholder {
+  display: none;
+}
+
+// modal 模态框 居中
+.vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vertical-center-modal .ant-modal {
+  top: 20px;
+}

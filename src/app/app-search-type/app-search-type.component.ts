@@ -1,6 +1,12 @@
-import {Component, EventEmitter} from '@angular/core';
-import {HttpService} from '../service/http.service';
-import {MessageService} from '../../shared/message/message.service';
+import { Component, EventEmitter } from '@angular/core';
+import { HttpService } from '../service/http.service';
+import { MessageService } from '../../shared/message/message.service';
+import { GlobeService } from '../service/globe.service';
+import { NzModalService } from 'ng-zorro-antd';
+import { AnalysisComponent } from '../analysis/analysis.component';
+import { Arabic } from 'src/shared/util/arabic';
+import { DrugItemComponent } from '../drug-item/drug-item.component';
+import { UnitComponent } from '../unit/unit.component';
 
 @Component({
   selector: 'app-app-search-type',
@@ -12,7 +18,7 @@ export class AppSearchTypeComponent {
   bookList: any = null;
   authorList: any = null;
   diseasesNodes: any = [];
-  caseItem = null;
+  caseItem: any = null;
   status: any = {
     topInputSearch: {
       topBack: false,
@@ -48,9 +54,19 @@ export class AppSearchTypeComponent {
     diseases: null
   };
   states = [];
+  destroy = [];
 
   constructor(private http: HttpService,
-              private msg: MessageService) {
+    private nzModal: NzModalService,
+    private globe: GlobeService,
+    private msg: MessageService) {
+  }
+
+  ngOnDestroy() {
+    this.destroy.forEach(item => {
+      item.unsubscribe && item.unsubscribe();
+      item.close && item.close();
+    })
   }
 
   // 列表组件加载完成
@@ -220,7 +236,7 @@ export class AppSearchTypeComponent {
     } else if (this.status.topInputSearch.type === 'author') {
       this.authorList.search(value);
     } else if (this.status.topInputSearch.type === 'diseases') {
-      this.http.searchCategoryList({searchstr: value}).subscribe(res => {
+      this.http.searchCategoryList({ searchstr: value }).subscribe(res => {
         if (res.code === '0' && res.data && res.msg === 'ok') {
           this.diseasesNodes = this.diseasesListToTree(res.data);
         } else {
@@ -230,16 +246,51 @@ export class AppSearchTypeComponent {
     }
   }
 
+  // 分析
+  analysis(item: any, content?: string) {
+    let tplModal = this.nzModal.create({
+      nzTitle: item.title + (content ? `：部分解析` : `：全文解析`),
+      nzContent: AnalysisComponent,
+      nzComponentParams: {
+        item,
+        data: content||item.content
+      },
+      nzWidth: "98vw",
+      nzWrapClassName: "vertical-center-modal",
+      nzFooter: null
+    });
+    this.destroy.push(tplModal);
+  }
+
   // 获取原文
   caseContent(data: any) {
-    this.caseItem = {title: data.title};
+    let getContent = (data: any) => {
+      const showInfo = (text: string) => {
+        let showText = text;
+        [...Arabic.zhDigit, ...this.globe.analysis.reduce((drugA, drugB) => {
+          if (Array.isArray(drugA)) {
+            return drugA.concat([drugB['饮片名']].concat(drugB['同异名'].split("、")));
+          } else {
+            return [drugB['饮片名']].concat(drugB['同异名'].split("、")).concat([drugA['饮片名']].concat(drugA['同异名'].split("、")));
+          }
+        }), ...[...this.globe.unitList, ...this.globe.unitOtherList].map(u => u.name)].forEach((s: string) => {
+          if (s) showText = showText.replace(new RegExp(s, 'g'), '<span style="color:#0089e0;">' + s + '</span>')
+        })
+        return showText;
+      }
+      this.caseItem = data;
+      this.caseItem.contentShow = showInfo(this.caseItem.content);
+      this.caseItem.contentParts = this.globe.caseContent(this.caseItem.content, {type: (this.caseItem['articleId'] ? 'article' : 'case'), 
+      id: (this.caseItem['articleId'] ? this.caseItem['articleId'] : this.caseItem['caseId'])}).contentsAndanalysis;
+    }
+    this.caseItem = { title: data.title };
     if (data.articleId) {
       this.http.getSection({
         articleId: data.articleId,
         bookName: data.title
       }).subscribe(res => {
         if (res.code === '0' && res.data && res.msg === 'ok') {
-          this.caseItem = res.data;
+          getContent(res.data);
         } else {
           this.msg.error('无法获取原文');
           this.caseItem = null;
@@ -250,13 +301,51 @@ export class AppSearchTypeComponent {
         caseId: data.caseId
       }).subscribe(res => {
         if (res.code === '0' && res.data && res.msg === 'ok') {
-          this.caseItem = res.data.caseInfo;
+          getContent(res.data.caseInfo);
         } else {
           this.msg.error('无法获取原文');
           this.caseItem = null;
         }
       });
     }
+  }
+
+  drugByName(name: string) {
+    const item = this.globe.drugs[name];
+    let tplModal = this.nzModal.create({
+      nzTitle: item['饮片名'],
+      nzContent: DrugItemComponent,
+      nzComponentParams: {
+        edit: true,
+        data: {
+          ...item
+        }
+      },
+      nzWidth: "85vw",
+      nzWrapClassName: "vertical-center-modal",
+      nzFooter: null
+    });
+    tplModal.afterClose.subscribe((e: any) => {
+      if (e) {
+        this.globe.pushDrugsEditLoaclStorage({
+          ...e, pre: {'饮片名': item['饮片名'], '同异名': item['同异名']}, old: (item.old || {'饮片名': item['饮片名'], '同异名': item['同异名']})
+        });
+        this.globe.pushDrugsEditFlag = true;
+      }
+    })
+    this.destroy.push(tplModal);
+  }
+
+  unit() {
+    let tplModal = this.nzModal.create({
+      nzTitle: `计量换算`,
+      nzContent: UnitComponent,
+      nzComponentParams: {},
+      nzWidth: "70vw",
+      nzWrapClassName: "vertical-center-modal",
+      nzFooter: null
+    });
+    this.destroy.push(tplModal);
   }
 
   // 点击医书 查询
@@ -350,7 +439,7 @@ export class AppSearchTypeComponent {
       // this.authorList.search(this.status.topInputSearch.searchstr);
     } else if (e === 'diseases') {
       this.status.topInputSearch.searchInputPlaceholder = '搜索病名';
-      this.http.searchCategoryList({searchstr: this.status.topInputSearch.searchstr}).subscribe(res => {
+      this.http.searchCategoryList({ searchstr: this.status.topInputSearch.searchstr }).subscribe(res => {
         if (res.code === '0' && res.data && res.msg === 'ok') {
           this.diseasesNodes = this.diseasesListToTree(res.data);
         } else {

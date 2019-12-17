@@ -1,0 +1,199 @@
+<div class="page">
+
+  <!-- <div class="search-drug" nz-row>
+    <div nz-col nzXs="24" nzMd="18" nzLg="15">
+      <div class="search-type-drug">
+        <nz-select [(ngModel)]="typeSearch" (ngModelChange)="search()"
+          [nzDropdownMatchSelectWidth]="false" [nzAllowClear]="false">
+          <nz-option nzValue="饮片名" nzLabel="饮片名"></nz-option>
+          <nz-option nzValue="同异名" nzLabel="同异名"></nz-option>
+          <nz-option nzValue="概述" nzLabel="概述"></nz-option>
+          <nz-option nzValue="味" nzLabel="味"></nz-option>
+          <nz-option nzValue="性" nzLabel="性"></nz-option>
+          <nz-option nzValue="归经" nzLabel="归经"></nz-option>
+          <nz-option nzValue="功能" nzLabel="功能"></nz-option>
+          <nz-option nzValue="主治" nzLabel="主治"></nz-option>
+          <nz-option nzValue="功效" nzLabel="功效"></nz-option>
+          <nz-option nzValue="病症" nzLabel="病症"></nz-option>
+          <nz-option nzValue="病邪" nzLabel="病邪"></nz-option>
+          <nz-option nzValue="病位" nzLabel="病位"></nz-option>
+          <nz-option nzValue="效用分析" nzLabel="效用分析"></nz-option>
+          <nz-option nzValue="用量" nzLabel="用量"></nz-option>
+          <nz-option nzValue="用法" nzLabel="用法"></nz-option>
+        </nz-select>
+      </div>
+      <div class="search-input-drug">
+        <nz-input-group [nzSuffix]="suffixIconSearch">
+          <input type="text" [(ngModel)]="searchInput" (ngModelChange)="search()"
+            nz-input [placeholder]="'搜索'+typeSearch" />
+        </nz-input-group>
+        <ng-template #suffixIconSearch>
+          <i nz-icon type="search"></i>
+        </ng-template>
+      </div>
+    </div>
+  </div> -->
+
+  <nz-table #table [nzData]="dataList" [nzScroll]="{ x: '3700px', y: 'calc(100vh - 300px)' }" nzShowPagination="false"
+    [nzFrontPagination]="false">
+    <thead>
+      <tr>
+        <th nzWidth="100px" nzCustomFilter nzLeft="0px">
+          饮片名
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown1>
+            <i [class.text-primary-static]="searchInput['饮片名']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown1.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['饮片名']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">同异名
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown2>
+            <i [class.text-primary-static]="searchInput['同异名']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown2.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['同异名']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="300px">概述
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown3>
+            <i [class.text-primary-static]="searchInput['概述']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown3.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['概述']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">味
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown4>
+            <i [class.text-primary-static]="searchInput['味']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown4.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['味']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">性
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown5>
+            <i [class.text-primary-static]="searchInput['性']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown5.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['性']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">归经
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown6>
+            <i [class.text-primary-static]="searchInput['归经']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown6.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['归经']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">功能
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown7>
+            <i [class.text-primary-static]="searchInput['功能']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown7.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['功能']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">主治
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown8>
+            <i [class.text-primary-static]="searchInput['主治']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown8.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['主治']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">功效
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown9>
+            <i [class.text-primary-static]="searchInput['功效']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown9.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['功效']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">病症
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown10>
+            <i [class.text-primary-static]="searchInput['病症']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown10.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['病症']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">病邪
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown11>
+            <i [class.text-primary-static]="searchInput['病邪']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown11.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['病邪']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">病位
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown12>
+            <i [class.text-primary-static]="searchInput['病位']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown12.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['病位']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="1500px">效用分析
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown13>
+            <i [class.text-primary-static]="searchInput['效用分析']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown13.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['效用分析']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">用量
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown14>
+            <i [class.text-primary-static]="searchInput['用量']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown14.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['用量']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+        <th nzCustomFilter nzWidth="150px">用法
+          <nz-dropdown nzTrigger="click" nzPlacement="bottom" [nzClickHide]="false" nzTableFilter #dropdown15>
+            <i [class.text-primary-static]="searchInput['用法']" nz-icon nzType="search" class="ant-table-filter-icon" [class.ant-table-filter-open]="dropdown15.nzVisible"
+              nz-dropdown></i>
+            <div class="search-box">
+              <input type="text" nz-input placeholder="搜索" [(ngModel)]="searchInput['用法']" (ngModelChange)="search()"/>
+            </div>
+          </nz-dropdown>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of table.data" (click)="item(data)">
+        <td nzWidth="100px" nzLeft="0px"><span [innerHtml]="data['饮片名']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['同异名']"></span></td>
+        <td nzWidth="300px"><span [innerHtml]="data['概述']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['味']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['性']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['归经']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['功能']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['主治']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['功效']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['病症']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['病邪']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['病位']"></span></td>
+        <td nzWidth="1500px"><span [innerHtml]="data['效用分析']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['用量']"></span></td>
+        <td nzWidth="150px"><span [innerHtml]="data['用法']"></span></td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

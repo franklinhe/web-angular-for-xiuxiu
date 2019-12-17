@@ -1,0 +1,54 @@
+@import "../style/vars";
+
+.body {
+    margin-top: 10px;
+    height: calc(100vh - 350px);
+    .row {
+        margin-bottom: 15px;
+        .title {
+            text-align: right;
+            color: #000;
+            font-weight: bolder;
+            font-size: 16px;
+            padding-right: 20px;
+        }
+    }
+}
+.edit-count {
+    border: none;
+    font-size: 20px;
+    border-bottom: $border;
+    width: 100px;
+    height: 27px;
+    &:focus {
+        outline: none;
+    }
+}
+.edit-item {
+    border: none;
+    font-size: 20px;
+    border-bottom: $border;
+    width: 80%;
+    height: 27px;
+    &:focus {
+        outline: none;
+    }
+}
+.edit-text {
+    border: none;
+    font-size: 20px;
+    // border-bottom: $border;
+    width: 90%;
+    height: 27px;
+    &:focus {
+        outline: none;
+    }
+}
+.ok {
+    width: 100%;
+    font-size: 20px;
+    padding: 10px;
+    height: 50px;
+    margin-top: 30px;
+}
+

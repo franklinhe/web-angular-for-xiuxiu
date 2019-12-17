@@ -1,0 +1,346 @@
+<qk-scrollbar class="page" *ngIf="(status === 'list') || (status === 'none')">
+  <div class="top">
+    <div class="case">
+      <nz-table #caseTable [nzData]="analysis.list" [nzShowPagination]="false" [nzWidthConfig]="['30px', '50%', '50%']"
+        nzSize="small">
+        <thead>
+          <tr>
+            <th nzShowCheckbox [(nzChecked)]="analysis.allChecked" [nzIndeterminate]="analysis.indeterminate"
+              (nzCheckedChange)="analysis.checkedAll($event);analy()"></th>
+            <th>处方原文</th>
+            <th>处方规范化与剂量折算
+              <!-- (<span class="text-primary" (click)="addDrug()">添加药材信息</span>) -->
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-template ngFor let-data let-i="index" [ngForOf]="caseTable.data">
+            <tr>
+              <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="analysis.checked($event,data);analy()">
+              </td>
+              <td>
+                <span *ngIf="!data.none">
+                  <span *ngIf="!data.edit">
+                    <ng-template ngFor let-cont [ngForOf]="data.content">
+                      <span *ngIf="!data.drugs.includes(cont)" [innerHtml]="cont"></span>
+                      <span *ngIf="data.drugs.includes(cont)" class="text-primary" (click)="drugByName(cont)"
+                        [innerHtml]="cont"></span>
+                    </ng-template>
+                    。
+                    <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="primary"
+                      (click)="editText(data)"><i nz-icon nzType="edit"></i>编辑</button>
+                  </span>
+                  <span *ngIf="data.edit">
+                    <textarea #textareaedit nz-input [(ngModel)]="data.text" (blur)="textEdit(data, i)"></textarea>
+                  </span>
+                </span>
+                <span *ngIf="data.none">
+                  <textarea #textareaedit nz-input [(ngModel)]="data.text"
+                    (ngModelChange)="noneEdit(data, i)"></textarea>
+                </span>
+              </td>
+              <td>
+                <ng-template ngFor let-item let-ii="index" [ngForOf]="data.analysis">
+                  <li>
+                    <span class="text-primary" *ngIf="item.getNameByContent===item['饮片名']"
+                      (click)="drug(item)">{{item.getNameByContent}}</span>
+                    <!-- <span *ngIf="item.getNameByContent===item['饮片名']" class="text-aux">
+                      (饮片名:<span class="text-primary-static">{{item['饮片名']}}</span>,
+                      同异名:{{item['同异名']}})
+                    </span> -->
+                    <span *ngIf="!(item.getNameByContent===item['饮片名'])" (click)="drug(item)"
+                      class="text-primary text-warning">{{item.getNameByContent}}</span>
+                    <!-- <span *ngIf="!(item.getNameByContent===item['饮片名'])" class="text-aux">
+                      (饮片名:{{item['饮片名']}},
+                      同异名:<span [innerHtml]="showName(item['同异名'],item)"></span>)
+                    </span> -->
+                    <span class="text-green" *ngIf="item.getCountByContent">
+                      ：用量{{item.getCountByContent.count}}g
+                    </span>
+                    <span class="text-warning" *ngIf="!item.getCountByContent">：未获取到用量！</span>
+                    <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="primary"
+                      (click)="editDrug(item, data, i)"><i nz-icon nzType="edit"></i>编辑</button>
+                    <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="danger"
+                      (click)="deleteDrug(ii, data)"><i nz-icon nzType="delete"></i>删除</button>
+                  </li>
+                </ng-template>
+                <div>
+                  <nz-select style="width: 120px;" [(ngModel)]="data.addDrug" nzPlaceHolder="药材" nzAllowClear
+                    nzShowSearch nzSize="small" [nzDropdownMatchSelectWidth]="false">
+                    <nz-option *ngFor="let drug of globe.analysis" [nzValue]="drug"
+                      [nzLabel]="(drug['饮片名']+'('+drug['同异名']+')')" nzCustomContent>
+                      {{drug['饮片名']}}({{drug['同异名']}})
+                    </nz-option>
+                  </nz-select>
+                  <span class="text-green">：用量</span>
+                  <nz-input-number required class="edit" type="text" style="width: 50px; text-align: center;"
+                    [(ngModel)]="data.addCount" [nzPlaceHolder]="'0'" [nzMin]="0" nzSize="small"></nz-input-number>
+                  <span class="text-green">g</span>&nbsp;&nbsp;
+                  <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="primary" (click)="addAnaly(data)"><i
+                      nz-icon nzType="plus"></i>添加</button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </nz-table>
+    </div>
+    <div class="setting">
+      <p (click)="unit()" class="text-primary">计量换算</p>
+      <p (click)="drugs()" class="text-primary">中药信息</p>
+    </div>
+  </div>
+  <qk-scrollbar *ngIf="status === 'list'" class="body">
+    <div nz-row *ngIf="evilsList.length > 0">
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11">
+        <h2>病邪分析</h2>
+        <nz-table class="table-head" nzSize="small" nzShowPagination="false" [nzWidthConfig]="['20%', '30%', '50%']">
+          <thead nzSingleSort (nzSortChange)="sort($event, evilsList, 'evilsList')">
+            <tr>
+              <th>病邪</th>
+              <th nzShowSort nzSortKey="value">量值</th>
+              <th>药味</th>
+            </tr>
+          </thead>
+        </nz-table>
+        <qk-scrollbar class="list-table">
+          <nz-table nzSize="small" [nzData]="evilsList" nzShowPagination="false"
+            [nzWidthConfig]="['20%', '30%', '50%']">
+            <tbody>
+              <ng-template ngFor let-data let-index [ngForOf]="evilsList">
+                <tr>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.value }}</td>
+                  <td>
+                    <ng-template ngFor let-drug let-index [ngForOf]="data.drugs">
+                      <span style="margin-right: 15px;">{{drug.drug}}:{{drug.value}}</span>
+                    </ng-template>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </nz-table>
+        </qk-scrollbar>
+      </div>
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11" style="padding-top: 30px;">
+        <qk-pie-chart [data]="evilsList"></qk-pie-chart>
+      </div>
+    </div>
+    <div nz-row *ngIf="diseaseList.length > 0">
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11">
+        <h2>病位分析</h2>
+        <nz-table class="table-head" nzSize="small" nzShowPagination="false" [nzWidthConfig]="['20%', '30%', '50%']">
+          <thead nzSingleSort (nzSortChange)="sort($event, diseaseList, 'diseaseList')">
+            <tr>
+              <th>病位</th>
+              <th nzShowSort nzSortKey="value">量值</th>
+              <th>药味</th>
+            </tr>
+          </thead>
+        </nz-table>
+        <qk-scrollbar class="list-table">
+          <nz-table nzSize="small" [nzData]="diseaseList" nzShowPagination="false"
+            [nzWidthConfig]="['20%', '30%', '50%']">
+            <tbody>
+              <ng-template ngFor let-data let-index [ngForOf]="diseaseList">
+                <tr>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.value }}</td>
+                  <td>
+                    <ng-template ngFor let-drug let-index [ngForOf]="data.drugs">
+                      <span style="margin-right: 15px;">{{drug.drug}}:{{drug.value}}</span>
+                    </ng-template>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </nz-table>
+        </qk-scrollbar>
+      </div>
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11" style="padding-top: 30px;">
+        <qk-pie-chart [data]="diseaseList"></qk-pie-chart>
+      </div>
+    </div>
+    <div nz-row *ngIf="propertyList.length > 0">
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11">
+        <h2>药性分析</h2>
+        <nz-table class="table-head" nzSize="small" nzShowPagination="false" [nzWidthConfig]="['20%', '30%', '50%']">
+          <thead nzSingleSort (nzSortChange)="sort($event, propertyList, 'propertyList')">
+            <tr>
+              <th>性</th>
+              <th nzShowSort nzSortKey="value">量值</th>
+              <th>药味</th>
+            </tr>
+          </thead>
+        </nz-table>
+        <qk-scrollbar class="list-table">
+          <nz-table nzSize="small" [nzData]="propertyList" nzShowPagination="false"
+            [nzWidthConfig]="['20%', '30%', '50%']">
+            <tbody>
+              <ng-template ngFor let-data let-index [ngForOf]="propertyList">
+                <tr>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.value }}</td>
+                  <td>
+                    <ng-template ngFor let-drug let-index [ngForOf]="data.drugs">
+                      <span style="margin-right: 15px;">{{drug.drug}}:{{drug.value}}</span>
+                    </ng-template>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </nz-table>
+        </qk-scrollbar>
+      </div>
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11" style="padding-top: 30px;">
+        <qk-pie-chart [data]="propertyList"></qk-pie-chart>
+      </div>
+    </div>
+    <div nz-row *ngIf="flavorList.length > 0">
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11">
+        <h2>药味分析</h2>
+        <nz-table class="table-head" nzSize="small" nzShowPagination="false" [nzWidthConfig]="['20%', '30%', '50%']">
+          <thead nzSingleSort (nzSortChange)="sort($event, flavorList, 'flavorList')">
+            <tr>
+              <th>味</th>
+              <th nzShowSort nzSortKey="value">量值</th>
+              <th>药味</th>
+            </tr>
+          </thead>
+        </nz-table>
+        <qk-scrollbar class="list-table">
+          <nz-table nzSize="small" [nzData]="flavorList" nzShowPagination="false"
+            [nzWidthConfig]="['20%', '30%', '50%']">
+            <tbody>
+              <ng-template ngFor let-data let-index [ngForOf]="flavorList">
+                <tr>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.value }}</td>
+                  <td>
+                    <ng-template ngFor let-drug let-index [ngForOf]="data.drugs">
+                      <span style="margin-right: 15px;">{{drug.drug}}:{{drug.value}}</span>
+                    </ng-template>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </nz-table>
+        </qk-scrollbar>
+      </div>
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11" style="padding-top: 30px;">
+        <qk-pie-chart [data]="flavorList"></qk-pie-chart>
+      </div>
+    </div>
+    <div nz-row *ngIf="tropismList.length > 0">
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11">
+        <h2>归经分析</h2>
+        <nz-table class="table-head" nzSize="small" nzShowPagination="false" [nzWidthConfig]="['20%', '30%', '50%']">
+          <thead nzSingleSort (nzSortChange)="sort($event, tropismList, 'tropismList')">
+            <tr>
+              <th>归经</th>
+              <th nzShowSort nzSortKey="value">量值</th>
+              <th>药味</th>
+            </tr>
+          </thead>
+        </nz-table>
+        <qk-scrollbar class="list-table">
+          <nz-table nzSize="small" [nzData]="tropismList" nzShowPagination="false"
+            [nzWidthConfig]="['20%', '30%', '50%']">
+            <tbody>
+              <ng-template ngFor let-data let-index [ngForOf]="tropismList">
+                <tr>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.value }}</td>
+                  <td>
+                    <ng-template ngFor let-drug let-index [ngForOf]="data.drugs">
+                      <span style="margin-right: 15px;">{{drug.drug}}:{{drug.value}}</span>
+                    </ng-template>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </nz-table>
+        </qk-scrollbar>
+      </div>
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11" style="padding-top: 30px;">
+        <qk-pie-chart [data]="tropismList"></qk-pie-chart>
+      </div>
+    </div>
+    <div nz-row *ngIf="effectList.length > 0">
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11">
+        <h2>功效分析</h2>
+        <nz-table class="table-head" nzSize="small" nzShowPagination="false" [nzWidthConfig]="['20%', '30%', '50%']">
+          <thead nzSingleSort (nzSortChange)="sort($event, effectList, 'effectList')">
+            <tr>
+              <th>功效</th>
+              <th nzShowSort nzSortKey="value">量值</th>
+              <th>药味</th>
+            </tr>
+          </thead>
+        </nz-table>
+        <qk-scrollbar class="list-table">
+          <nz-table nzSize="small" [nzData]="effectList" nzShowPagination="false"
+            [nzWidthConfig]="['20%', '30%', '50%']">
+            <tbody>
+              <ng-template ngFor let-data let-index [ngForOf]="effectList">
+                <tr>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.value }}</td>
+                  <td>
+                    <ng-template ngFor let-drug let-index [ngForOf]="data.drugs">
+                      <span style="margin-right: 15px;">{{drug.drug}}:{{drug.value}}</span>
+                    </ng-template>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </nz-table>
+        </qk-scrollbar>
+      </div>
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11" style="padding-top: 30px;">
+        <qk-column-chart [data]="effectList"></qk-column-chart>
+      </div>
+    </div>
+    <div nz-row *ngIf="maladyList.length > 0">
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11">
+        <h2>病症分析</h2>
+        <nz-table class="table-head" nzSize="small" nzShowPagination="false" [nzWidthConfig]="['20%', '30%', '50%']">
+          <thead nzSingleSort (nzSortChange)="sort($event, maladyList, 'maladyList')">
+            <tr>
+              <th>病症</th>
+              <th nzShowSort nzSortKey="value">量值</th>
+              <th>药味</th>
+            </tr>
+          </thead>
+        </nz-table>
+        <qk-scrollbar class="list-table">
+          <nz-table nzSize="small" [nzData]="maladyList" nzShowPagination="false"
+            [nzWidthConfig]="['20%', '30%', '50%']">
+            <tbody>
+              <ng-template ngFor let-data let-index [ngForOf]="maladyList">
+                <tr>
+                  <td>{{ data.name }}</td>
+                  <td>{{ data.value }}</td>
+                  <td>
+                    <ng-template ngFor let-drug let-index [ngForOf]="data.drugs">
+                      <span style="margin-right: 15px;">{{drug.drug}}:{{drug.value}}</span>
+                    </ng-template>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </nz-table>
+        </qk-scrollbar>
+      </div>
+      <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11" style="padding-top: 30px;">
+        <qk-column-chart [data]="maladyList"></qk-column-chart>
+      </div>
+    </div>
+  </qk-scrollbar>
+  <div class="none" *ngIf="status === 'none'">
+    暂无分析结果，您可以<span class="text-primary" (click)="addDrug()">添加药材信息</span>，以获得正确的分析结果！
+  </div>
+</qk-scrollbar>
+<div class="none" *ngIf="status === 'loading'">
+  <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+</div>

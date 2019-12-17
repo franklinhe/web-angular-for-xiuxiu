@@ -8,7 +8,7 @@ export abstract class TableList {
   // loading
   isLoading = true;
   // table list all
-  list = [];
+  list: any[] = [];
   // all checked
   checkedList = [];
   checkedEvent = new EventEmitter<any>(true);

@@ -41,28 +41,25 @@
               </td>
               <td>
                 <ng-template ngFor let-item let-ii="index" [ngForOf]="data.analysis">
-                  <li>
                     <span class="text-primary" *ngIf="item.getNameByContent===item['饮片名']"
-                      (click)="drug(item)">{{item.getNameByContent}}</span>
+                      (click)="editDrug(item, data, i)">{{item.getNameByContent}}</span>
                     <!-- <span *ngIf="item.getNameByContent===item['饮片名']" class="text-aux">
                       (饮片名:<span class="text-primary-static">{{item['饮片名']}}</span>,
                       同异名:{{item['同异名']}})
                     </span> -->
-                    <span *ngIf="!(item.getNameByContent===item['饮片名'])" (click)="drug(item)"
+                    <span *ngIf="!(item.getNameByContent===item['饮片名'])" (click)="editDrug(item, data, i)"
                       class="text-primary text-warning">{{item.getNameByContent}}</span>
                     <!-- <span *ngIf="!(item.getNameByContent===item['饮片名'])" class="text-aux">
                       (饮片名:{{item['饮片名']}},
                       同异名:<span [innerHtml]="showName(item['同异名'],item)"></span>)
                     </span> -->
                     <span class="text-green" *ngIf="item.getCountByContent">
-                      ：用量{{item.getCountByContent.count}}g
+                      {{item.getCountByContent.count}}g
                     </span>
                     <span class="text-warning" *ngIf="!item.getCountByContent">：未获取到用量！</span>
-                    <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="primary"
-                      (click)="editDrug(item, data, i)"><i nz-icon nzType="edit"></i>编辑</button>
                     <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="danger"
-                      (click)="deleteDrug(ii, data)"><i nz-icon nzType="delete"></i>删除</button>
-                  </li>
+                      (click)="deleteDrug(ii, data)"><i nz-icon nzType="delete"></i></button>
+
                 </ng-template>
                 <div>
                   <nz-select style="width: 120px;" [(ngModel)]="data.addDrug" nzPlaceHolder="药材" nzAllowClear

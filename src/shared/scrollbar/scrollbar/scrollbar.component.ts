@@ -18,10 +18,12 @@ export class ScrollbarComponent implements AfterViewChecked {
   @ViewChild('scrollbar') ele: ElementRef<any>;
   defaultconfig: any = {
     axis: 'y',
-    theme: 'minimal-dark',
+    theme: 'dark',
     advanced: {autoExpandHorizontalScroll: true},
     autoDraggerLength: true,
-    scrollInertia: 100
+    scrollInertia: 100,
+	keyboard:{ enable: true },
+	autoHideScrollbar: true
   };
   @Input() config: any;
   @Output() init = new EventEmitter();

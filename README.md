@@ -1,11 +1,16 @@
-# WebAngularForXiuxiu - 医案管理 H5
+﻿# WebAngularForXiuxiu - 医案管理 H5
 
 ## init(node: version > 12, cnpm)
     cnpm i
 
+node-sass的编译问题的处理：
+cd node-modules
+git clone https://github.com/sass/node-sass.git
+cd node-sass
+vi package.json文件中nodeSassConfig>binarySite的值https://npm.taobao.org/mirrors/node-sass/
+npm install
 ## run 
-    npm run start-o
-
+    npm run start
 ## build 
     npm run build-prod
 
@@ -16,30 +21,10 @@
     npm run start-o 使用的 environment.ts
     npm run build-prod 使用的 environment.prod.ts
 
-## 技术栈 angular cli 说明
-    
-    This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.4.
 
-    ## Development server
+## to do
+1、数据后台化；
+2、方剂分析界面适合手机端使用的改造；
+3、生成.exe本地可以运行的方式；
+4、服务器用户注册与管理，与微信等第三方应用绑定推广。
 
-    Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-    ## Code scaffolding
-
-    Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-    ## Build
-
-    Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-    ## Running unit tests
-
-    Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-    ## Running end-to-end tests
-
-    Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-    ## Further help
-
-    To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

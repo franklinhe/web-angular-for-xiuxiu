@@ -249,7 +249,7 @@ export class AppSearchTypeComponent {
   // 分析
   analysis(item: any, content?: string) {
     let tplModal = this.nzModal.create({
-      nzTitle: item.title + (content ? `：部分解析` : `：全文解析`),
+      nzTitle: item.title + (': ' +content),
       nzContent: AnalysisComponent,
       nzComponentParams: {
         item,

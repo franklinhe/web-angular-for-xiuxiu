@@ -3,42 +3,10 @@
     <div class="case">
       <nz-table #caseTable [nzData]="analysis.list" [nzShowPagination]="false" [nzWidthConfig]="['30px', '50%', '50%']"
         nzSize="small">
-        <thead>
-          <tr>
-            <th nzShowCheckbox [(nzChecked)]="analysis.allChecked" [nzIndeterminate]="analysis.indeterminate"
-              (nzCheckedChange)="analysis.checkedAll($event);analy()"></th>
-            <th>处方原文</th>
-            <th>处方规范化与剂量折算
-              <!-- (<span class="text-primary" (click)="addDrug()">添加药材信息</span>) -->
-            </th>
-          </tr>
-        </thead>
+
         <tbody>
           <ng-template ngFor let-data let-i="index" [ngForOf]="caseTable.data">
             <tr>
-              <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="analysis.checked($event,data);analy()">
-              </td>
-              <td>
-                <span *ngIf="!data.none">
-                  <span *ngIf="!data.edit">
-                    <ng-template ngFor let-cont [ngForOf]="data.content">
-                      <span *ngIf="!data.drugs.includes(cont)" [innerHtml]="cont"></span>
-                      <span *ngIf="data.drugs.includes(cont)" class="text-primary" (click)="drugByName(cont)"
-                        [innerHtml]="cont"></span>
-                    </ng-template>
-                    。
-                    <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="primary"
-                      (click)="editText(data)"><i nz-icon nzType="edit"></i>编辑</button>
-                  </span>
-                  <span *ngIf="data.edit">
-                    <textarea #textareaedit nz-input [(ngModel)]="data.text" (blur)="textEdit(data, i)"></textarea>
-                  </span>
-                </span>
-                <span *ngIf="data.none">
-                  <textarea #textareaedit nz-input [(ngModel)]="data.text"
-                    (ngModelChange)="noneEdit(data, i)"></textarea>
-                </span>
-              </td>
               <td>
                 <ng-template ngFor let-item let-ii="index" [ngForOf]="data.analysis">
                     <span class="text-primary" *ngIf="item.getNameByContent===item['饮片名']"
@@ -84,10 +52,8 @@
     </div>
     <div class="setting">
       <p (click)="unit()" class="text-primary">计量换算</p>
-      <p (click)="drugs()" class="text-primary">中药信息</p>
     </div>
   </div>
-  <qk-scrollbar *ngIf="status === 'list'" class="body">
     <div nz-row *ngIf="evilsList.length > 0">
       <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11">
         <h2>病邪分析</h2>
@@ -333,7 +299,6 @@
         <qk-column-chart [data]="maladyList"></qk-column-chart>
       </div>
     </div>
-  </qk-scrollbar>
   <div class="none" *ngIf="status === 'none'">
     暂无分析结果，您可以<span class="text-primary" (click)="addDrug()">添加药材信息</span>，以获得正确的分析结果！
   </div>

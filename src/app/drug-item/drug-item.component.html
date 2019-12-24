@@ -118,25 +118,18 @@
     </div>
   </div>
 </qk-scrollbar>
-<div *ngIf="analy">
-  <div nz-row class="row">
-    <div nz-col nzSpan="3" class="title">饮片名</div>
-    <div nz-col nzSpan="20" [innerHtml]="data['饮片名']"></div>
+<div *ngIf="analy" class="analy">
+  <div nz-row class="row">    
+    <div nz-col  [innerHtml]="data['饮片名']"></div>
   </div>
   <div nz-row class="row">
-    <div nz-col nzSpan="3" class="title">同异名</div>
-    <div nz-col nzSpan="20" [innerHtml]="data['同异名']"></div>
-  </div>
-  <div nz-row class="row">
-    <div nz-col nzSpan="3" class="title">此方中的用量</div>
-    <div nz-col nzSpan="20">
+    <div nz-col >
       <input class="edit-count" type="text" [(ngModel)]="data.flag[flag.type][flag.id][flag.data.text]">
       <span>{{data.StandardUnitChar}}</span>
     </div>
   </div>
   <div nz-row class="row">
-    <div nz-col nzSpan="8" class="title"></div>
-    <div nz-col nzSpan="8">
+    <div nz-col>
       <button class="ok" nz-button nzType="primary" (click)="ok()">保存</button>
     </div>
   </div>

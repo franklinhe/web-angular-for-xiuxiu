@@ -5,6 +5,7 @@
     height: calc(100vh - 350px);
     .row {
         margin-bottom: 15px;
+        text-align: center;
         .title {
             text-align: right;
             color: #000;
@@ -18,8 +19,8 @@
     border: none;
     font-size: 20px;
     border-bottom: $border;
-    width: 100px;
-    height: 27px;
+    width: 45px;
+    height: 30px;
     &:focus {
         outline: none;
     }
@@ -45,10 +46,16 @@
     }
 }
 .ok {
-    width: 100%;
+    width: 30%;
     font-size: 20px;
-    padding: 10px;
-    height: 50px;
-    margin-top: 30px;
+    padding: 5px;
+    height: 30px;
+    margin-top: 10px;
 }
 
+.analy {
+    margin: 0 auto;
+    width: 200px;
+    height: 100px;
+    border: 1px;
+}

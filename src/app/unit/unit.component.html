@@ -1,5 +1,4 @@
 <qk-scrollbar class="body">
-  <p class="head">通用剂量换算</p>
   <div style="line-height: 30px;" nz-row class="row" *ngFor="let unit of globe.unitList">
     <div nz-col nzSpan="13" class="title">1{{unit.name}}&nbsp;&nbsp;=&nbsp;&nbsp;</div>
     <div *ngIf="unit.name === '两'" nz-col nzSpan="10">
@@ -9,26 +8,6 @@
     <div *ngIf="!(unit.name === '两')" nz-col nzSpan="10">
       <input class="edit" type="text" [(ngModel)]="unit.count">
       <span>{{unit.nuitChar}}</span>
-    </div>
-  </div>
-  <p class="head">特殊剂量换算</p>
-  <div nz-row class="row" *ngFor="let other of globe.unitOtherList">
-    <div nz-col nzSpan="13" class="title">
-      <input class="edit" style="width: 120px; text-align: right;" type="text" [(ngModel)]="other.name">
-      &nbsp;&nbsp;=&nbsp;&nbsp;</div>
-    <div nz-col nzSpan="10">
-      <input class="edit" type="text" [(ngModel)]="other.count">
-      <span>{{other.nuitChar}}</span>
-    </div>
-  </div>
-  <div nz-row class="row">
-    <div nz-col nzSpan="13" class="title">
-      <input class="edit" style="width: 120px; text-align: right;" type="text" [(ngModel)]="addName">
-      &nbsp;&nbsp;=&nbsp;&nbsp;</div>
-    <div nz-col nzSpan="10">
-      <input class="edit" type="text" [(ngModel)]="addCount">
-      <span>g</span>
-      <i (click)="add()" class="text-primary" style="margin-left: 20px; font-size: 30px; vertical-align: middle;" nz-icon nzType="border-inner" nzTheme="outline"></i>
     </div>
   </div>
 </qk-scrollbar>

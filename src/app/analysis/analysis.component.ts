@@ -125,7 +125,7 @@ export class AnalysisComponent implements OnDestroy {
       id = this.item['caseId']
     }
     let tplModal = this.nzModal.create({
-      nzTitle: '编辑',
+      
       nzContent: DrugItemComponent,
       nzComponentParams: {
         flag: {
@@ -140,7 +140,7 @@ export class AnalysisComponent implements OnDestroy {
           StandardUnitChar: 'g'
         }
       },
-      nzWidth: "60vw",
+      nzWidth: "50vw",
       nzWrapClassName: "vertical-center-modal",
       nzFooter: null
     });
@@ -197,7 +197,7 @@ export class AnalysisComponent implements OnDestroy {
       nzTitle: `计量换算`,
       nzContent: UnitComponent,
       nzComponentParams: {},
-      nzWidth: "80vw",
+      nzWidth: "60vw",
       nzWrapClassName: "vertical-center-modal",
       nzFooter: null
     });
@@ -541,13 +541,6 @@ export class AnalysisComponent implements OnDestroy {
         default:
           break;
       }
-
-
-
-
-
-
-
     }
 
   }

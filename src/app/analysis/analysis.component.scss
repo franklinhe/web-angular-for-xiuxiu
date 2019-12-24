@@ -39,6 +39,11 @@
     .case {
         display: inline-block;
         position: relative;
+        width: 100%;
+    }
+    .add {
+        display: inline-block;
+        position: relative;
         width: calc(100% - 85px);
     }
     .setting {

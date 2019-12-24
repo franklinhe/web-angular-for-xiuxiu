@@ -28,7 +28,7 @@
         <span *ngIf="part.drugs" style="background-color: rgba(0,0,0,0.1); margin-right: 10px;">
           <ng-template ngFor let-cont [ngForOf]="part.content">
             <span *ngIf="!part.drugs.includes(cont)" [innerHtml]="cont"></span>
-            <span *ngIf="part.drugs.includes(cont)" class="text-primary" (click)="drugByName(cont)" [innerHtml]="cont"></span>
+            <span *ngIf="part.drugs.includes(cont)" class="text-primary"  [innerHtml]="cont"></span>
           </ng-template>。
           <i class="text-primary" (click)="analysis(caseItem, part.text)" nz-icon nzType="question-circle" nzTheme="outline"></i>
         </span>

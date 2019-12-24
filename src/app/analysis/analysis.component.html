@@ -1,6 +1,6 @@
 <qk-scrollbar class="page" *ngIf="(status === 'list') || (status === 'none')">
   <div class="top">
-    <div class="case">
+    <div  class="case">
       <nz-table #caseTable [nzData]="analysis.list" [nzShowPagination]="false" [nzWidthConfig]="['30px', '50%', '50%']"
         nzSize="small">
 
@@ -29,29 +29,29 @@
                       (click)="deleteDrug(ii, data)"><i nz-icon nzType="delete"></i></button>
 
                 </ng-template>
-                <div>
-                  <nz-select style="width: 120px;" [(ngModel)]="data.addDrug" nzPlaceHolder="药材" nzAllowClear
+                <div  class="add">
+                  <nz-select style="width: 120px;" [(ngModel)]="data.addDrug" nzPlaceHolder="加饮片" nzAllowClear
                     nzShowSearch nzSize="small" [nzDropdownMatchSelectWidth]="false">
                     <nz-option *ngFor="let drug of globe.analysis" [nzValue]="drug"
                       [nzLabel]="(drug['饮片名']+'('+drug['同异名']+')')" nzCustomContent>
                       {{drug['饮片名']}}({{drug['同异名']}})
                     </nz-option>
                   </nz-select>
-                  <span class="text-green">：用量</span>
+                  
                   <nz-input-number required class="edit" type="text" style="width: 50px; text-align: center;"
                     [(ngModel)]="data.addCount" [nzPlaceHolder]="'0'" [nzMin]="0" nzSize="small"></nz-input-number>
                   <span class="text-green">g</span>&nbsp;&nbsp;
                   <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="primary" (click)="addAnaly(data)"><i
-                      nz-icon nzType="plus"></i>添加</button>
+                      nz-icon nzType="plus"></i></button>
                 </div>
+                <div class="setting">
+                  <p (click)="unit()" class="text-primary">计量换算</p>
+                </div>            
               </td>
             </tr>
           </ng-template>
         </tbody>
       </nz-table>
-    </div>
-    <div class="setting">
-      <p (click)="unit()" class="text-primary">计量换算</p>
     </div>
   </div>
     <div nz-row *ngIf="evilsList.length > 0">

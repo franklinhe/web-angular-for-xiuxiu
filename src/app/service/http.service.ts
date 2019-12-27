@@ -231,6 +231,13 @@ export class HttpService {
     }
   }
 
+  // 处方分析模型
+  getModel(data: {
+    txt: string
+  }) {
+    return this.http.get<any>(environment.api + '/drug/model', HttpUtil.setParams(data));
+  }
+
   autoComplete(data: {
     query: string
   }) {

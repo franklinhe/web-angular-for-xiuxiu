@@ -8,7 +8,7 @@ export const environment: any = {
   // 接口mockData
   // api: 'http://47.99.194.110/mockjsdata/2',
   // 真实数据
-  api: 'http://47.99.194.110/consilia',
+  api: 'http://localhost:8080/consilia',
   resource: './',
   lng: 'zh',
   mockData: false

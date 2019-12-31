@@ -85,14 +85,7 @@ export class DrugItemComponent implements OnDestroy, OnInit {
   }
 
   ok() {
-    if (!this.data['饮片名']) {
-      this.msg.warning('请填写饮片名！');
-      return;
-    }
-    if (!this.data['用量']) {
-      this.msg.warning('请填写用量！');
-      return;
-    }
+
     this.modal.destroy(this.data);
   }
 

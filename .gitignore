@@ -24,6 +24,7 @@ speed-measure-plugin.json
 .editorconfig
 *.xlsx
 .gitkeep
+develop.txt
 
 # IDE - VSCode
 .vscode/*

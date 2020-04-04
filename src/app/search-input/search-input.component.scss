@@ -34,13 +34,15 @@
   .back-input {
     width: calc(100% - 32px);
     display: inline-block;
+    float:left;
   }
   .type-search-input {
-    width: calc(100% - 60px);
+    width: calc(80% - 60px);
     display: inline-block;
+    float: left;
   }
   .type-search-input.back-input {
-    width: calc(100% - 93px);
+    width: calc(80% - 93px);
     display: inline-block;
   }
   .type-search {

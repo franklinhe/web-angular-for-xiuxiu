@@ -1,7 +1,7 @@
 <app-search-input [(placeholder)]="status.topInputSearch.searchInputPlaceholder" [(back)]="status.topInputSearch.topBack"
   [(typeSearchShow)]="status.topInputSearch.searchTypeSelectShow" [(typeSearch)]="status.topInputSearch.type"
   [(disabled)]="status.topInputSearch.searchInputDisabled" (typeSearchChange)="typeSearch($event)" [(search)]="status.topInputSearch.searchstr"
-  (searchChange)="searchStr($event)" (previous)="previous()"></app-search-input>
+  (searchChange)="searchStr($event)" (previous)="previous()" (aliasChange) = "alias($event)" (vocabChange) = "vocab($event)"></app-search-input>
 <div *ngIf="status.topInputSearch.type==='case'">
   <app-search-type *ngIf="!status.diseases" [searchOptions]="status.searchType.searchOptions" (init)="getCategoryList()"
     [(searchType)]="status.searchType.bookCataIds" [(disabled)]="status.searchType.searchTypeDisabled"

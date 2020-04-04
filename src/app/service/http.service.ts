@@ -117,6 +117,8 @@ export class HttpService {
     search?: string | number
     pageNum: string | number
     pageSize: string | number
+    extended?: boolean
+    smart?: boolean
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -131,7 +133,9 @@ export class HttpService {
           pageSize: data.pageSize,
           bookAuthor: data.bookAuthor || null,	// 作者	string
           bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
-          searchstr: data.search || null
+          searchstr: data.search || null,
+          extended: data.extended,
+          smart: data.smart
         });
       } else {
         return this.http.get<any>(environment.api + '/case/list', HttpUtil.setParams({
@@ -206,6 +210,8 @@ export class HttpService {
     bookAuthor?: string | number	// 作者	string
     bookName?: string | number	// 书名	string	@mock=续名医类案
     searchstr?: string | number
+    extended?: boolean
+    smart?:boolean
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {

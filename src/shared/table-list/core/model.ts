@@ -4,7 +4,8 @@ export class Param {
   pageSize: number | string;
   sortName?: string;
   sortOrder?: string;
-  [propName: string]: any
+  [propName: string]: any;
+  exetended: boolean;
 }
 export class Config {
   // Select the first item by default

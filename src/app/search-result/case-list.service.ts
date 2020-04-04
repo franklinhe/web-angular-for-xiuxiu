@@ -11,9 +11,10 @@ export class CaseListService extends TableList {
     pageNum: 1,
     pageSize: 10,
     search: null,
-    bookName: null,
+    bookCataId: null,
     bookAuthor: null,
-    bookCataId: null
+    bookName: null,
+
   };
 
   constructor(private http: HttpService) {

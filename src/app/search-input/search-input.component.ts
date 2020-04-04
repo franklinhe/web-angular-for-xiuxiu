@@ -29,6 +29,12 @@ export class SearchInputComponent implements OnInit {
   @Input() typeSearchShow = true;
   @Output() typeSearchShowChange = new EventEmitter<string>();
 
+  @Input() alias = false;
+  @Output() aliasChange = new EventEmitter<string>();
+
+  @Input() vocab = false;
+  @Output() vocabChange = new EventEmitter<string>();
+
   options: string[] = [];
 
   constructor(private http: HttpService) { }

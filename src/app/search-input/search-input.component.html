@@ -1,6 +1,51 @@
 <div class="search-input" nz-row>
+  <div nz-col nzXs="24" nzMd="16" nzLg="15">
+    <div [class.back-icon]="back" style="display: none;">
+      <i (click)="previous.emit()" class="back-icon" nz-icon nzType="left" nzTheme="outline"></i>
+    </div>
+    <div [class.type-search]="typeSearchShow" style="display: none;">
+      <nz-select [(ngModel)]="typeSearch"
+                 (ngModelChange)="typeSearchChange.emit($event)"
+                 [nzDropdownMatchSelectWidth]="false" [nzAllowClear]="false">
+        <nz-option nzValue="case" nzLabel="医案"></nz-option>
+        <nz-option nzValue="book" nzLabel="医书"></nz-option>
+        <nz-option nzValue="author" nzLabel="医家"></nz-option>
+        <nz-option nzValue="diseases" nzLabel="病名"></nz-option>
+      </nz-select>
+    </div>
+    <div [class.back-input]="back" [class.type-search-input]="typeSearchShow">
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input type="text" [(ngModel)]="search"
+               [(disabled)]="disabled"
+               (input)="onInput($event.target?.value)"
+               [nzAutocomplete]="auto"
+               (keyup)="keyup($event)"
+               (keydown.enter)="enter($event)"
+               (ngModelChange)="searchChange.emit($event)" nz-input [placeholder]="placeholder" />
+               <nz-autocomplete nzBackfill #auto>
+                <nz-auto-option *ngFor="let option of options" [nzValue]="option">
+                  {{ option }}
+                </nz-auto-option>
+              </nz-autocomplete>
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <i nz-icon type="search"></i>
+      </ng-template>
+    </div>
+  </div>
+  <div *ngIf="typeSearch=='case'" nz-col nzXs="24" nzMd="8" nzLg="9">
+    <div caseSearchExtend>
+      <label nz-checkbox [(ngModel)]="extended" (ngModelChange)="change('extended',$event)" >扩展</label>
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- <div class="search-input" nz-row>
   <div nz-col nzXs="24" nzMd="18" nzLg="15">
-    <div [class.back-icon]="back" style="display: inline-block; float: left;">
+    <div [class.back-icon]="back" style="display: noneß; float: left;">
       <i (click)="previous.emit()" class="back-icon" nz-icon nzType="left" nzTheme="outline"></i>
     </div>
     <div [class.type-search]="typeSearchShow" style="display: inline-block; float: left;">
@@ -36,6 +81,7 @@
       &nbsp;
       <label nz-checkbox [(ngModel)]="alias"  (ngModelChange)="aliasChange.emit($event)">扩展</label>
       <label nz-checkbox [(ngModel)]="vocab"  (ngModelChange)="vocabChange.emit($event)">智能</label>
+      <label nz-checkbox [(ngModel)]="vocab"  (ngModelChange)="vocabChange.emit($event)">切分</label>
     </div>
   </div>
-</div>
+</div> -->

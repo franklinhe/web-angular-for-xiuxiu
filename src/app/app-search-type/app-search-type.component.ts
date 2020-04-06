@@ -30,7 +30,9 @@ export class AppSearchTypeComponent {
       searchInputPlaceholder: '搜索医案',
       searchInputDisabled: false,
       searchTypeSelectShow: true,
-      extended:false,
+      extended: false,
+      smart: false,
+      divide: false
     },
     searchType: {
       searchOptions: [],
@@ -97,18 +99,18 @@ export class AppSearchTypeComponent {
     this.searchResult.caseList.param.bookCataId = this.status.searchType.bookCataId;
     this.searchResult.caseList.param.search = this.status.topInputSearch.searchstr;
     this.searchResult.caseList.param.extended = this.status.topInputSearch.extended;
+    this.searchResult.caseList.param.smart = this.status.topInputSearch.smart;
+    this.searchResult.caseList.param.divide = this.status.topInputSearch.divide;
     // 书名
     this.searchResult.bookNameList.param.bookAuthor = this.status.resultList.bookAuthor;
     this.searchResult.bookNameList.param.bookName = this.status.resultList.bookName;
     this.searchResult.bookNameList.param.bookCataId = this.status.searchType.bookCataId;
     this.searchResult.bookNameList.param.search = this.status.topInputSearch.searchstr;
-    this.searchResult.bookNameList.param.extended = this.status.topInputSearch.extended;
     // 作者
     this.searchResult.bookAuthorList.param.bookAuthor = this.status.resultList.bookAuthor;
     this.searchResult.bookAuthorList.param.bookName = this.status.resultList.bookName;
     this.searchResult.bookAuthorList.param.bookCataId = this.status.searchType.bookCataId;
     this.searchResult.bookAuthorList.param.search = this.status.topInputSearch.searchstr;
-    this.searchResult.bookAuthorList.param.extended = this.status.topInputSearch.extended;
     // init data
     this.searchResult.caseList.initList();
     this.searchResult.bookNameList.initList();
@@ -218,7 +220,6 @@ export class AppSearchTypeComponent {
 
   // 搜索
   searchStr(value: any) {
-   
     if (this.status.topInputSearch.type === 'case' && this.status.diseases) {
       // this.status.resultList.searchResultIndex = 0;
       this.searchResult.caseList.search(value);
@@ -252,29 +253,15 @@ export class AppSearchTypeComponent {
 
   }
   
-  alias(e: any) {
-    if (e == true) {
-      this.status.topInputSearch.extended = true;
-    } else {
-      this.status.topInputSearch.extended = false;
+  // 医案搜索 扩展类型（一个是extended,一个是smart, 第三个就传divide）
+  searchCaseType(e: any) {
+    Object.assign(this.status.topInputSearch, e)
+    Object.assign(this.searchResult.caseList.param, e)
+    if (this.searchResult.caseList.param.search) {
+      this.searchResult.caseList.initList();
     }
-    this.searchResult.caseList.param.extended = e;
-    this.searchResult.bookNameList.param.extended = e;
-  
-    this.searchResult.bookAuthorList.param.extended = e;    
-
   }
 
-  vocab(e: any) {
-    if (e == true) {
-      this.status.topInputSearch.smart = true;
-    } else {
-      this.status.topInputSearch.smart = false;
-    }
-    this.searchResult.caseList.param.smart = e;
-    this.searchResult.bookNameList.param.smart = e;
-    this.searchResult.bookAuthorList.param.smart = e;    
-  }
   // 分析
   analysis(item: any, content?: string) {
     let tplModal = this.nzModal.create({
@@ -296,13 +283,18 @@ export class AppSearchTypeComponent {
     let getContent = (data: any) => {
       const showInfo = (text: string) => {
         let showText = text;
-        [...Arabic.zhDigit, ...this.globe.analysis.reduce((drugA, drugB) => {
-          if (Array.isArray(drugA)) {
-            return drugA.concat([drugB['饮片名']].concat(drugB['同异名'].split("、")));
-          } else {
-            return [drugB['饮片名']].concat(drugB['同异名'].split("、")).concat([drugA['饮片名']].concat(drugA['同异名'].split("、")));
-          }
-        }), ...[...this.globe.unitList, ...this.globe.unitOtherList].map(u => u.name)].forEach((s: string) => {
+        [
+          ...Arabic.zhDigit, 
+          ...this.globe.analysis.reduce((drugA, drugB) => {
+            if (Array.isArray(drugA)) {
+              return drugA.concat([drugB['饮片名']].concat(drugB['同异名'].split("、")));
+            } else {
+              return [drugB['饮片名']].concat(drugB['同异名'].split("、")).concat([drugA['饮片名']].concat(drugA['同异名'].split("、")));
+            }
+          }), 
+          ...[...this.globe.unitList, ...this.globe.unitOtherList].map(u => u.name),
+          ...[...this.globe.prescription.方剂, ...this.globe.prescription.同异名]
+        ].forEach((s: string) => {
           if (s) showText = showText.replace(new RegExp(s, 'g'), '<span style="color:#0089e0;">' + s + '</span>')
         })
         return showText;
@@ -311,6 +303,7 @@ export class AppSearchTypeComponent {
       this.caseItem.contentShow = showInfo(this.caseItem.content);
       this.caseItem.contentParts = this.globe.caseContent(this.caseItem.content, {type: (this.caseItem['articleId'] ? 'article' : 'case'), 
       id: (this.caseItem['articleId'] ? this.caseItem['articleId'] : this.caseItem['caseId'])}).contentsAndanalysis;
+    
     }
     this.caseItem = { title: data.title };
     if (data.articleId) {
@@ -363,6 +356,47 @@ export class AppSearchTypeComponent {
       }
     })
     this.destroy.push(tplModal);
+  }
+
+  detailPrescription(part: any, name: string) {
+    const p = part.prescriptionAnalysis.find(p => p.getNameByContent == name)
+    this.http.detailPrescription({name: p.name||name}).subscribe(res => {
+      const data = res.data[0]
+      let tplModal = this.nzModal.create({
+        nzTitle: name,
+        nzContent: `
+          <p><span class="text-color-green">名称: </span><span class="text-aux">${data.name}</span></p>` +
+          (data.alias ? `<p><span class="text-color-green">同异名: </span><span class="text-aux">${data.alias}</span></p>` : '') +
+          (data.ingredents ? `<p><span class="text-color-green">药物组成: </span><span class="text-aux">${data.ingredents}</span></p>`: '') +
+          (data.source ? `<p><span class="text-color-green">来源: </span><span class="text-aux">${data.source}</span></p>` : '')
+        ,
+        nzWidth: "85vw",
+        nzWrapClassName: "vertical-center-modal",
+        nzFooter: null
+      });
+      this.destroy.push(tplModal);
+    });
+  }
+
+  detaildrug(part: any, name: string) {
+    const p = part.analysis.find(p => p.getNameByContent == name)
+    this.http.detaildrug({name: p['饮片名']||name}).subscribe(res => {
+      const data = res.data[0]
+      let tplModal = this.nzModal.create({
+        nzTitle: name,
+        nzContent: `
+          <p>药名: <span class="text-aux">${data.drug}</span></p>` +
+          (data.alias ? `<p><span class="text-primary-static">同异名: </span><span class="text-aux">${data.alias}</span></p>`: '') +
+          (data.brief ? `<p><span class="text-primary-static">简介: </span><span class="text-aux">${data.brief}</span></p>`: '') +
+          (data.xiaoy ? `<p><span class="text-primary-static">功效: </span><span class="text-aux">${data.xiaoy}</span></p>`: '') +
+          (data.yongf ? `<p><span class="text-primary-static">用法: </span><span class="text-aux">${data.yongf}</span></p>`: '') 
+        ,
+        nzWidth: "85vw",
+        nzWrapClassName: "vertical-center-modal",
+        nzFooter: null
+      });
+      this.destroy.push(tplModal);
+    });
   }
 
   unit() {

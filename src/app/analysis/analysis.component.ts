@@ -304,13 +304,24 @@ export class AnalysisComponent implements OnDestroy {
           };
         }
       }
-    });
+    })
+    // 方剂
+    analy.prescriptionAnalysis.forEach((drug: any) => {
+      if (drug.getCountByContent) {
+        // if (drugs[drug.getNameByContent]) {
+        //   drugs[drug.getNameByContent].totalCount += drug.getCountByContent.count;
+        // } else {
+        //   drugs[drug.getNameByContent] = {
+        //     ...this.globe.drugs[drug.getNameByContent],
+        //     totalCount: drug.getCountByContent.count
+        //   };
+        // }
+      }
+    })
   });
-
   for (const drug in drugs) {
     txt = txt + drug+ ':' + drugs[drug].totalCount+',';
   }
-
   this.http.getModel({txt:txt.substr(0, txt.length-1)}).subscribe(res => {
       let result =JSON.parse(res);
       evils = result.bingx;

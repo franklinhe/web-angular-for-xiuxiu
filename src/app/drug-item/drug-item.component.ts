@@ -85,7 +85,6 @@ export class DrugItemComponent implements OnDestroy, OnInit {
   }
 
   ok() {
-
     this.modal.destroy(this.data);
   }
 

@@ -34,12 +34,13 @@
   .back-input {
     width: calc(100% - 32px);
     display: inline-block;
-    float:left;
+    // float:left;
   }
   .type-search-input {
-    width: calc(80% - 60px);
+    // width: calc(80% - 60px);
+    width: calc(100% - 60px);
     display: inline-block;
-    float: left;
+    // float: left;
   }
   .type-search-input.back-input {
     width: calc(80% - 93px);
@@ -61,6 +62,21 @@
       .ant-select-focused .ant-select-selection, .ant-select-selection:focus, .ant-select-selection:active {
         box-shadow: none !important;
       }
+    }
+  }
+}
+[caseSearchExtend] {
+  line-height: 30px;
+  padding-left: 10px;
+  margin-bottom: -10px;
+  [radio] {
+    /deep/.ant-checkbox-inner {
+      border-radius: 20px;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    &{
+      padding-left: 70px;
     }
   }
 }

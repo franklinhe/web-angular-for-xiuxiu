@@ -29,11 +29,10 @@ export class SearchInputComponent implements OnInit {
   @Input() typeSearchShow = true;
   @Output() typeSearchShowChange = new EventEmitter<string>();
 
-  @Input() alias = false;
-  @Output() aliasChange = new EventEmitter<string>();
-
-  @Input() vocab = false;
-  @Output() vocabChange = new EventEmitter<string>();
+  @Output() searchCaseTypeChange = new EventEmitter<any>();
+  extended = false;
+  smart = false;
+  divide = false;
 
   options: string[] = [];
 
@@ -42,13 +41,13 @@ export class SearchInputComponent implements OnInit {
   ngOnInit() {
   }
 
-  enter(e) {
+  enter(e: any) {
     e.currentTarget.blur();
     e.target.blur();
     this.searchChange.emit(this.search);
   }
 
-  keyup(e) {
+  keyup(e: any) {
     // this.searchChange.emit(e);
   }
 
@@ -57,6 +56,19 @@ export class SearchInputComponent implements OnInit {
       if (res.code == 0 && res.data && res.msg === 'ok') {
         this.options = res.data.map(v => v.value);
       }
+    });
+  }
+
+  change(key: string, e: any) {
+    if (key == 'extended' && e) {
+      this.smart = false;
+    } else if (key == 'smart' && e) {
+      this.extended = false
+    }
+    this.searchCaseTypeChange.emit({
+      extended: this.extended,
+      smart: this.smart, 
+      divide: this.divide
     });
   }
 

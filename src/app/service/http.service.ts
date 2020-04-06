@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../environments/environment';
-import {HttpUtil} from '../../shared/http-api/util';
-import {Observable, Observer} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { HttpUtil } from '../../shared/http-api/util';
+import { Observable, Observer } from 'rxjs';
 
 // import { Observable } from 'rxjs';
 /**
@@ -119,6 +119,7 @@ export class HttpService {
     pageSize: string | number
     extended?: boolean
     smart?: boolean
+    divide?: boolean
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -134,8 +135,13 @@ export class HttpService {
           bookAuthor: data.bookAuthor || null,	// 作者	string
           bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
           searchstr: data.search || null,
-          extended: data.extended,
-          smart: data.smart
+          // searchstr: data.search || '',
+          extended: data.search ? (data.extended || false) : null,
+          // extended: data.extended || false,
+          smart: data.search ? (data.smart || false) : null,
+          // smart: data.smart || false,
+          divide: data.search ? (data.divide || false) : null
+          // divide: data.divide || false
         });
       } else {
         return this.http.get<any>(environment.api + '/case/list', HttpUtil.setParams({
@@ -211,7 +217,8 @@ export class HttpService {
     bookName?: string | number	// 书名	string	@mock=续名医类案
     searchstr?: string | number
     extended?: boolean
-    smart?:boolean
+    smart?: boolean
+    divide?: boolean
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -219,6 +226,9 @@ export class HttpService {
         observer.complete();
       });
     } else {
+      data.extended = data.searchstr ? (data.extended || false) : null;
+      data.smart = data.searchstr ? (data.smart || false) : null;
+      data.divide = data.searchstr ? (data.divide || false) : null;
       return this.http.get<any>(environment.api + '/search', HttpUtil.setParams(data));
     }
   }
@@ -266,7 +276,35 @@ export class HttpService {
         observer.complete();
       });
     } else {
-      return this.http.get<any>(environment.api + '/case/info', HttpUtil.setParams({...data, userId: '123456789'}));
+      return this.http.get<any>(environment.api + '/case/info', HttpUtil.setParams({ ...data, userId: '123456789' }));
+    }
+  }
+
+  // 方剂名
+  detailPrescription(data: {
+    name: string
+  }) {
+    if (environment.mockData) {
+      return new Observable((observer: Observer<any>) => {
+        observer.next(environment.mockData.autoComplete);
+        observer.complete();
+      });
+    } else {
+      return this.http.get<any>(environment.api + '/prescription/info', HttpUtil.setParams(data));
+    }
+  }
+
+  // 方剂名
+  detaildrug(data: {
+    name: string
+  }) {
+    if (environment.mockData) {
+      return new Observable((observer: Observer<any>) => {
+        observer.next(environment.mockData.autoComplete);
+        observer.complete();
+      });
+    } else {
+      return this.http.get<any>(environment.api + '/drug/info', HttpUtil.setParams(data));
     }
   }
 }

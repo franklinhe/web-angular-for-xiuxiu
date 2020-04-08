@@ -287,9 +287,9 @@ export class AppSearchTypeComponent {
           ...Arabic.zhDigit, 
           ...this.globe.analysis.reduce((drugA, drugB) => {
             if (Array.isArray(drugA)) {
-              return drugA.concat([drugB['饮片名']].concat(drugB['同异名'].split("、")));
+              return drugA.concat([drugB['饮片名']].concat((drugB['同异名']||"").split("、")));
             } else {
-              return [drugB['饮片名']].concat(drugB['同异名'].split("、")).concat([drugA['饮片名']].concat(drugA['同异名'].split("、")));
+              return [drugB['饮片名']].concat((drugB['同异名']||"").split("、")).concat([drugA['饮片名']].concat((drugB['同异名']||"").split("、")));
             }
           }), 
           ...[...this.globe.unitList, ...this.globe.unitOtherList].map(u => u.name),

@@ -45,7 +45,7 @@ export class GlobeService {
         [...data[0], ...this.drugsAddLoaclStorage].map((d: any) => {
           this.analysis.push(d);
           this.drugs[d['饮片名']] = d;
-          d['同异名'].split("、").filter((s: string) => s.length > 0).map((n: string) => {
+          d['同异名'] && d['同异名'].split("、").filter((s: string) => s.length > 0).map((n: string) => {
             this.drugs[n] = d;
           });
         })
@@ -239,27 +239,20 @@ export class GlobeService {
       .filter((i: string) => i.length > 0)
       .sort((a: string, b: string) => b.length - a.length)
       .join('|')
-    const analy = text.match(new RegExp(reg));
+    const analy = text.match(new RegExp(reg,'g'));
     // 药品匹配结果 [value]|{index, input:text}
     if (analy) {
       // 取匹配的药材后面的字符串,获取药材后面的数量单位|用量
-      let getCountByContent: any = this.getCount(text.substr(analy.index + analy[0].length));
-      datas.push({
-        name: this.prescription.map[analy[0]] || analy[0],
-        getNameByContent: analy[0],
-        getAnalyByContent: analy,
-        getCountByContent
-      });
-      // 查找 下一味 药材
-      const getNext = this.getPrescription(text.substr(analy.index + analy[0].length), flag, text_);
-      if (getNext) {
-        return datas.concat(getNext);
-      } else {
-        return datas;
+      for(var i in analy) {
+        datas.push({
+          name: this.prescription.map[analy[i]] || analy[i],
+          getNameByContent: analy[i],
+          getAnalyByContent: analy
+        });
       }
-    } else {
-      return datas;
+      
     }
+    return datas;
   };
 
   // 获取文本中的 药品 信息 、 用量
@@ -269,9 +262,9 @@ export class GlobeService {
     // 在句子中 用 药名 globe.analysis 匹配药品 名称|analy:[string]{index, input|原文}
     const reg = this.analysis.reduce((drugA, drugB) => {
       if (Array.isArray(drugA)) {
-        return drugA.concat([drugB['饮片名']].concat(drugB['同异名'].split("、")));
+        return drugA.concat([drugB['饮片名']].concat((drugB['同异名']||"").split("、")));
       } else {
-        return [drugB['饮片名']].concat(drugB['同异名'].split("、")).concat([drugA['饮片名']].concat(drugA['同异名'].split("、")));
+        return [drugB['饮片名']].concat((drugB['同异名']||"").split("、")).concat([drugA['饮片名']].concat((drugA['同异名']||"").split("、")));
       }
     }).filter((i: string) => i.length > 0).sort((a: string, b: string) => b.length - a.length).join("|");
     const analy = text.match(new RegExp(reg));

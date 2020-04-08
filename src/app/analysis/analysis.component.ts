@@ -323,6 +323,9 @@ export class AnalysisComponent implements OnDestroy {
     txt = txt + drug+ ':' + drugs[drug].totalCount+',';
   }
   this.http.getModel({txt:txt.substr(0, txt.length-1)}).subscribe(res => {
+    if (res.code === '-1') {
+      return;
+    }
       let result =JSON.parse(res);
       evils = result.bingx;
       disease = result.bingw;

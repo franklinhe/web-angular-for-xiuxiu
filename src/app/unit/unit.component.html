@@ -1,5 +1,5 @@
 <qk-scrollbar class="body">
-  <div style="line-height: 30px;" nz-row class="row" *ngFor="let unit of globe.unitList">
+  <div style="line-height: 50px;" nz-row class="row" *ngFor="let unit of globe.unitList">
     <div nz-col nzSpan="13" class="title">1{{unit.name}}&nbsp;&nbsp;=&nbsp;&nbsp;</div>
     <div *ngIf="unit.name === '两'" nz-col nzSpan="10">
       <input class="text-primary-static edit" type="text" [(ngModel)]="unit.count" (ngModelChange)="change($event)">

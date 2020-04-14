@@ -8,7 +8,7 @@ import { DrugItemComponent } from '../drug-item/drug-item.component';
 import { isPlatformBrowser } from '@angular/common';
 import { MessageService } from 'src/shared/message/message.service';
 import { HttpService } from '../service/http.service';
-declare let $:any;
+declare let $: any;
 
 @Component({
   selector: 'app-analysis',
@@ -42,6 +42,8 @@ export class AnalysisComponent implements OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     public globe: GlobeService) {
     modal.afterOpen.subscribe(() => {
+      this.data = this.data.replace(/<[^<>]+>/g, "");
+      this.data = this.data.replace(new RegExp('&nbsp;', 'g'), " ");
       this.getContentPart(this.data);
     })
   }
@@ -61,7 +63,7 @@ export class AnalysisComponent implements OnDestroy {
       nzWidth: "95vw",
       nzWrapClassName: "vertical-center-modal",
       nzFooter: null
-    });    
+    });
     this.destroy.push(tplModal);
   }
 
@@ -82,11 +84,11 @@ export class AnalysisComponent implements OnDestroy {
     tplModal.afterClose.subscribe((e: any) => {
       if (e) {
         this.globe.pushDrugsEditLoaclStorage({
-          ...e, pre: {'饮片名': item['饮片名'], '同异名': item['同异名']}, old: (item.old || {'饮片名': item['饮片名'], '同异名': item['同异名']})
+          ...e, pre: { '饮片名': item['饮片名'], '同异名': item['同异名'] }, old: (item.old || { '饮片名': item['饮片名'], '同异名': item['同异名'] })
         });
         this.status = 'loading';
         this.analysis.list = [];
-        setTimeout(() => { this.getContentPart(this.data) }, 500);
+        this.getContentPart(this.data);
       }
     })
     this.destroy.push(tplModal);
@@ -118,57 +120,89 @@ export class AnalysisComponent implements OnDestroy {
   }
 
   editDrug(item: any, data: any, index: number) {
-    let article: boolean, id: string;
-    if (this.item['articleId']) {
-      article = true;
-      id = this.item['articleId'];
-    } else {
-      article = false;
-      id = this.item['caseId']
-    }
-    let tplModal = this.nzModal.create({
-      
-      nzContent: DrugItemComponent,
-      nzComponentParams: {
-        flag: {
-          type: (this.item['articleId'] ? 'article' : 'case'), 
-          id: (this.item['articleId'] ? this.item['articleId'] : this.item['caseId']), 
-          data
+    if (item.prescription) {
+      let data_ = JSON.parse(JSON.stringify(data));
+      data_.text = item.ingredents;
+      let tplModal = this.nzModal.create({
+        nzContent: DrugItemComponent,
+        nzComponentParams: {
+          flag: {
+            type: '方剂',
+            id: '1',
+            data: data_
+          },
+          edit: true,
+          analy: true,
+          data: {
+            ...item,
+            StandardUnitChar: 'g'
+          }
         },
-        edit: true,
-        analy: true,
-        data: {
-          ...item,
-          StandardUnitChar: 'g'
+        nzWidth: "50vw",
+        nzWrapClassName: "vertical-center-modal",
+        nzFooter: null
+      });
+      tplModal.afterClose.subscribe((e: any) => {
+        if (e) {
+          e.flag['方剂']['1'][item.ingredents] = parseFloat(e.flag['方剂']['1'][item.ingredents]);
+          this.globe.pushDrugsEditLoaclStorage({
+            ...e, pre: { '饮片名': item['饮片名'], '同异名': item['同异名'] }, old: (item.old || { '饮片名': item['饮片名'], '同异名': item['同异名'] })
+          });
+          // this.textEdit(data, index);
+          item.getCountByContent = item.getCountByContent || {}
+          item.getCountByContent.count = e.flag['方剂']['1'][item.ingredents]
+          this.analy(true);
         }
-      },
-      nzWidth: "50vw",
-      nzWrapClassName: "vertical-center-modal",
-      nzFooter: null
-    });
-    tplModal.afterClose.subscribe((e: any) => {
-      if (e) {
-        e.flag[(article ? 'article' : 'case')][id][data.text] = parseFloat(e.flag[(article ? 'article' : 'case')][id][data.text]);
-        this.globe.pushDrugsEditLoaclStorage({
-          ...e, pre: {'饮片名': item['饮片名'], '同异名': item['同异名']}, old: (item.old || {'饮片名': item['饮片名'], '同异名': item['同异名']})
-        });
-        this.textEdit(data, index);
-        // this.analy();
-        // this.status = 'loading';
-        // // this.analysis.list = [];
-        // setTimeout(() => { 
-        //   // this.getContentPart(this.data)
-        //   this.textEdit(data, index);
-        //   this.analy();
-        // }, 500);
+      })
+      this.destroy.push(tplModal);
+    } else {
+      let article: boolean, id: string;
+      if (this.item['articleId']) {
+        article = true;
+        id = this.item['articleId'];
+      } else {
+        article = false;
+        id = this.item['caseId']
       }
-    })
-    this.destroy.push(tplModal);
+      let tplModal = this.nzModal.create({
+        nzContent: DrugItemComponent,
+        nzComponentParams: {
+          flag: {
+            type: (this.item['articleId'] ? 'article' : 'case'),
+            id: (this.item['articleId'] ? this.item['articleId'] : this.item['caseId']),
+            data
+          },
+          edit: true,
+          analy: true,
+          data: {
+            ...item,
+            StandardUnitChar: 'g'
+          }
+        },
+        nzWidth: "50vw",
+        nzWrapClassName: "vertical-center-modal",
+        nzFooter: null
+      });
+      tplModal.afterClose.subscribe((e: any) => {
+        if (e) {
+          e.flag[(article ? 'article' : 'case')][id][data.text] = parseFloat(e.flag[(article ? 'article' : 'case')][id][data.text]);
+          this.globe.pushDrugsEditLoaclStorage({
+            ...e, pre: { '饮片名': item['饮片名'], '同异名': item['同异名'] }, old: (item.old || { '饮片名': item['饮片名'], '同异名': item['同异名'] })
+          });
+          // this.textEdit(data, index);
+          item.getCountByContent = item.getCountByContent || {}
+          item.getCountByContent.count = e.flag[(article ? 'article' : 'case')][id][data.text]
+          this.analy(true);
+        }
+      })
+      this.destroy.push(tplModal);
+    }
   }
 
   deleteDrug(index: number, data: any) {
     data.analysis.splice(index, 1);
-    this.analy();
+    data.arry = data.analysis
+    this.analy(true);
   };
 
   drugByName(name: string) {
@@ -194,6 +228,26 @@ export class AnalysisComponent implements OnDestroy {
     this.destroy.push(tplModal);
   }
 
+  detailPrescription(part: any, name: string) {
+    const p = part.prescriptionAnalysis.find(p => p.getNameByContent == name)
+    this.http.detailPrescription({ name: p.name || name }).subscribe(res => {
+      const data = res.data[0]
+      let tplModal = this.nzModal.create({
+        nzTitle: name,
+        nzContent: `
+          <p><span class="text-color-green">名称: </span><span class="text-aux">${data.name}</span></p>` +
+          (data.alias ? `<p><span class="text-color-green">同异名: </span><span class="text-aux">${data.alias}</span></p>` : '') +
+          (data.ingredents ? `<p><span class="text-color-green">药物组成: </span><span class="text-aux">${data.ingredents}</span></p>` : '') +
+          (data.source ? `<p><span class="text-color-green">来源: </span><span class="text-aux">${data.source}</span></p>` : '')
+        ,
+        nzWidth: "85vw",
+        nzWrapClassName: "vertical-center-modal",
+        nzFooter: null
+      });
+      this.destroy.push(tplModal);
+    });
+  }
+
   unit() {
     let tplModal = this.nzModal.create({
       nzTitle: `计量换算`,
@@ -204,39 +258,50 @@ export class AnalysisComponent implements OnDestroy {
       nzFooter: null
     });
     tplModal.afterClose.subscribe(() => {
-      this.status = 'loading';
+      // this.status = 'loading';
       this.globe.unitsToMap();
-      this.analysis.list = [];
-      setTimeout(() => { this.getContentPart(this.data) }, 500);
+      // this.analysis.list = [];
+      this.analysis.checkedList[0].analysis.forEach(drug => {
+        if (drug.getCountByContent && drug.getCountByContent.countContent) {
+          drug.getCountByContent = this.globe.getCount(drug.getCountByContent.countContent)
+        }
+      });
+      this.analysis.checkedList[0].arry = this.analysis.checkedList[0].analysis;
+      // setTimeout(() => { this.getContentPart(this.data) }, 500);
     })
     this.destroy.push(tplModal);
   }
 
-  getContentPart(content: string) {
-    let analysis = this.globe.caseContent(content, {type: (this.item['articleId'] ? 'article' : 'case'), 
-    id: (this.item['articleId'] ? this.item['articleId'] : this.item['caseId'])});
+  async getContentPart(content: string) {
+    let analysis = this.globe.caseContent(content, {
+      type: (this.item['articleId'] ? 'article' : 'case'),
+      id: (this.item['articleId'] ? this.item['articleId'] : this.item['caseId'])
+    });
     if (analysis.analysis) {
       this.analysis.list = analysis.analysis;
       // 全部选中
       this.analysis.allChecked = true;
       this.analysis.checkedAll(true);
       // 分析
-      this.analy();
+      await this.analy();
       this.status = 'list';
     } else {
       // this.status = 'none';                               ';
-      this.analysis.list = [{none: true, text: '', analysis: []}];
+      this.analysis.list = [{ none: true, text: '', analysis: [] }];
       // 全部选中
       this.analysis.allChecked = true;
       this.analysis.checkedAll(true);
       // 分析
-      this.analy();
+      await this.analy();
       this.status = 'list';
     }
   }
+
   noneEdit(data: any, index: number) {
-    const anay = this.globe.casePart(data.text, {type: (this.item['articleId'] ? 'article' : 'case'), 
-      id: (this.item['articleId'] ? this.item['articleId'] : this.item['caseId'])}
+    const anay = this.globe.casePart(data.text, {
+      type: (this.item['articleId'] ? 'article' : 'case'),
+      id: (this.item['articleId'] ? this.item['articleId'] : this.item['caseId'])
+    }
     );
     if (anay) {
       data.analysis = anay.analysis;
@@ -258,8 +323,10 @@ export class AnalysisComponent implements OnDestroy {
   textEdit(data: any, index: number) {
     data.edit = false;
     this.analysis.checked(false, data);
-    this.analysis.list[index] = this.globe.casePart(data.text, {type: (this.item['articleId'] ? 'article' : 'case'), 
-    id: (this.item['articleId'] ? this.item['articleId'] : this.item['caseId'])}) || {
+    this.analysis.list[index] = this.globe.casePart(data.text, {
+      type: (this.item['articleId'] ? 'article' : 'case'),
+      id: (this.item['articleId'] ? this.item['articleId'] : this.item['caseId'])
+    }) || {
       analysis: []
     };
     this.analysis.list[index].text = data.text;
@@ -269,7 +336,7 @@ export class AnalysisComponent implements OnDestroy {
     this.analy();
   }
 
-  addAnaly(data: any) {
+  async addAnaly(data: any) {
     if (!data.addDrug) {
       this.msg.warning('请选择药材！')
       return;
@@ -281,52 +348,91 @@ export class AnalysisComponent implements OnDestroy {
     data.analysis.push({
       ...data.addDrug,
       getNameByContent: data.addDrug['饮片名'],
-      getCountByContent: {count: parseFloat(data.addCount)}
+      getCountByContent: { count: parseFloat(data.addCount) }
     });
-    this.analy();
+    await this.analy(true);
     data.addDrug = null;
     data.addCount = ''
   }
- // 分析
- analy() {
-  // 获取 药品
-  let drugs = {}, evils = {}, disease = {}, property = {}, flavor = {}, tropism = {}, effect = {}, malady = {}, txt='',
-    drugsList = [], evilsList = [], diseaseList = [], propertyList = [], flavorList = [], tropismList = [], effectList = [], maladyList = [];
-  this.analysis.checkedList.forEach((analy: any) => {
-    analy.analysis.forEach((drug: any) => {
-      if (drug.getCountByContent) {
-        if (drugs[drug.getNameByContent]) {
-          drugs[drug.getNameByContent].totalCount += drug.getCountByContent.count;
-        } else {
-          drugs[drug.getNameByContent] = {
-            ...this.globe.drugs[drug.getNameByContent],
-            totalCount: drug.getCountByContent.count
-          };
+  // 分析
+  async analy(edit = false) {
+    // 获取 药品
+    let drugs = {}, evils = {}, disease = {}, property = {}, flavor = {}, tropism = {}, effect = {}, malady = {}, txt = '',
+      drugsList = [], evilsList = [], diseaseList = [], propertyList = [], flavorList = [], tropismList = [], effectList = [], maladyList = [];
+    for (let iijj = 0; iijj < this.analysis.checkedList.length; iijj++) {
+      const analy = this.analysis.checkedList[iijj];
+      // 方剂
+      if (!edit) {
+        for (let i = 0; i < analy.prescriptionAnalysis.length; i++) {
+          const p = analy.prescriptionAnalysis[i];
+          if (p.name) {
+            let res = await this.http.detailPrescription({ name: p.name }).toPromise()
+            if (res.data[0].ingredents) {
+              let arry = [];
+              analy.analysis.concat(this.globe.casePart(res.data[0].ingredents, {
+                type: '方剂',
+                id: '1'
+              }).analysis.map(p => {
+                p.prescription = true;
+                p.ingredents = res.data[0].ingredents
+                return p;
+              })).forEach((drug: any, i) => {
+                const find = arry.find(f => f.饮片名 === drug.饮片名)
+                if (find) {
+                  if (drug.prescription) { // 方剂中的药
+                    if (find.prescription) {
+                      console.log('方剂中有 重复的 药', find, drug)
+                    } else {
+                      console.log('方剂与原文存在 重复的 药, 以方剂中的为准！', find, drug)
+                      arry[arry.indexOf(find)] = drug;
+                    }
+                    if (drug.getCountByContent && drug.getCountByContent.count) {
+                      console.log('优先使用方剂中的 用量', find, drug)
+                      find.getCountByContent = drug.getCountByContent
+                    }
+                  } else { // 原文中的药
+                    // 去重 和 计算 值
+                    console.log('原文中存在重复 药品，用量取其中一种用量', drug, find)
+                    if (drug.getCountByContent && drug.getCountByContent.count) {
+                      if (find.getCountByContent && find.getCountByContent.count) {
+                        // find.getCountByContent.count += drug.getCountByContent.count
+                        console.log('原文中存在重复用量', drug, find)
+                      } else {
+                        find.getCountByContent = drug.getCountByContent
+                      }
+                    }
+                  }
+                } else {
+                  arry.push(drug)
+                }
+              });
+              analy.analysis = arry;
+            }
+          }
         }
       }
-    })
-    // 方剂
-    analy.prescriptionAnalysis.forEach((drug: any) => {
-      if (drug.getCountByContent) {
-        // if (drugs[drug.getNameByContent]) {
-        //   drugs[drug.getNameByContent].totalCount += drug.getCountByContent.count;
-        // } else {
-        //   drugs[drug.getNameByContent] = {
-        //     ...this.globe.drugs[drug.getNameByContent],
-        //     totalCount: drug.getCountByContent.count
-        //   };
-        // }
-      }
-    })
-  });
-  for (const drug in drugs) {
-    txt = txt + drug+ ':' + drugs[drug].totalCount+',';
-  }
-  this.http.getModel({txt:txt.substr(0, txt.length-1)}).subscribe(res => {
-    if (res.code === '-1') {
-      return;
+      analy.arry = analy.analysis
+      analy.analysis.forEach((drug: any) => {
+        if (drug.getCountByContent) {
+          if (drugs[drug.getNameByContent]) {
+            drugs[drug.getNameByContent].totalCount += drug.getCountByContent.count;
+          } else {
+            drugs[drug.getNameByContent] = {
+              ...this.globe.drugs[drug.getNameByContent],
+              totalCount: drug.getCountByContent.count
+            };
+          }
+        }
+      })
     }
-      let result =JSON.parse(res);
+    for (const drug in drugs) {
+      txt = txt + drugs[drug]['饮片名'] + ':' + drugs[drug].totalCount + ',';
+    }
+    this.http.getModel({ txt: txt.substr(0, txt.length - 1) }).subscribe(res => {
+      if (res.code === '-1') {
+        return;
+      }
+      let result = JSON.parse(res);
       evils = result.bingx;
       disease = result.bingw;
       property = result.xing;
@@ -421,52 +527,51 @@ export class AnalysisComponent implements OnDestroy {
         return this.globe.sorts['病症'].indexOf(a.name) - this.globe.sorts['病症'].indexOf(b.name)
       });
     }
-  );
+    );
+  }
 
- }
- 
-showName(name: string, item: any) {
-  return name.replace(item.getNameByContent, `<span class="text-warning">${item.getNameByContent}</span>`);
-}
+  showName(name: string, item: any) {
+    return name.replace(item.getNameByContent, `<span class="text-warning">${item.getNameByContent}</span>`);
+  }
 
-sort(e: { key: string, value: 'descend' | 'ascend' }, data: [], key: string) {
-  if (e.value) {
-    this[key] = [...data.sort((a: any, b: any) => {
-      if (e.value === 'ascend') {
-        return parseFloat(a[e.key]) - parseFloat(b[e.key]);
+  sort(e: { key: string, value: 'descend' | 'ascend' }, data: [], key: string) {
+    if (e.value) {
+      this[key] = [...data.sort((a: any, b: any) => {
+        if (e.value === 'ascend') {
+          return parseFloat(a[e.key]) - parseFloat(b[e.key]);
+        }
+        return parseFloat(b[e.key]) - parseFloat(a[e.key]);
+      })];
+    } else {
+      switch (key) {
+        case 'evilsList':
+          this.evilsList = this.evilsList.sort((a: any, b: any) => {
+            return this.globe.sorts['病邪顺序'].indexOf(a.name) - this.globe.sorts['病邪顺序'].indexOf(b.name)
+          });
+          break;
+        case 'diseaseList':
+          this.diseaseList = this.diseaseList.sort((a: any, b: any) => {
+            return this.globe.sorts['病位顺序'].indexOf(a.name) - this.globe.sorts['病位顺序'].indexOf(b.name)
+          });
+          break;
+        case 'propertyList':
+          this.propertyList = this.propertyList.sort((a: any, b: any) => {
+            return this.globe.sorts['药性顺序'].indexOf(a.name) - this.globe.sorts['药性顺序'].indexOf(b.name)
+          });
+          break;
+        case 'flavorList':
+          this.flavorList = this.flavorList.sort((a: any, b: any) => {
+            return this.globe.sorts['药味顺序'].indexOf(a.name) - this.globe.sorts['药味顺序'].indexOf(b.name)
+          });
+          break;
+        case 'tropismList':
+          this.tropismList = this.tropismList.sort((a: any, b: any) => {
+            return this.globe.sorts['归经顺序'].indexOf(a.name) - this.globe.sorts['归经顺序'].indexOf(b.name)
+          });
+          break;
+        default:
+          break;
       }
-      return parseFloat(b[e.key]) - parseFloat(a[e.key]);
-    })];
-  } else {
-    switch (key) {
-      case 'evilsList':
-        this.evilsList = this.evilsList.sort((a: any, b: any) => {
-          return this.globe.sorts['病邪顺序'].indexOf(a.name) - this.globe.sorts['病邪顺序'].indexOf(b.name)
-        });
-        break;
-      case 'diseaseList':
-        this.diseaseList = this.diseaseList.sort((a: any, b: any) => {
-          return this.globe.sorts['病位顺序'].indexOf(a.name) - this.globe.sorts['病位顺序'].indexOf(b.name)
-        });
-        break;
-      case 'propertyList':
-        this.propertyList = this.propertyList.sort((a: any, b: any) => {
-          return this.globe.sorts['药性顺序'].indexOf(a.name) - this.globe.sorts['药性顺序'].indexOf(b.name)
-        });
-        break;
-      case 'flavorList':
-        this.flavorList = this.flavorList.sort((a: any, b: any) => {
-          return this.globe.sorts['药味顺序'].indexOf(a.name) - this.globe.sorts['药味顺序'].indexOf(b.name)
-        });
-        break;
-      case 'tropismList':
-        this.tropismList = this.tropismList.sort((a: any, b: any) => {
-          return this.globe.sorts['归经顺序'].indexOf(a.name) - this.globe.sorts['归经顺序'].indexOf(b.name)
-        });
-        break;
-      default:
-        break;
     }
   }
- }
 }

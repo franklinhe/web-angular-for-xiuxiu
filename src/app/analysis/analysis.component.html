@@ -1,22 +1,82 @@
 <qk-scrollbar class="page" *ngIf="(status === 'list') || (status === 'none')">
   <div class="top">
-    <div  class="case">
-      <nz-table #caseTable [nzData]="analysis.list" [nzShowPagination]="false" [nzWidthConfig]="['30px', '50%', '50%']"
+    <div class="case">
+      <div style="margin-bottom: 15px;">
+        <span *ngIf="!analysis.list[0].none">
+          <span *ngIf="!analysis.list[0].edit">
+            <ng-template ngFor let-cont [ngForOf]="analysis.list[0].content">
+              <span *ngIf="analysis.list[0].prescription.includes(cont)"
+              (click)="detailPrescription(analysis.list[0],cont)" class="text-primary" 
+              style="color: green !important;" [innerHtml]="cont"></span>
+              <span *ngIf="analysis.list[0].drugs.includes(cont)"
+              (click)="drugByName(cont)" class="text-primary" [innerHtml]="cont"></span>
+              <span *ngIf="analysis.list[0].symptom.includes(cont)" class="text-primary" 
+              style="color: purple !important;" [innerHtml]="cont"></span>
+              <span *ngIf="!analysis.list[0].drugs.includes(cont)&&!analysis.list[0].prescription.includes(cont)&&!analysis.list[0].symptom.includes(cont)"
+              [innerHtml]="cont"></span>
+            </ng-template>
+            <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="primary"
+              (click)="editText(analysis.list[0])"><i nz-icon nzType="edit"></i>编辑</button>
+          </span>
+          <span *ngIf="analysis.list[0].edit">
+            <textarea #textareaedit nz-input [(ngModel)]="analysis.list[0].text" (blur)="textEdit(analysis.list[0], 0)" (keyup.enter)="textEdit(analysis.list[0], 0)"></textarea>
+          </span>
+        </span>
+        <span *ngIf="analysis.list[0].none">
+          <textarea #textareaedit nz-input [(ngModel)]="analysis.list[0].text"
+            (ngModelChange)="noneEdit(analysis.list[0], 0)"></textarea>
+        </span>
+      </div>
+      <nz-table #caseTable [nzData]="analysis.list" [nzShowPagination]="false" [nzWidthConfig]="['50%', '50%']"
         nzSize="small">
-
+        <!-- <thead>
+          <tr>
+            <th>处方原文</th>
+            <th>处方规范化与剂量折算
+              (<span class="text-primary" (click)="addDrug()">添加药材信息</span>)
+            </th>
+          </tr>
+        </thead> -->
         <tbody>
           <ng-template ngFor let-data let-i="index" [ngForOf]="caseTable.data">
             <tr>
+              <!-- <td>
+                <span *ngIf="!data.none">
+                  <span *ngIf="!data.edit">
+                    <ng-template ngFor let-cont [ngForOf]="data.content">
+                      <span *ngIf="data.prescription.includes(cont)"
+                      (click)="detailPrescription(data,cont)" class="text-primary" 
+                      style="color: green !important;" [innerHtml]="cont"></span>
+                      <span *ngIf="data.drugs.includes(cont)"
+                      (click)="drugByName(cont)" class="text-primary" [innerHtml]="cont"></span>
+                      <span *ngIf="data.symptom.includes(cont)" class="text-primary" 
+                      style="color: purple !important;" [innerHtml]="cont"></span>
+                      <span *ngIf="!data.drugs.includes(cont)&&!data.prescription.includes(cont)&&!data.symptom.includes(cont)"
+                      [innerHtml]="cont"></span>
+                    </ng-template>
+                    <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="primary"
+                      (click)="editText(data)"><i nz-icon nzType="edit"></i>编辑</button>
+                  </span>
+                  <span *ngIf="data.edit">
+                    <textarea #textareaedit nz-input [(ngModel)]="data.text" (blur)="textEdit(data, i)"></textarea>
+                  </span>
+                </span>
+                <span *ngIf="data.none">
+                  <textarea #textareaedit nz-input [(ngModel)]="data.text"
+                    (ngModelChange)="noneEdit(data, i)"></textarea>
+                </span>
+              </td> -->
               <td>
-                <ng-template ngFor let-item let-ii="index" [ngForOf]="data.analysis">
+                <!-- <ng-template ngFor let-item let-ii="index" [ngForOf]="data.analysis"> -->
+                <ng-template ngFor let-item let-ii="index" [ngForOf]="data.arry">
                     <span class="text-primary" *ngIf="item.getNameByContent===item['饮片名']"
-                      (click)="editDrug(item, data, i)">{{item.getNameByContent}}</span>
+                    (click)="editDrug(item, data, i)">{{item.getNameByContent}}</span>
                     <!-- <span *ngIf="item.getNameByContent===item['饮片名']" class="text-aux">
                       (饮片名:<span class="text-primary-static">{{item['饮片名']}}</span>,
                       同异名:{{item['同异名']}})
                     </span> -->
                     <span *ngIf="!(item.getNameByContent===item['饮片名'])" (click)="editDrug(item, data, i)"
-                      class="text-primary text-warning">{{item.getNameByContent}}</span>
+                      class="text-primary text-warning">{{item['饮片名']}}</span>
                     <!-- <span *ngIf="!(item.getNameByContent===item['饮片名'])" class="text-aux">
                       (饮片名:{{item['饮片名']}},
                       同异名:<span [innerHtml]="showName(item['同异名'],item)"></span>)
@@ -26,10 +86,10 @@
                     </span>
                     <span class="text-warning" *ngIf="!item.getCountByContent">：未获取到用量！</span>
                     <button style="margin: 5px;" [nzSize]="'small'" nz-button nzType="danger"
-                      (click)="deleteDrug(ii, data)"><i nz-icon nzType="delete"></i></button>
+                    (click)="deleteDrug(ii, data)"><i nz-icon nzType="delete"></i></button>
 
                 </ng-template>
-                <div  class="add">
+                <div class="add">
                   <nz-select style="width: 120px;" [(ngModel)]="data.addDrug" nzPlaceHolder="加饮片" nzAllowClear
                     nzShowSearch nzSize="small" [nzDropdownMatchSelectWidth]="false">
                     <nz-option *ngFor="let drug of globe.analysis" [nzValue]="drug"
@@ -37,7 +97,7 @@
                       {{drug['饮片名']}}({{drug['同异名']}})
                     </nz-option>
                   </nz-select>
-                  
+
                   <nz-input-number required class="edit" type="text" style="width: 50px; text-align: center;"
                     [(ngModel)]="data.addCount" [nzPlaceHolder]="'0'" [nzMin]="0" nzSize="small"></nz-input-number>
                   <span class="text-green">g</span>&nbsp;&nbsp;
@@ -46,13 +106,17 @@
                 </div>
                 <div class="setting">
                   <p (click)="unit()" class="text-primary">计量换算</p>
-                </div>            
+                </div> 
               </td>
             </tr>
           </ng-template>
         </tbody>
       </nz-table>
     </div>
+    <!-- <div class="setting">
+      <p (click)="unit()" class="text-primary">计量换算</p>
+      <p (click)="drugs()" class="text-primary">中药信息</p>
+    </div> -->
   </div>
     <div nz-row *ngIf="evilsList.length > 0">
       <div nz-col nzXs="24" nzSm="24" nzMd="11" nzLg="11" nzXl="11">

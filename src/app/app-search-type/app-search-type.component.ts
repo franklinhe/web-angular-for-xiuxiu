@@ -19,6 +19,7 @@ export class AppSearchTypeComponent {
   authorList: any = null;
   diseasesNodes: any = [];
   caseItem: any = null;
+  caseItemContent = true;
   status: any = {
     topInputSearch: {
       topBack: false,
@@ -280,11 +281,14 @@ export class AppSearchTypeComponent {
 
   // 获取原文
   caseContent(data: any) {
+    // false 展示解析 true 展示原文
+    this.caseItemContent = true;
     let getContent = (data: any) => {
       const showInfo = (text: string) => {
         let showText = text;
+        let zhDigit = Arabic.zhDigit;
         [
-          ...Arabic.zhDigit, 
+          ...zhDigit, 
           ...this.globe.analysis.reduce((drugA, drugB) => {
             if (Array.isArray(drugA)) {
               return drugA.concat([drugB['饮片名']].concat((drugB['同异名']||"").split("、")));
@@ -300,10 +304,10 @@ export class AppSearchTypeComponent {
         return showText;
       }
       this.caseItem = data;
+      this.caseItem.content = this.caseItem.content.replace(new RegExp('font-size:9;', 'g'), "font-size:9px;");
       this.caseItem.contentShow = showInfo(this.caseItem.content);
       this.caseItem.contentParts = this.globe.caseContent(this.caseItem.content, {type: (this.caseItem['articleId'] ? 'article' : 'case'), 
       id: (this.caseItem['articleId'] ? this.caseItem['articleId'] : this.caseItem['caseId'])}).contentsAndanalysis;
-    
     }
     this.caseItem = { title: data.title };
     if (data.articleId) {

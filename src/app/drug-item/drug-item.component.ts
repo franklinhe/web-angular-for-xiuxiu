@@ -11,7 +11,7 @@ import { MessageService } from 'src/shared/message/message.service';
 export class DrugItemComponent implements OnDestroy, OnInit {
   @Input()
   flag: {
-    type: 'article' | 'case',
+    type: 'article' | 'case' | '方剂',
     id: string
     [prop:string]: any
   }

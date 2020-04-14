@@ -16,6 +16,7 @@ export class GlobeService {
   units: any = {};
   unitList: any[] = [];
   unitOtherList = [];
+  symptom = [];
   prescription = {
     '方剂': [],
     '同异名': [],
@@ -40,6 +41,8 @@ export class GlobeService {
         index: 5, header: 2 // 参数	值	说明	用途
       }, {
         index: 6, header: 2 // 方名 同异名
+      }, {
+        index: 7, header: 2 // 病症术语	术语扩展
       }]).subscribe((data: [][]) => {
         // // 饮片名	同异名	概述	味	性	归经	功能	主治	功效	病症	病邪	病位	效用分析	用量	用法
         [...data[0], ...this.drugsAddLoaclStorage].map((d: any) => {
@@ -118,6 +121,16 @@ export class GlobeService {
             }
           });
         })
+        // 病症术语	术语扩展
+        data[7].map((d: any) => {
+          this.symptom.push(d['病症术语'])
+          d['术语扩展'] && d['术语扩展'].split('、').forEach(p => {
+            if (p && p.trim()) {
+              this.symptom.push(p)
+            }
+          });
+        })
+        this.symptom = this.symptom.sort((a, b) => a.length-b.length)
       })
     })
   }
@@ -172,14 +185,46 @@ export class GlobeService {
     LocalStorageSetTime.setItem('drugsEdit', this.drugsEditLoaclStorage);
   }
 
+  // 原文字体格式
+  formatContent(content) {
+    let res = [];
+    let a1 = content.split('<span style="color:#0070C0;font-family:宋体;font-size:9;">');
+    a1.forEach((p, i) => {
+      if (i > 0) {
+        let b1 = p.split('</span>')
+        if (b1.length > 1) {
+          res.push({value: b1.shift(), type: 'font'})
+          res.push({value: b1.join('')})
+        } else {
+          res.push({value: p})
+        }
+      } else {
+        res.push({value: p})
+      }
+    });
+    return res;
+  }
+
+  // 原文 + 分析
+  caseContentFormat(content: string, flag: { type: 'article' | 'case', id: string }) {
+    let format = this.formatContent(content).filter(c => c.value)
+    format.forEach(f => {
+      f.content = this.caseContent(f.value, flag)
+    });
+    return format
+  }
+
   // 原文分析
   caseContent(content: string, flag: { type: 'article' | 'case', id: string }) {
     let analysis: any[], contents: any[], contentsAndanalysis: any[];
     // 原文 拆分 成 句
     const conts = content.split('。');
-    conts.filter(c => c).forEach((text: string) => {
+    conts.filter(c => c).forEach((text: string, i) => {
+      if (i < conts.length - 1) {
+        text += '。';
+      }
       text = text.replace(/<[^<>]+>/g, "");
-      text = text.replace(new RegExp('&nbsp;', 'g'), " ");
+      // text = text.replace(new RegExp('&nbsp;', 'g'), " ");
       // analy.text = analy.text.match(/[\u4e00-\u9fa5]/g).join("");
       const analy: any = this.casePart(text, flag);
       if (analy) {
@@ -197,11 +242,14 @@ export class GlobeService {
   }
 
   // 段落 句子 分析
-  casePart(text: string, flag: { type: 'article' | 'case', id: string }) {
+  casePart(text: string, flag: { type: 'article' | 'case' | '方剂', id: string }) {
     // 获取文本中的 方剂
-    const prescriptionAnalysis = this.getPrescription(text, flag, text);
+    let prescriptionAnalysis = []
+    let symptom = [];
+    prescriptionAnalysis = this.getPrescription(text, flag, text);
     // 获取文本中的 药品 信息 、 用量
     let analysis = this.getAnaly(text, flag, text);
+    // symptom = this.getSymptom(text, flag, text);
     // content: 按关键词拆分文本=>用于页面显示点击时间 , drugs 从原文中匹配到的药品名称
     let content: string[], drugs = [], prescription = [];
     prescriptionAnalysis.forEach((pres: any) => {
@@ -223,16 +271,41 @@ export class GlobeService {
         }
       }
     });
+    symptom.forEach((sym: any) => {
+      if (sym) {
+        text = text.replace(new RegExp(sym, 'g'), '(^$#@!*)' + sym + '(^$#@!*)');
+      }
+    });
     content = text.split('(^$#@!*)').filter(c => c);
     //原文按关键词拆分[],匹配到的药品[],从原文中匹配到的药品字符串[],
     if (content.length) {
-      return { content, analysis, drugs, prescription, prescriptionAnalysis };
+      return { content, analysis, drugs, prescription, prescriptionAnalysis, symptom };
     }
     // return {content: [text], analysis: [], drugs: []}
   }
 
+  // 获取文本中的 病症
+  getSymptom(text: string, flag: { type: 'article' | 'case' | '方剂', id: string }, text_: string): any[] {
+    // 匹配到的方剂
+    let datas = []; 
+    let reg = this.symptom
+      .filter((i: string) => i.length > 0)
+      .sort((a: string, b: string) => b.length - a.length)
+      .join('|')
+    const analy = text.match(new RegExp(reg,'g'));
+    // 药品匹配结果 [value]|{index, input:text}
+    if (analy) {
+      // 取匹配的药材后面的字符串,获取药材后面的数量单位|用量
+      for(var i in analy) {
+        datas.push(analy[i]);
+      }
+      
+    }
+    return datas;
+  };
+
   // 获取文本中的 方剂
-  getPrescription(text: string, flag: { type: 'article' | 'case', id: string }, text_: string): any[] {
+  getPrescription(text: string, flag: { type: 'article' | 'case' | '方剂', id: string }, text_: string): any[] {
     // 匹配到的方剂
     let datas = [];
     let reg = [...this.prescription.方剂, ...this.prescription.同异名]
@@ -256,7 +329,7 @@ export class GlobeService {
   };
 
   // 获取文本中的 药品 信息 、 用量
-  getAnaly(text: string, flag: { type: 'article' | 'case', id: string }, text_: string): any[] {
+  getAnaly(text: string, flag: { type: 'article' | 'case' | '方剂', id: string }, text_: string): any[] {
     // 匹配到的药品
     let drugs = [];
     // 在句子中 用 药名 globe.analysis 匹配药品 名称|analy:[string]{index, input|原文}

@@ -19,23 +19,40 @@
         <i class="back" nz-icon nzType="left" nzTheme="outline" (click)="caseItem=null"></i>
         <span class="title">{{caseItem?.title}}</span>
         <!-- <span *ngIf="caseItem?.content" (click)="analysis(caseItem)" class="title text-primary" style="float: right;margin-right: 36px;">解析</span> -->
+        <span *ngIf="caseItem?.content" (click)="caseItemContent = !caseItemContent" 
+        class="title text-primary" style="float: right;margin-right: 36px;">
+        {{caseItemContent?'解析':'原文'}}</span>
       </div>
     </ng-template>
     <qk-scrollbar class="body">
       <nz-skeleton *ngIf="!caseItem?.contentShow" [nzParagraph]="{rows:24}" [nzActive]="true" [nzTitle]="false"></nz-skeleton>
       <!-- <p *ngIf="caseItem?.contentShow" [innerHtml]="caseItem?.contentShow | safeHtml"></p> -->
-      <ng-template ngFor let-part [ngForOf]="caseItem?.contentParts">
-        <span *ngIf="(part.drugs&&part.drugs.length)||(part.prescription&&part.prescription.length)" style="background-color: rgba(0,0,0,0.1); margin-right: 10px;">
-          <ng-template ngFor let-cont [ngForOf]="part.content">
-            <span *ngIf="part.prescription.includes(cont)" (click)="detailPrescription(part,cont)" class="text-primary" style="color: green !important;" [innerHtml]="cont"></span>
-            <span *ngIf="part.drugs.includes(cont)" (click)="detaildrug(part,cont)" class="text-primary" [innerHtml]="cont"></span>
-            <span *ngIf="!part.drugs.includes(cont)&&!part.prescription.includes(cont)" [innerHtml]="cont"></span>
-          </ng-template>。<i class="text-primary" (click)="analysis(caseItem, part.text)" nz-icon nzType="question-circle" nzTheme="outline"></i>
-        </span>
-        <span *ngIf="(!part.drugs||!part.drugs.length)&&(!part.prescription||!part.prescription.length)">
-          <span [innerHtml]="part?.text||part"></span>。
-        </span>
-      </ng-template>
+      <div *ngIf="!caseItemContent">
+        <ng-template ngFor let-part [ngForOf]="caseItem?.contentParts">
+          <span
+            *ngIf="(part.drugs&&part.drugs.length)||(part.prescription&&part.prescription.length)||(part.symptom&&part.symptom.length)"
+            style="background-color: rgba(0,0,0,0.1); margin-right: 10px;">
+            <ng-template ngFor let-cont [ngForOf]="part.content">
+              <span *ngIf="part.prescription.includes(cont)"
+                (click)="detailPrescription(part,cont)" class="text-primary" 
+                style="color: green !important;" [innerHtml]="cont"></span>
+  
+              <span *ngIf="part.drugs.includes(cont)"
+                (click)="detaildrug(part,cont)" class="text-primary" [innerHtml]="cont"></span>
+  
+              <span *ngIf="part.symptom.includes(cont)" class="text-primary" 
+                style="color: purple !important;" [innerHtml]="cont"></span>
+  
+              <span *ngIf="!part.drugs.includes(cont)&&!part.prescription.includes(cont)&&!part.symptom.includes(cont)"
+                [innerHtml]="cont"></span>
+            </ng-template><i class="text-primary" (click)="analysis(caseItem, part.text)" nz-icon nzType="question-circle" nzTheme="outline"></i>
+          </span>
+          <span *ngIf="(!part.drugs||!part.drugs.length)&&(!part.prescription||!part.prescription.length)&&(!part.symptom||!part.symptom.length)">
+            <span [innerHtml]="part?.text||part"></span>
+          </span>
+        </ng-template>
+      </div>
+      <div *ngIf="caseItemContent" [innerHtml]="caseItem?.content | safeHtml"></div>
     </qk-scrollbar>
   </nz-drawer>
 </div>

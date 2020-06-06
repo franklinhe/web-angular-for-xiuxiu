@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "url": "http://localhost:49152",
+            "url": "http://localhost:4200",
             "sourceMaps": true,
             "webRoot": "${workspaceFolder}",
             "trace": true,

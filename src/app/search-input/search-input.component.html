@@ -17,16 +17,8 @@
       <nz-input-group [nzSuffix]="suffixIconSearch">
         <input type="text" [(ngModel)]="search"
                [(disabled)]="disabled"
-               (input)="onInput($event.target?.value)"
-               [nzAutocomplete]="auto"
-               (keyup)="keyup($event)"
                (keydown.enter)="enter($event)"
                (ngModelChange)="searchChange.emit($event)" nz-input [placeholder]="placeholder" />
-               <nz-autocomplete nzBackfill #auto>
-                <nz-auto-option *ngFor="let option of options" [nzValue]="option">
-                  {{ option }}
-                </nz-auto-option>
-              </nz-autocomplete>
       </nz-input-group>
       <ng-template #suffixIconSearch>
         <i nz-icon type="search"></i>

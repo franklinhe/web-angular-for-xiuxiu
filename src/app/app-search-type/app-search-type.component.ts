@@ -107,11 +107,13 @@ export class AppSearchTypeComponent {
     this.searchResult.bookNameList.param.bookName = this.status.resultList.bookName;
     this.searchResult.bookNameList.param.bookCataId = this.status.searchType.bookCataId;
     this.searchResult.bookNameList.param.search = this.status.topInputSearch.searchstr;
+    this.searchResult.bookNameList.param.extended = this.status.topInputSearch.extended;
     // 作者
     this.searchResult.bookAuthorList.param.bookAuthor = this.status.resultList.bookAuthor;
     this.searchResult.bookAuthorList.param.bookName = this.status.resultList.bookName;
     this.searchResult.bookAuthorList.param.bookCataId = this.status.searchType.bookCataId;
     this.searchResult.bookAuthorList.param.search = this.status.topInputSearch.searchstr;
+    this.searchResult.bookAuthorList.param.extended = this.status.topInputSearch.extended;
     // init data
     this.searchResult.caseList.initList();
     this.searchResult.bookNameList.initList();
@@ -258,9 +260,15 @@ export class AppSearchTypeComponent {
   searchCaseType(e: any) {
     Object.assign(this.status.topInputSearch, e)
     Object.assign(this.searchResult.caseList.param, e)
-    if (this.searchResult.caseList.param.search) {
+    Object.assign(this.searchResult.bookAuthorList.param, e)
+    Object.assign(this.searchResult.bookNameList.param, e)
+    this.getCategoryList().subscribe(ids => {
+      this.searchResult.bookAuthorList.param.bookCataId = ids;
+      this.searchResult.caseList.param.bookCataId = ids;
+      this.searchResult.bookAuthorList.initList();
       this.searchResult.caseList.initList();
-    }
+      this.searchResult.bookNameList.initList();
+    });
   }
 
   // 分析
@@ -557,6 +565,7 @@ export class AppSearchTypeComponent {
         searchstr: this.status.topInputSearch.searchstr || null,
         bookAuthor: this.status.resultList.bookAuthor || null,
         bookName: this.status.resultList.bookName || null,
+        extended: this.searchResult.caseList.param.extended
       }).subscribe(result);
     } else {
       this.http.getCategoryList().subscribe(result);

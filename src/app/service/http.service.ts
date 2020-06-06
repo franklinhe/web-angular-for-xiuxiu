@@ -29,6 +29,7 @@ export class HttpService {
     searchstr?: string
     bookAuthor?: string
     bookName?: string
+    extended?: boolean
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -36,6 +37,7 @@ export class HttpService {
         observer.complete();
       });
     } else {
+      data.extended = data.searchstr ? (data.extended || false) : null;
       return this.http.get<any>(environment.api + '/search/getCategoryList', HttpUtil.setParams(data));
     }
   }
@@ -48,6 +50,7 @@ export class HttpService {
     search?: string | number
     pageNum: string | number
     pageSize: string | number
+    extended?: boolean
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -62,14 +65,16 @@ export class HttpService {
           pageSize: data.pageSize,
           bookAuthor: data.bookAuthor || null,	// 作者	string
           bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
-          searchstr: data.search || null
+          searchstr: data.search || null,
+          extended: data.extended
         });
       }
       return this.http.get<any>(environment.api + '/book/getBookNameList', HttpUtil.setParams({
         bookCataId: data.bookCataId || null,
         searchstr: data.search || null,
         pageNum: data.pageNum,
-        pageSize: data.pageSize
+        pageSize: data.pageSize,
+        extended: data.extended
       }));
     }
   }
@@ -82,6 +87,7 @@ export class HttpService {
     search?: string | number
     pageNum: string | number
     pageSize: string | number
+    extended: boolean
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -96,14 +102,16 @@ export class HttpService {
           pageSize: data.pageSize,
           bookAuthor: data.bookAuthor || null,	// 作者	string
           bookName: data.bookName || null,	// 书名	string	@mock=续名医类案
-          searchstr: data.search || null
+          searchstr: data.search || null,
+          extended: data.extended
         });
       } else {
         return this.http.get<any>(environment.api + '/book/getBookAuthorList', HttpUtil.setParams({
           bookCataId: data.bookCataId || null,
           searchstr: data.search || null,
           pageNum: data.pageNum,
-          pageSize: data.pageSize
+          pageSize: data.pageSize,
+          extended: data.extended
         }));
       }
     }
@@ -178,6 +186,7 @@ export class HttpService {
     bookAuthor?: string | number	// 作者	string
     bookName?: string | number	// 书名	string	@mock=续名医类案
     searchstr?: string | number
+    extended?: boolean
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -185,6 +194,7 @@ export class HttpService {
         observer.complete();
       });
     } else {
+      data.extended = data.searchstr ? (data.extended || false) : null;
       return this.http.get<any>(environment.api + '/search/getBookNameList', HttpUtil.setParams(data));
     }
   }
@@ -197,6 +207,7 @@ export class HttpService {
     bookAuthor?: string | number	// 作者	string
     bookName?: string | number	// 书名	string	@mock=续名医类案
     searchstr?: string | number
+    extended?: boolean
   }) {
     if (environment.mockData) {
       return new Observable((observer: Observer<any>) => {
@@ -204,6 +215,7 @@ export class HttpService {
         observer.complete();
       });
     } else {
+      data.extended = data.searchstr ? (data.extended || false) : null;
       return this.http.get<any>(environment.api + '/search/getBookAuthorList', HttpUtil.setParams(data));
     }
   }

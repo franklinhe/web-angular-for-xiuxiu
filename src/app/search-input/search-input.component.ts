@@ -47,17 +47,6 @@ export class SearchInputComponent implements OnInit {
     this.searchChange.emit(this.search);
   }
 
-  keyup(e: any) {
-    // this.searchChange.emit(e);
-  }
-
-  onInput(value: string): void {
-    this.http.autoComplete({query: value}).subscribe(res => {
-      if (res.code == 0 && res.data && res.msg === 'ok') {
-        this.options = res.data.map(v => v.value);
-      }
-    });
-  }
 
   change(key: string, e: any) {
     if (key == 'extended' && e) {
